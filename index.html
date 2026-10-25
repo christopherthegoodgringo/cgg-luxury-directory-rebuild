@@ -21,6 +21,15 @@ dialog{width:min(520px,calc(100% - 28px));border:1px solid #d7d9ce;border-radius
 .dashboard-nav{display:flex;gap:7px;flex-wrap:wrap;padding:0 0 16px;border-bottom:1px solid var(--line)}
 .dashboard-tab{border:1px solid #d8ddd6;background:#fff;border-radius:22px;padding:9px 13px;font-size:12px;color:#526158}
 .dashboard-tab[aria-selected=true]{background:var(--green);color:#fff;border-color:var(--green)}
+/* Consistent CGG green interaction feedback for clickable controls */
+button{cursor:pointer;transition:background-color .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease}
+button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+button:active{background:var(--green)!important;color:#fff!important;border-color:var(--green)!important}
+button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green);color:#fff;border-color:var(--green)}
+.chat-subnav button:hover,.dashboard-tab:hover,.cat-btn:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-gold:hover,.btn-gold:focus-visible{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-outline:hover,.btn-outline:focus-visible{background:var(--green);color:#fff;border-color:var(--green)}
+
 .chat-shell{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .chat-subnav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .chat-subnav button{border:1px solid #d8ddd6;background:#fff;border-radius:20px;padding:8px 12px;font-size:12px;color:#526158}
