@@ -97,12 +97,22 @@ const travelLogoAssets={
  hotels:{name:'Hotels.com',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Hotels%20Product%20Logo%20Full%20Colour%20Dark%20Blue%202025.png',base:'https://www.hotels.com/'},
  priceline:{name:'Priceline',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Priceline.com%20logo.svg',base:'https://www.priceline.com/'},
  skyscanner:{name:'Skyscanner',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Skyscanner%20Logo%20LockupHorizontal%20SkyBlue%20RGB.svg',base:'https://www.skyscanner.com/'},
- kayak:{name:'KAYAK',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Kayak%20Logo.svg',base:'https://www.kayak.com/'}
+ kayak:{name:'KAYAK',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Kayak%20Logo.svg',base:'https://www.kayak.com/'},
+ tripadvisor:{name:'Tripadvisor',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Tripadvisor%20logo.svg',base:'https://www.tripadvisor.com/'},
+ hostelworld:{name:'Hostelworld',logo:'https://commons.wikimedia.org/wiki/Special:FilePath/Hostelworld%20logo.svg',base:'https://www.hostelworld.com/'}
 };
 const travelPlatformsByListing={
  'la-guaca':[{key:'booking',url:'https://www.booking.com/hotel/co/la-guaca-hostel.html'}],
  'camali':[{key:'booking',url:'https://www.booking.com/hotel/co/camali.html'},{key:'expedia',url:'https://www.expedia.com/Hotel-Search?destination=Camali%20Hotel%2C%20Santa%20Marta%2C%20Colombia'}],
- 'masaya':[{key:'booking',url:'https://www.booking.com/searchresults.html?ss=Masaya%20Santa%20Marta%2C%20Colombia'}],
+ 'masaya':[
+  {key:'booking',url:'https://www.booking.com/hotel/co/hostal-masaya-santa-marta.html'},
+  {key:'expedia',url:'https://www.expedia.com/Santa-Marta-Hotels-Masaya-Santa-Marta.h6842510.Hotel-Information'},
+  {key:'hotels',url:'https://www.hotels.com/ho443416/masaya-santa-marta-santa-marta-colombia/'},
+  {key:'tripadvisor',url:'https://www.tripadvisor.com/Hotel_Review-g297484-d4813145-Reviews-Masaya_Santa_Marta-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html'},
+  {key:'skyscanner',url:'https://www.espanol.skyscanner.com/hoteles/colombia/santa-marta-hoteles/masaya-santa-marta/ht-123701736'},
+  {key:'kayak',url:'https://www.kayak.com/Santa-Marta-Hotels-Masaya-Hostel-Santa-Marta.2018166.ksp'},
+  {key:'hostelworld',url:'https://www.hostelworld.com/hostels/p/80944/masaya-santa-marta/'}
+ ],
  'boyaca-plaza':[{key:'booking',url:'https://www.booking.com/hotel/co/boyaca-plaza.html'},{key:'priceline',url:'https://www.priceline.com/'}]
 };
 const cards=document.getElementById('cards'),country=document.getElementById('country'),city=document.getElementById('city'),type=document.getElementById('type'),search=document.getElementById('search'),resultCount=document.getElementById('resultCount'),dialog=document.getElementById('detailsDialog');
