@@ -103,18 +103,36 @@ const travelLogoAssets={
 };
 const travelPlatformOrder=['booking','trip','expedia','tripadvisor','agoda','hotels','priceline','skyscanner','kayak','hostelworld'];
 const travelPlatformsByListing={
- 'la-guaca':[{key:'booking',url:'https://www.booking.com/hotel/co/la-guaca-hostel.html'}],
- 'camali':[{key:'booking',url:'https://www.booking.com/hotel/co/camali.html'},{key:'expedia',url:'https://www.expedia.com/Hotel-Search?destination=Camali%20Hotel%2C%20Santa%20Marta%2C%20Colombia'}],
+ 'la-guaca':[
+  {key:'booking',url:'https://www.booking.com/hotel/co/la-guaca-hostel.html'},
+  {key:'trip',url:'https://us.trip.com/hotels/santa-marta-hotel-detail-4381075/la-guaca-hostel/'},
+  {key:'expedia',url:'https://www.expedia.com/Santa-Marta-Hotels-La-Guaca-Hostel.h110715140.Hotel-Information'},
+  {key:'tripadvisor',url:'https://www.tripadvisor.com/Hotel_Review-g297484-d6554770-Reviews-La_Guaca_Hostel-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html'},
+  {key:'agoda',url:'https://www.agoda.com/en-sg/la-guaca-hostel/hotel/santa-marta-co.html'},
+  {key:'hostelworld',url:'https://www.hostelworld.com/hostels/p/85499/la-guaca-hostel-santa-marta/'}
+ ],
+ 'camali':[
+  {key:'booking',url:'https://www.booking.com/hotel/co/camali.html'},
+  {key:'expedia',url:'https://www.expedia.com/Hotel-Search?destination=Camali%20Hotel%2C%20Santa%20Marta%2C%20Colombia'},
+  {key:'tripadvisor',url:'https://www.tripadvisor.com/Hotel_Review-g297484-d15805035-Reviews-Camali_Hotel-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html'},
+  {key:'priceline',url:'https://www.priceline.com/hotel-deals/en-us/P5000016704/H122638104/camali-hotel.ssp'},
+  {key:'skyscanner',url:'https://www.skyscanner.com/hotels/colombia/santa-marta-hotels/camali-hotel/ht-194777619'}
+ ],
  'masaya':[
   {key:'booking',url:'https://www.booking.com/hotel/co/hostal-masaya-santa-marta.html'},
+  {key:'trip',url:'https://www.trip.com/hotels/santa-marta-hotel-detail-4232992/masaya-hostel-santa-marta/'},
   {key:'expedia',url:'https://www.expedia.com/Santa-Marta-Hotels-Masaya-Santa-Marta.h6842510.Hotel-Information'},
-  {key:'hotels',url:'https://www.hotels.com/ho443416/masaya-santa-marta-santa-marta-colombia/'},
   {key:'tripadvisor',url:'https://www.tripadvisor.com/Hotel_Review-g297484-d4813145-Reviews-Masaya_Santa_Marta-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html'},
+  {key:'hotels',url:'https://www.hotels.com/ho443416/masaya-santa-marta-santa-marta-colombia/'},
   {key:'skyscanner',url:'https://www.espanol.skyscanner.com/hoteles/colombia/santa-marta-hoteles/masaya-santa-marta/ht-123701736'},
   {key:'kayak',url:'https://www.kayak.com/Santa-Marta-Hotels-Masaya-Hostel-Santa-Marta.2018166.ksp'},
   {key:'hostelworld',url:'https://www.hostelworld.com/hostels/p/80944/masaya-santa-marta/'}
  ],
- 'boyaca-plaza':[{key:'booking',url:'https://www.booking.com/hotel/co/boyaca-plaza.html'},{key:'priceline',url:'https://www.priceline.com/'}]
+ 'boyaca-plaza':[
+  {key:'booking',url:'https://www.booking.com/hotel/co/boyaca-plaza.html'},
+  {key:'tripadvisor',url:'https://www.tripadvisor.com/Hotel_Review-g776258-d1996602-Reviews-Hotel_Boyaca_Plaza-Tunja_Boyaca_Department.html'},
+  {key:'agoda',url:'https://www.agoda.com/nb-no/hotel-boyaca-plaza/hotel/tunja-co.html'}
+ ]
 };
 const cards=document.getElementById('cards'),country=document.getElementById('country'),city=document.getElementById('city'),type=document.getElementById('type'),search=document.getElementById('search'),resultCount=document.getElementById('resultCount'),dialog=document.getElementById('detailsDialog');
 let activeCategory='all',currentListing=null,showFavorites=false;
