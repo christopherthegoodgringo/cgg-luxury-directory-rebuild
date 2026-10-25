@@ -118,7 +118,7 @@ create policy traveler_shared_lists_select_own on public.traveler_shared_lists f
 drop policy if exists traveler_shared_lists_insert_own on public.traveler_shared_lists;
 create policy traveler_shared_lists_insert_own on public.traveler_shared_lists for insert to authenticated with check ((select auth.uid()) = user_id and exists (select 1 from public.traveler_trip_collections c where c.id = collection_id and c.user_id = (select auth.uid())));
 drop policy if exists traveler_shared_lists_update_own on public.traveler_shared_lists;
-create policy traveler_shared_lists_update_own on public.traveler_shared_lists for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy traveler_shared_lists_update_own on public.traveler_shared_lists for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id and exists (select 1 from public.traveler_trip_collections c where c.id = collection_id and c.user_id = (select auth.uid())));
 drop policy if exists traveler_shared_lists_delete_own on public.traveler_shared_lists;
 create policy traveler_shared_lists_delete_own on public.traveler_shared_lists for delete to authenticated using ((select auth.uid()) = user_id);
 
