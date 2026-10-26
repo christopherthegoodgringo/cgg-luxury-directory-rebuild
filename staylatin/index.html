@@ -246,7 +246,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-review-score{font-size:11px;font-weight:900;white-space:nowrap;color:#6c4a08}
 .stay-review-stars{font-size:19px;letter-spacing:1px;line-height:1.1;color:#d49b19}
 .stay-review-stars .empty-star{color:#9aa098}
-.stay-review-copy{font-size:12px!important;line-height:1.35!important;color:#45534a!important;margin:0!important;min-height:2.7em!important;height:2.7em;max-height:2.7em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.stay-review-slides{position:relative;min-height:2.7em}.stay-review-copy{display:none!important}.stay-review-copy.active{display:-webkit-box!important;font-size:12px!important;line-height:1.35!important;color:#45534a!important;margin:0!important;min-height:2.7em!important;height:2.7em;max-height:2.7em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .stay-review-note{display:block;font-size:9px;line-height:1.25;color:#7b6b53;margin-top:auto}
 @media(max-width:560px){.stay-review{min-height:126px;padding:12px}}
 </style>
@@ -323,8 +323,14 @@ function render(){
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
   const note=s.note||(links.length>1?"Official website and available booking partners":"Official property website");
   // Clearly mark this as sample copy until verified traveler testimonials and scores are sourced.
-  const reviewText=('A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting, ideal for exploring '+s.city.split(",")[0]+'.').slice(0,115);
-  const reviewBlock='<section class="stay-review" aria-label="Illustrative review sample with a preview score of four out of five"><div class="stay-review-head"><span class="stay-review-label">Traveler review · sample</span><span class="stay-review-score">4.0 / 5</span></div><div class="stay-review-stars" aria-label="4 out of 5 stars"><span>★★★★</span><span class="empty-star">☆</span></div><p class="stay-review-copy">'+esc(reviewText)+'</p><span class="stay-review-note">Illustrative sample — not verified guest feedback</span></section>';
+  const reviewTexts=[
+   'A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting in '+s.city.split(",")[0]+'.',
+   'A useful base for exploring the neighborhood, local food and nearby highlights in '+s.city.split(",")[0]+'.',
+   'The kind of stay to consider for travelers who value atmosphere and a sense of place.',
+   'A potential fit for a slower trip, with time to discover the destination beyond the usual stops.',
+   'Worth comparing for a trip to '+s.city.split(",")[0]+' alongside location, amenities and direct-booking details.'
+  ];
+  const reviewBlock='<section class="stay-review" aria-label="Five rotating illustrative travel review samples"><div class="stay-review-head"><span class="stay-review-label">Travel review preview</span><span class="stay-review-score">Sample · 4.0 / 5</span></div><div class="stay-review-stars" aria-label="Illustrative four out of five stars"><span>★★★★</span><span class="empty-star">☆</span></div><div class="stay-review-slides">'+reviewTexts.map((txt,i)=>'<p class="stay-review-copy'+(i===0?' active':'')+'" data-review-slide="'+i+'"'+(i===0?' aria-live="polite"':'')+'>'+esc(txt)+'</p>').join("")+'</div><span class="stay-review-note">Illustrative sample copy — not verified guest feedback</span></section>';
   return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'"><div class="photo"><img class="property-photo" src="'+esc(s.image)+'" data-fallback="'+esc(s.imageFallback||"")+'" data-fallbacks="'+esc(JSON.stringify(s.imageFallbacks||[]))+'" alt="Photo of '+esc(s.name)+'" loading="eager" decoding="async"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span></span><button class="share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'">↗</button><button class="heart '+(saved.includes(s.id)?"saved":"")+'" type="button" aria-label="Save '+esc(s.name)+'" data-save="'+s.id+'">'+(saved.includes(s.id)?"♥":"♡")+'</button></div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
  }).join(""):'<div class="empty">'+(language==="en"?(activeType==="Hostel"?"No hostels are listed yet.":activeType==="Long-stay base"?"No long-stay bases are listed yet.":"No public listings match those filters. Try another destination or stay style."):(activeType==="Hostel"?"Todavía no hay hostales en el directorio.":activeType==="Long-stay base"?"Todavía no hay alojamientos para largas estancias.":"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."))+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
@@ -368,6 +374,17 @@ function ensureInitialListings(){
 ensureInitialListings();
 window.addEventListener("pageshow",ensureInitialListings);
 document.addEventListener("DOMContentLoaded",ensureInitialListings,{once:true});
+let stayReviewRotationTimer=null;
+function rotateStayReviews(){
+ document.querySelectorAll(".stay-review").forEach(card=>{
+  const slides=[...card.querySelectorAll("[data-review-slide]")];
+  if(slides.length<2)return;
+  const current=slides.findIndex(slide=>slide.classList.contains("active"));
+  const next=(current+1)%slides.length;
+  slides.forEach((slide,index)=>{slide.classList.toggle("active",index===next);if(index===next)slide.setAttribute("aria-live","polite");else slide.removeAttribute("aria-live");});
+ });
+}
+if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,5000);
 </script>
 </body>
 </html>
