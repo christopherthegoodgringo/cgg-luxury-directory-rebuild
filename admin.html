@@ -279,12 +279,16 @@ function addAdminSessionControls(email){
 function updateLiveOverview(){
  const panel=document.getElementById("liveOverviewPanel"); if(!panel)return;
  const count=(arr,status)=>arr.filter(x=>String(x.status||"").toLowerCase()===status).length;
- document.getElementById("liveStatListings").textContent=liveData.listings.length;
- document.getElementById("liveStatActive").textContent=count(liveData.listings,"active");
- document.getElementById("liveStatSubmissions").textContent=count(liveData.submissions,"pending");
- document.getElementById("liveStatClaims").textContent=count(liveData.claims,"pending");
+ const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value)};
+ put("liveStatListings",(liveData.listings||[]).length);
+ put("liveStatActive",count(liveData.listings||[],"active"));
+ put("liveStatSubmissions",count(liveData.submissions||[],"pending"));
+ put("liveStatClaims",count(liveData.claims||[],"pending"));
+ put("coreMemberTotal",(liveData.subscribers||[]).length);
+ put("queuePendingListings",count(liveData.submissions||[],"pending"));
+ put("queueMemberTotal",(liveData.subscribers||[]).length);
  const tag=document.getElementById("liveConnectionTag");if(tag){tag.textContent="LIVE · CONNECTED";tag.className="tag active";}
- const note=document.getElementById("liveOverviewNote");if(note)note.textContent="Connected to Supabase. Counts reflect the records returned by the admin API; use Refresh live data to reload.";
+ const note=document.getElementById("liveOverviewNote");if(note)note.textContent="Connected to Supabase. Counts reflect records returned by the admin API; refresh to reload.";
 }
 function svgBarChart(items,{valueKey="value",labelKey="label",color="#1c5b43",maxItems=10}={}){
  if(!items||!items.length)return '<p class="live-empty">No records available for this chart yet.</p>';
