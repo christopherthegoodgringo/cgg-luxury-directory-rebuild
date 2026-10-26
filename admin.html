@@ -90,7 +90,23 @@ body.auth-locked .layout,body.auth-locked .modal-backdrop,body.auth-locked .toas
 </div></main></div>
 <div class="modal-backdrop" id="memberModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><div><div class="eyebrow" style="color:#d9c27e">MEMBER PROFILE</div><h2 id="modalTitle">Review member</h2></div><button class="close" onclick="closeMember()">Close ✕</button></div><form id="memberForm"><div class="modal-body"><div class="field"><label for="fullName">Full name</label><input id="fullName" required maxlength="100"></div><div class="field"><label for="email">Email address</label><input id="email" type="email" required maxlength="180"></div><div class="field"><label for="status">Account status</label><select id="status"><option>Active</option><option>Pending</option><option>Suspended</option></select></div><div class="field"><label for="plan">Membership plan</label><select id="plan"><option>Free</option><option>Featured</option><option>Premium</option></select></div><div class="field"><label for="joined">Joined date</label><input id="joined" type="date"></div><div class="field"><label for="role">Admin note / role</label><input id="role" maxlength="120" placeholder="Internal note (preview only)"></div><div class="field full"><label for="notes">Correction notes</label><textarea id="notes" rows="3" maxlength="1000" placeholder="Explain the requested correction or admin note…"></textarea></div></div><div class="modal-foot"><button type="button" class="btn" onclick="closeMember()">Cancel</button><button type="submit" class="btn gold">Save preview changes</button></div></form></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script>
+(function(){
+  function showDiagnostic(message){
+    var el=document.getElementById("authMessage");
+    if(el){el.textContent="Admin Studio diagnostic: "+message;el.classList.add("error");}
+    else {var d=document.createElement("div");d.style.cssText="position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;padding:14px;background:#fff0ee;color:#7d2019;border:2px solid #bb665d;border-radius:8px;font:14px system-ui";d.textContent="Admin Studio diagnostic: "+message;document.body.appendChild(d);}
+  }
+  window.addEventListener("error",function(e){showDiagnostic(e.message||"A JavaScript file failed to load.");});
+  window.addEventListener("unhandledrejection",function(e){var r=e.reason;showDiagnostic(r&&(r.message||String(r))||"An unhandled sign-in error occurred.");});
+  var lib=document.querySelector('script[src*="supabase-js"]');
+  if(lib)lib.addEventListener("error",function(){showDiagnostic("The sign-in library could not load. Try disabling script-blocking extensions or another browser.");});
+  document.addEventListener("DOMContentLoaded",function(){
+    var form=document.getElementById("adminLoginForm");
+    if(form)form.addEventListener("submit",function(){if(!window.supabase||!window.supabase.createClient){showDiagnostic("The Supabase sign-in library did not initialize in this browser.");}},true);
+  });
+})();
+</script>
 <script>
 const members=[
 {id:1,name:"Maria Fernanda",email:"maria.fernanda@example.com",status:"Active",joined:"2026-10-25",last:"12 min ago",plan:"Free",role:"Traveler",notes:""},
