@@ -80,11 +80,7 @@ async function loadTravelerChat(){
   if(error)throw error;
   const messages=(data||[]).reverse();
   if(!messages.length){chatMessages.innerHTML='<div class="status">You’re first in the lounge. Say hello or share a useful travel tip.</div>';setChatNotice("Chat is ready.");return;}
-  const senderIds=[...new Set(messages.map(m=>m.sender_id))];
-  const {data:profiles,error:profileError}=await client.from("staylatin_profiles").select("id,display_name").in("id",senderIds);
-  if(profileError)throw profileError;
-  const names=new Map((profiles||[]).map(p=>[p.id,p.display_name||"Traveler"]));
-  chatMessages.innerHTML=messages.map(m=>'<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(m.sender_id===currentTravelerSession.user.id?'#f0f3eb':'#fffefb')+'"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest)">'+dashSafe(m.sender_id===currentTravelerSession.user.id?'You':(names.get(m.sender_id)||'Traveler'))+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></article>').join("");
+  chatMessages.innerHTML=messages.map(m=>'<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(m.sender_id===currentTravelerSession.user.id?'#f0f3eb':'#fffefb')+'"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest)">'+dashSafe(m.sender_id===currentTravelerSession.user.id?'You':'Traveler')+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></article>').join("");
   chatMessages.scrollTop=chatMessages.scrollHeight;setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
  }catch(e){chatMessages.innerHTML="";setChatNotice("Traveler chat is not available right now. Please refresh or try again later.","error");}
 }
@@ -98,7 +94,7 @@ chatForm.addEventListener("submit",async e=>{
  finally{chatBusy=false;sendChat.disabled=false;sendChat.textContent="Send message ↗";}
 });
 document.getElementById("refreshChat").addEventListener("click",loadTravelerChat);
-function connectTravelerChat(session){currentTravelerSession=session||null;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages",filter:"destination=eq.General Traveler Lounge"},()=>loadTravelerChat()).subscribe();}
+function connectTravelerChat(session){currentTravelerSession=session||null;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe();}
 async function loadDashboardStays(session){
  dashResults.innerHTML='<div class="status">Loading published stays…</div>';
  try{
