@@ -127,6 +127,7 @@
     <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px">
       <strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:8px">Privacy controls</strong>
       <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="introShowDirectory" type="checkbox" style="margin-top:4px"> <span><b>Include me in the member directory</b><br><span style="color:var(--muted)">If unchecked, your introduction will not appear to other members.</span></span></label>
+      <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="introShowPhoto" type="checkbox" style="margin-top:4px"> <span><b>Show my profile photo in the member directory</b><br><span style="color:var(--muted)">Your photo is private unless you enable this separately.</span></span></label>
       <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
         <label style="display:flex;gap:8px;font-size:12px"><input id="introShowName" type="checkbox" checked> Show display name</label>
         <label style="display:flex;gap:8px;font-size:12px"><input id="introShowText" type="checkbox" checked> Show introduction</label>
@@ -141,6 +142,20 @@
   </form>
   <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-top:24px"><div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members.</p></div><button id="refreshTravelerIntroductions" type="button" class="minor-action" style="width:auto;margin:0">Refresh directory</button></div>
   <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
+  <section id="privateMessagingPanel" aria-label="Private member messages" style="margin-top:22px;border:1px solid #dce8dd;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Only you and the selected member can read your conversation.</p></div><button id="refreshPrivateInbox" type="button" class="minor-action" style="width:auto;margin:0">Refresh inbox ↻</button></div>
+    <div id="privateInboxList" style="display:grid;gap:8px;margin-top:12px"><div class="status">Loading private inbox…</div></div>
+    <div id="privateConversation" hidden style="margin-top:16px;border-top:1px solid #dce8dd;padding-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h5 id="privateConversationTitle" style="font:500 20px Georgia,serif;color:var(--forest);margin:0">Conversation</h5><button id="closePrivateConversation" type="button" class="minor-action" style="width:auto;margin:0">Close</button></div>
+      <div id="privateMessages" role="log" aria-live="polite" style="height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px;margin-top:10px;background:#fff;border:1px solid #dce8dd;border-radius:8px"><div class="status">Choose a member to begin.</div></div>
+      <form id="privateMessageForm" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:10px">
+        <label for="privateMessageInput" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">PRIVATE MESSAGE</label>
+        <textarea id="privateMessageInput" maxlength="2000" rows="2" required placeholder="Write a private message…" style="width:100%;min-width:0;resize:vertical;border:1px solid #dcd8cd;border-radius:7px;padding:11px"></textarea>
+        <button id="sendPrivateMessage" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px">Send privately ↗</button>
+      </form>
+      <div id="privateMessageNotice" class="status" role="status" aria-live="polite" style="margin-top:8px"></div>
+    </div>
+  </section>
 </section>
 
 <section id="travelerLounge" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
@@ -199,12 +214,13 @@ function introClient(){if(!client){const cfg=window.STAYLATIN_SUPABASE_CONFIG;if
 async function saveTravelerChatProfile(db,userId){
  const shareName=!!document.getElementById("chatShareName")?.checked;
  const sharePhoto=!!document.getElementById("chatSharePhoto")?.checked;
+ const sharePhotoDirectory=!!document.getElementById("introShowPhoto")?.checked;
  const displayName=document.getElementById("introDisplayName").value.trim();
  if(shareName&&!displayName)throw new Error("Add a display name above before choosing to show your name in the Traveler Lounge.");
  const {data:existing,error:existingError}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",userId).maybeSingle();
  if(existingError)throw existingError;
  let avatarPath=existing?.avatar_path||null;
- if(sharePhoto){
+ if(sharePhoto||sharePhotoDirectory){
    const saved=localStorage.getItem(avatarStorageKey());
    if(saved){
      const blob=await (await fetch(saved)).blob();
@@ -215,13 +231,13 @@ async function saveTravelerChatProfile(db,userId){
      if(uploadError)throw uploadError;
      avatarPath=objectPath;
    }
-   if(!avatarPath)throw new Error("Add a profile photo above before choosing to show your photo in the Traveler Lounge.");
+   if(!avatarPath)throw new Error("Add a profile photo above before choosing to share it in chat or the member directory.");
  }else{
    avatarPath=null;
  }
- const {error:saveError}=await db.from("staylatin_traveler_chat_profiles").upsert({user_id:userId,display_name:shareName?displayName:"",share_name:shareName,share_photo:sharePhoto,avatar_path:avatarPath,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ const {error:saveError}=await db.from("staylatin_traveler_chat_profiles").upsert({user_id:userId,display_name:shareName?displayName:"",share_name:shareName,share_photo:sharePhoto,share_photo_in_directory:sharePhotoDirectory,avatar_path:avatarPath,updated_at:new Date().toISOString()},{onConflict:"user_id"});
  if(saveError)throw saveError;
- setChatPrivacyStatus(!shareName&&!sharePhoto?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":"Your profile photo will appear beside your chat messages.");
+ setChatPrivacyStatus(!shareName&&!sharePhoto&&!sharePhotoDirectory?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":sharePhoto?"Your profile photo will appear beside your chat messages.":sharePhotoDirectory?"Your profile photo is shared in the member directory only.":"Your photo privacy settings were saved.");
 }
 async function loadTravelerIntroduction(){
  const db=introClient(),userId=activeTripUserId;
@@ -233,11 +249,12 @@ async function loadTravelerIntroduction(){
  for(const [field,ids] of Object.entries(introFields)){document.getElementById(ids[0]).value=row[field]||"";document.getElementById(ids[1]).checked=row["show_"+field]===undefined?(field==="display_name"||field==="introduction"):!!row["show_"+field]}
  document.getElementById("introShowDirectory").checked=!!row.show_in_directory;
  try{
-   const {data:loungeProfile,error:loungeProfileError}=await db.from("staylatin_traveler_chat_profiles").select("share_name,share_photo").eq("user_id",userId).maybeSingle();
+   const {data:loungeProfile,error:loungeProfileError}=await db.from("staylatin_traveler_chat_profiles").select("share_name,share_photo,share_photo_in_directory").eq("user_id",userId).maybeSingle();
    if(loungeProfileError)throw loungeProfileError;
    document.getElementById("chatShareName").checked=!!loungeProfile?.share_name;
    document.getElementById("chatSharePhoto").checked=!!loungeProfile?.share_photo;
-   setChatPrivacyStatus(!loungeProfile||(!loungeProfile.share_name&&!loungeProfile.share_photo)?"Your name and photo are hidden from other travelers.":loungeProfile.share_name&&loungeProfile.share_photo?"Your display name and photo are shared in chat.":loungeProfile.share_name?"Your display name is shared in chat.":"Your profile photo is shared in chat.");
+   document.getElementById("introShowPhoto").checked=!!loungeProfile?.share_photo_in_directory;
+   setChatPrivacyStatus(!loungeProfile||(!loungeProfile.share_name&&!loungeProfile.share_photo&&!loungeProfile.share_photo_in_directory)?"Your name and photo are hidden from other travelers.":loungeProfile.share_name&&loungeProfile.share_photo?"Your display name and photo are shared in chat.":loungeProfile.share_name?"Your display name is shared in chat.":loungeProfile.share_photo?"Your profile photo is shared in chat.":loungeProfile.share_photo_in_directory?"Your profile photo is shared in the member directory only.":"Your privacy settings are saved.");
  }catch(e){
    setChatPrivacyStatus("Could not load your Traveler Lounge privacy settings. Check the connection and save again if needed.",true);
  }
@@ -284,15 +301,86 @@ async function saveTravelerIntroduction(e){
 }
 async function loadTravelerIntroductionDirectory(){
  const box=document.getElementById("travelerIntroDirectory"),db=introClient();if(!box||!db)return;
+ if(!activeTripUserId){box.innerHTML='<div class="status">Sign in to see the member directory.</div>';return}
  box.innerHTML='<div class="status">Loading shared introductions…</div>';
  const {data,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").order("updated_at",{ascending:false}).limit(100);
  if(error){box.innerHTML='<div class="status error">The member directory could not load. Please try again.</div>';return}
  const rows=(data||[]).filter(x=>x.user_id!==activeTripUserId);
- if(!rows.length){box.innerHTML='<div class="status">No other introductions shared yet. You can be one of the first to introduce yourself.</div>';return}
- box.innerHTML=rows.map(r=>'<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px"><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 7px">'+introEscape(r.display_name||"StayLatin traveler")+'</h5>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+[['Home country',r.home_country],['Favorite destinations',r.favorite_destinations],['Languages',r.languages_spoken],['Travel interests',r.travel_interests]].filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("")+'</article>').join("");
+ if(!rows.length){box.innerHTML='<div class="status">No other introductions shared yet. You can be one of the first to introduce yourself.</div>';await loadPrivateInbox();return}
+ const ids=rows.map(r=>r.user_id);
+ const {data:photoProfiles,error:photoError}=await db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").in("user_id",ids);
+ const photoById=Object.create(null);
+ if(!photoError)await Promise.all((photoProfiles||[]).map(async p=>{
+   if(!p.share_photo_in_directory||!p.avatar_path)return;
+   try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!signedError&&signed?.signedUrl)photoById[p.user_id]=signed.signedUrl}catch(e){}
+ }));
+ box.innerHTML=rows.map(r=>{
+   const photo=photoById[r.user_id]?'<img src="'+introEscape(photoById[r.user_id])+'" alt="'+introEscape(r.display_name||"Traveler")+' profile photo" style="width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<div aria-hidden="true" style="width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:27px">✳</div>';
+   return '<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+photo+'<div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(r.display_name||"StayLatin traveler")+'</h5><div style="font-size:10px;color:var(--muted)">StayLatin member</div></div></div>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+[['Home country',r.home_country],['Favorite destinations',r.favorite_destinations],['Languages',r.languages_spoken],['Travel interests',r.travel_interests]].filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("")+'<button type="button" data-private-message="'+introEscape(r.user_id)+'" data-private-name="'+introEscape(r.display_name||"StayLatin traveler")+'" class="primary-action" style="width:100%;margin-top:14px">Message privately ↗</button></article>';
+ }).join("");
+ box.querySelectorAll("[data-private-message]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.privateMessage,button.dataset.privateName)));
+ await loadPrivateInbox();
 }
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
 document.getElementById("refreshTravelerIntroductions").addEventListener("click",loadTravelerIntroductionDirectory);
+
+let activePrivateRecipient=null,activePrivateName="Traveler",privateBusy=false,privateRefreshTimer=null;
+const privateInboxList=document.getElementById("privateInboxList"),privateConversation=document.getElementById("privateConversation"),privateMessages=document.getElementById("privateMessages"),privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageNotice=document.getElementById("privateMessageNotice"),privateMessageSend=document.getElementById("sendPrivateMessage");
+function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
+async function loadPrivateInbox(){
+ const db=introClient(),box=privateInboxList;if(!db||!box||!activeTripUserId){if(box)box.innerHTML='<div class="status">Sign in to use private messages.</div>';return}
+ const {data,error}=await db.from("staylatin_traveler_private_messages").select("id,sender_id,recipient_id,body,read_at,created_at").order("created_at",{ascending:false}).limit(150);
+ if(error){box.innerHTML='<div class="status error">Private inbox is not available yet. Please refresh and try again.</div>';return}
+ const latestByPartner=new Map();
+ (data||[]).forEach(m=>{const partner=m.sender_id===activeTripUserId?m.recipient_id:m.sender_id;if(!latestByPartner.has(partner)){latestByPartner.set(partner,{...m,partner,unread:m.recipient_id===activeTripUserId&&!m.read_at})}});
+ const partners=[...latestByPartner.values()];
+ if(!partners.length){box.innerHTML='<div class="status">Your private inbox is empty. Choose “Message privately” on a member card to start a conversation.</div>';return}
+ const ids=partners.map(x=>x.partner);
+ const {data:profiles}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids);
+ const names=Object.create(null);(profiles||[]).forEach(p=>names[p.user_id]=p.display_name||"StayLatin traveler");
+ box.innerHTML=partners.map(m=>'<button type="button" data-inbox-partner="'+introEscape(m.partner)+'" data-inbox-name="'+introEscape(names[m.partner]||"StayLatin traveler")+'" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:1px solid #dce8dd;border-radius:9px;background:#fff;padding:11px 13px;cursor:pointer"><span style="min-width:0"><strong style="display:block;color:var(--forest);font-size:13px">'+introEscape(names[m.partner]||"StayLatin traveler")+'</strong><span style="display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px">'+introEscape(m.body)+'</span></span><span style="flex:0 0 auto;color:var(--terra);font-size:10px;font-weight:800">'+(m.unread?"NEW":"Open ↗")+'</span></button>').join("");
+ box.querySelectorAll("[data-inbox-partner]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.inboxPartner,button.dataset.inboxName)));
+}
+async function openPrivateConversation(userId,displayName){
+ if(!activeTripUserId||!userId||userId===activeTripUserId)return;
+ activePrivateRecipient=userId;activePrivateName=displayName||"StayLatin traveler";
+ privateConversation.hidden=false;document.getElementById("privateConversationTitle").textContent="Private conversation with "+activePrivateName;
+ privateMessages.innerHTML='<div class="status">Loading private messages…</div>';setPrivateNotice("Only you and "+activePrivateName+" can read this conversation.");
+ privateConversation.scrollIntoView({behavior:"smooth",block:"nearest"});
+ await loadPrivateConversation();
+ if(privateRefreshTimer)window.clearInterval(privateRefreshTimer);
+ privateRefreshTimer=window.setInterval(()=>{if(!document.hidden&&activePrivateRecipient)loadPrivateConversation(true)},8000);
+}
+async function loadPrivateConversation(silent=false){
+ const db=introClient();if(!db||!activeTripUserId||!activePrivateRecipient||!privateMessages)return;
+ if(!silent)privateMessages.innerHTML='<div class="status">Loading private messages…</div>';
+ try{
+   const me=activeTripUserId,other=activePrivateRecipient;
+   const {data,error}=await db.from("staylatin_traveler_private_messages").select("id,sender_id,recipient_id,body,read_at,created_at").or("and(sender_id.eq."+me+",recipient_id.eq."+other+"),and(sender_id.eq."+other+",recipient_id.eq."+me+")").order("created_at",{ascending:true}).limit(200);
+   if(error)throw error;
+   const rows=data||[];
+   if(!rows.length)privateMessages.innerHTML='<div class="status">No messages yet. Send a private hello to begin.</div>';
+   else privateMessages.innerHTML=rows.map(m=>{const own=m.sender_id===me;return '<article style="align-self:'+(own?"flex-end":"flex-start")+';max-width:88%;border:1px solid '+(own?"#d4e7d7":"#e5e0d5")+';border-radius:10px;padding:9px 12px;background:'+(own?"#edf6ee":"#fffdf8")+'"><div style="font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px">'+(own?"You":introEscape(activePrivateName))+' · '+introEscape(new Date(m.created_at).toLocaleString())+'</div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></article>'}).join("");
+   const unread=rows.filter(m=>m.recipient_id===me&&!m.read_at);
+   if(unread.length){const {error:readError}=await db.from("staylatin_traveler_private_messages").update({read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(readError)throw readError}
+   privateMessages.scrollTop=privateMessages.scrollHeight;
+   if(!silent)setPrivateNotice("Private conversation with "+activePrivateName+".");
+   await loadPrivateInbox();
+ }catch(e){privateMessages.innerHTML='<div class="status error">Could not load this private conversation. Please refresh and try again.</div>';setPrivateNotice("Private messages could not be loaded. Check the connection and try again.",true)}
+}
+privateMessageForm?.addEventListener("submit",async e=>{
+ e.preventDefault();if(privateBusy)return;
+ const db=introClient(),body=privateMessageInput.value.trim();
+ if(!db||!activeTripUserId||!activePrivateRecipient){setPrivateNotice("Choose a member before sending a private message.",true);return}
+ if(!body)return;
+ privateBusy=true;privateMessageSend.disabled=true;privateMessageSend.textContent="Sending…";
+ try{const {error}=await db.from("staylatin_traveler_private_messages").insert({sender_id:activeTripUserId,recipient_id:activePrivateRecipient,body});if(error)throw error;privateMessageInput.value="";await loadPrivateConversation();setPrivateNotice("Private message sent.");}
+ catch(e){setPrivateNotice("Could not send your private message. Please try again.",true)}
+ finally{privateBusy=false;privateMessageSend.disabled=false;privateMessageSend.textContent="Send privately ↗"}
+});
+document.getElementById("refreshPrivateInbox")?.addEventListener("click",async()=>{await loadPrivateInbox();if(activePrivateRecipient)await loadPrivateConversation()});
+document.getElementById("closePrivateConversation")?.addEventListener("click",()=>{privateConversation.hidden=true;activePrivateRecipient=null;if(privateRefreshTimer){window.clearInterval(privateRefreshTimer);privateRefreshTimer=null}});
+
 function showTravelerDashboard(session){
   activeTripUserId=session&&session.user?session.user.id:null;
   loadTravelerAvatar();
