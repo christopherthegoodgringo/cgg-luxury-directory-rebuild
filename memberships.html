@@ -33,10 +33,13 @@ async function refresh(){
  if(session){showAccount();await loadOwnedListings();}else showAuth();
 }
 async function authAction(kind){
+ if(!client){status('The secure account service is still loading. Please wait a moment and try again.',true);return;}
  const email=$('email').value.trim(),password=$('password').value;
  if(!email||!password){status('Enter your email and password.',true);return;}
  status(kind==='signup'?'Creating your account…':'Signing in…');
- const res=kind==='signup'?await client.auth.signUp({email,password}):await client.auth.signInWithPassword({email,password});
+ let res;
+ try { res=kind==='signup'?await client.auth.signUp({email,password}):await client.auth.signInWithPassword({email,password}); }
+ catch(error){status('Signup/sign-in request failed. Please check your connection and try again.',true);return;}
  if(res.error){status(res.error.message,true);return;}
  if(kind==='signup'&&!res.data.session){status('Check your email to confirm your account, then return here to sign in.');return;}
  session=res.data.session;await refresh();status('Account ready.');
