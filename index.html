@@ -133,7 +133,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
    <span class="mark" aria-hidden="true">C</span>
    <span><span class="brand-name">CGG Luxury Directory<small>™</small></span><span class="brand-sub">The Good Gringo Collection</span></span>
   </a>
-  <div class="nav-actions"><div class="nav-note">Thoughtfully selected · Colombia</div><button class="btn btn-outline dashboard-open" id="dashboardButton" type="button">Travel Companion</button></div>
+  <div class="nav-actions"><div class="nav-note">Thoughtfully selected · Colombia</div></div>
  </div>
 </header>
 <section class="hero">
@@ -429,7 +429,7 @@ async function disableTravelerPush(){const status=document.getElementById('pushS
 function initTravelerPushControls(){const enable=document.getElementById('enablePush'),disable=document.getElementById('disablePush');if(enable)enable.addEventListener('click',enableTravelerPush);if(disable)disable.addEventListener('click',disableTravelerPush);const status=document.getElementById('pushStatus');if(!status)return;if(!('serviceWorker'in navigator)||!('PushManager'in window)){status.textContent='This browser does not support web push notifications.';if(enable)enable.disabled=true;if(disable)disable.disabled=true;return;}navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(async reg=>{const sub=await reg.pushManager.getSubscription();status.textContent=sub?'This browser has a push subscription.':'Not enabled on this device.';}).catch(e=>status.textContent='Service worker setup failed: '+e.message);}
 async function saveTravelerPreferences(event){event.preventDefault();const form=event.currentTarget;const values=name=>[...form.querySelectorAll('input[name="'+name+'"]:checked')].map(el=>el.value);const payload={user_id:currentUser.id,preferred_countries:['Colombia'],preferred_cities:values('cities'),accommodation_types:values('types'),booking_platforms:values('platforms'),email_notifications:document.getElementById('emailNotifications').checked,updated_at:new Date().toISOString()};const {error}=await supabaseClient.from('traveler_preferences').upsert(payload,{onConflict:'user_id'});if(error){dashboardStatus(error.message,true);return;}dashboardStatus('Your preferences are saved to your account.');}
 document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('toolsPanel').hidden=true;document.getElementById('dashboardPanel').hidden=false;loadDashboardTab(b.dataset.dashboardTab);}));
-document.getElementById('dashboardButton').addEventListener('click',()=>{document.getElementById('travelerTools').scrollIntoView({behavior:'smooth',block:'start'});openDashboard();});
+
 document.getElementById('openDashboardFromAccount').addEventListener('click',()=>{accountDialog.close();document.getElementById('travelerTools').scrollIntoView({behavior:'smooth',block:'start'});openDashboard();});
 
 
@@ -484,7 +484,7 @@ function renderTool(name=activeTool){
  toolPanel.querySelectorAll('[data-tool-action]').forEach(b=>b.addEventListener('click',()=>{const [act,ix]=b.dataset.toolAction.split('-');const key=act==='delete'?(ix==='trip'?'planner':ix==='stamp'?'passport':'reminders'):'';if(key){const arr=cggToolStore.read(key);arr.splice(Number(b.dataset.toolAction.split('-').pop()),1);cggToolStore.write(key,arr);renderTool(name);}}));
  toolPanel.querySelectorAll('[data-map-city]').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.mapCity,box=toolPanel.querySelector('.tools-map'),ext=document.getElementById('toolMapExternal');const maps={ 'Santa Marta':{bbox:'-74.25%2C11.15%2C-74.12%2C11.30',marker:'11.2408%2C-74.1990'},'Tunja':{bbox:'-73.40%2C5.50%2C-73.30%2C5.60',marker:'5.5353%2C-73.3678'},'Colombia':{bbox:'-79%2C-4%2C-66%2C13',marker:'4.5709%2C-74.2973'}};const m=maps[c];box.src='https://www.openstreetmap.org/export/embed.html?bbox='+m.bbox+'&layer=mapnik&marker='+m.marker;ext.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(c==='Colombia'?'Colombia':c+', Colombia');ext.textContent='Open '+c+' in Google Maps ↗';}));
  toolPanel.querySelector('[data-review-scroll]')?.addEventListener('click',()=>document.getElementById('discover').scrollIntoView({behavior:'smooth'}));
- toolPanel.querySelector('[data-review-dashboard]')?.addEventListener('click',()=>{if(typeof openDashboard==='function')openDashboard();else document.getElementById('dashboardButton').click();});
+ toolPanel.querySelector('[data-review-dashboard]')?.addEventListener('click',()=>{document.getElementById('travelerTools').scrollIntoView({behavior:'smooth',block:'start'});if(typeof openDashboard==='function')openDashboard();});
 }
 document.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>renderTool(b.dataset.tool)));
 renderTool('planner');
