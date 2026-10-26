@@ -16,18 +16,52 @@
 <div class="toolbar"><div class="chips"><button class="chip active" data-filter="all">All stays</button><button class="chip" data-filter="Boutique hotel">Boutique hotels</button><button class="chip" data-filter="Hostel">Hostels</button><button class="chip" data-filter="Long-stay base">Long-stay bases</button></div><span class="count" id="count" aria-live="polite"></span></div>
 <section class="grid" id="grid" aria-label="Stay listings"></section><p class="note">Preview notice: names, descriptions and photos below are sample content used to build the directory experience. They are not endorsements, verified business profiles, availability, prices or booking offers.</p></main>
 <footer class="footer"><div class="wrap"><span>© <span id="year"></span> StayLatin · Find your place in Latin America.</span><span><a href="index.html">Home</a> · <a href="traveler.html">Traveler accounts</a> · <a href="index.html#business">List your property</a></span></div></footer>
+<script src="staylatin-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const listings=[
-{id:1,name:"Casa de Patio",city:"Cartagena",country:"Colombia",type:"Boutique hotel",mood:"Culture",tag:"Character & culture",desc:"A courtyard-inspired sample stay for travelers drawn to architecture, history and walkable old-town streets.",img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80"},
-{id:2,name:"Selva Social House",city:"Medellín",country:"Colombia",type:"Hostel",mood:"Culture",tag:"Meet & explore",desc:"A social-style sample listing imagined for meeting other travelers and finding neighborhood cafés.",img:"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1000&q=80"},
-{id:3,name:"The Slow House",city:"Oaxaca",country:"Mexico",type:"Long-stay base",mood:"Work",tag:"Work & settle in",desc:"A sample long-stay concept for remote workers who want a comfortable routine and a rich local food scene.",img:"https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1000&q=80"},
-{id:4,name:"Casa Brisa",city:"Santa Marta",country:"Colombia",type:"Boutique hotel",mood:"Nature",tag:"Coast & nature",desc:"A sample boutique stay concept for slow mornings, coastal air and easy access to outdoor adventures.",img:"https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1000&q=80"},
-{id:5,name:"Patio de Viajeros",city:"Antigua",country:"Guatemala",type:"Hostel",mood:"Culture",tag:"Community",desc:"A sample guesthouse concept for shared stories, colorful streets and exploring the highlands at an easy pace.",img:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1000&q=80"},
-{id:6,name:"Andes Work Lodge",city:"Cusco",country:"Peru",type:"Long-stay base",mood:"Work",tag:"Longer journeys",desc:"A sample long-stay concept for travelers balancing laptop time with history, mountain air and weekend escapes.",img:"https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1000&q=80"}
-];
-let filter="all";let saved=[];try{saved=JSON.parse(localStorage.getItem("staylatin-saved")||"[]")}catch(e){}
-const grid=document.getElementById("grid");const q=document.getElementById("q"),type=document.getElementById("type"),mood=document.getElementById("mood");
-function safe(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function render(){let term=q.value.trim().toLowerCase();let rows=listings.filter(x=>(filter==="all"||x.type===filter)&&(type.value==="all"||x.type===type.value)&&(mood.value==="all"||x.mood===mood.value)&&(!term||(x.name+" "+x.city+" "+x.country+" "+x.type).toLowerCase().includes(term)));document.getElementById("count").textContent=rows.length+" sample "+(rows.length===1?"stay":"stays");grid.innerHTML=rows.length?rows.map(x=>'<article class="card"><div class="photo" style="background-image:url(\''+x.img+'\')"><span class="tag">'+safe(x.tag)+'</span><button class="save '+(saved.includes(x.id)?"on":"")+'" data-save="'+x.id+'" aria-label="Save '+safe(x.name)+'">'+(saved.includes(x.id)?"♥":"♡")+'</button></div><div class="body"><div class="loc">'+safe(x.city)+", "+safe(x.country)+'</div><h2>'+safe(x.name)+'</h2><p>'+safe(x.desc)+'</p><div class="meta"><span class="kind">'+safe(x.type)+'</span><a class="details" href="index.html#business">Listing details ↗</a></div></div></article>').join(""):'<div class="empty"><strong>No matching stays yet.</strong><br>Try a broader destination or select “All stay styles.”</div>';grid.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>{let id=Number(b.dataset.save);saved=saved.includes(id)?saved.filter(x=>x!==id):saved.concat(id);try{localStorage.setItem("staylatin-saved",JSON.stringify(saved))}catch(e){}render()}))}
-document.getElementById("search").addEventListener("submit",e=>{e.preventDefault();render()});[q,type,mood].forEach(el=>el.addEventListener(el===q?"input":"change",render));document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;type.value="all";document.querySelectorAll("[data-filter]").forEach(c=>c.classList.toggle("active",c===b));render()}));document.getElementById("year").textContent=new Date().getFullYear();render();
+let filter="all", saved=[], listings=[], client=null, currentUser=null, loading=true;
+const grid=document.getElementById("grid"),q=document.getElementById("q"),type=document.getElementById("type"),mood=document.getElementById("mood");
+const typeLabels={boutique_hotel:"Boutique hotel",posada:"Posada",hostel:"Hostel",long_stay:"Long-stay base",serviced_apartment:"Serviced apartment",guesthouse_bnb:"Guesthouse / B&B"};
+const images=["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1000&q=80","https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1000&q=80"];
+function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function moodFor(x){if(["hostel","guesthouse_bnb"].includes(x.business_type))return "Culture";if(["long_stay","serviced_apartment"].includes(x.business_type))return "Work";return "Nature"}
+function imageFor(x,i){return x.cover_url||images[i%images.length]}
+function render(){
+ const term=q.value.trim().toLowerCase();
+ const rows=listings.filter(x=> (filter==="all"||(typeLabels[x.business_type]||x.business_type)===filter) && (type.value==="all"||x.business_type===type.value) && (mood.value==="all"||moodFor(x)===mood.value) && (!term||(x.name+" "+x.city+" "+x.country+" "+(typeLabels[x.business_type]||x.business_type)).toLowerCase().includes(term)));
+ document.getElementById("count").textContent=loading?"Loading published stays…":rows.length+" "+(rows.length===1?"stay":"stays");
+ if(loading){grid.innerHTML='<div class="empty"><strong>Loading the StayLatin directory…</strong><br>Checking currently published listings.</div>';return}
+ grid.innerHTML=rows.length?rows.map((x,i)=>'<article class="card"><div class="photo" style="background-image:url(\''+safe(imageFor(x,i))+'\')"><span class="tag">Published listing</span><button class="save '+(saved.includes(x.id)?"on":"")+'" data-save="'+safe(x.id)+'" aria-label="Save '+safe(x.name)+'" title="'+(currentUser?"Save this stay":"Sign in to save this stay")+'">'+(saved.includes(x.id)?"♥":"♡")+'</button></div><div class="body"><div class="loc">'+safe(x.city)+", "+safe(x.country)+'</div><h2>'+safe(x.name)+'</h2><p>'+safe(x.description||"Explore this stay in "+x.city+".")+'</p><div class="meta"><span class="kind">'+safe(typeLabels[x.business_type]||x.business_type)+'</span>'+(x.official_website?'<a class="details" href="'+safe(x.official_website)+'" target="_blank" rel="noopener noreferrer">Official website ↗</a>':'<span class="details">Stay details</span>')+'</div></div></article>').join(""):'<div class="empty"><strong>'+(listings.length?"No matching published stays.":"No published stays yet.")+'</strong><br>'+(listings.length?'Try a broader destination or select “All stay styles.”':'New business listings will appear here after they are reviewed and published. Sample concepts are not shown as real properties.')+'</div>';
+ grid.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>toggleFavorite(b.dataset.save)));
+}
+async function toggleFavorite(id){
+ if(!currentUser){location.href="traveler.html";return}
+ const wasSaved=saved.includes(id);
+ const button=grid.querySelector('[data-save="'+CSS.escape(id)+'"]');
+ if(button)button.disabled=true;
+ try{
+   if(wasSaved){const {error}=await client.from("staylatin_favorites").delete().eq("user_id",currentUser.id).eq("business_id",id);if(error)throw error;saved=saved.filter(x=>x!==id)}
+   else{const {error}=await client.from("staylatin_favorites").insert({user_id:currentUser.id,business_id:id});if(error)throw error;saved=[...saved,id]}
+   render();
+ }catch(err){alert("Your favorite could not be saved. Please sign in again and retry.");if(button)button.disabled=false}
+}
+async function init(){
+ document.getElementById("year").textContent=new Date().getFullYear();
+ const cfg=window.STAYLATIN_SUPABASE_CONFIG;
+ if(!cfg||!window.supabase){loading=false;render();grid.innerHTML='<div class="empty"><strong>Directory connection needed.</strong><br>StayLatin is not connected to its published-listings database yet.</div>';return}
+ try{
+  client=window.supabase.createClient(cfg.url,cfg.anonKey);
+  const {data:sessionData,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;
+  currentUser=sessionData.session?.user||null;
+  if(currentUser){const fav=await client.from("staylatin_favorites").select("business_id").eq("user_id",currentUser.id);if(fav.error)throw fav.error;saved=(fav.data||[]).map(r=>r.business_id)}
+  const {data,error}=await client.from("staylatin_businesses").select("id,name,slug,business_type,description,country,city,official_website").eq("listing_status","published").order("name");
+  if(error)throw error;listings=(data||[]).map(x=>({...x,cover_url:null}));
+ }catch(err){loading=false;render();grid.innerHTML='<div class="empty"><strong>Could not load published stays.</strong><br>Please try again shortly.</div>';return}
+ loading=false;render();
+ client.auth.onAuthStateChange((event,session)=>{currentUser=session?.user||null;if(!currentUser)saved=[];else client.from("staylatin_favorites").select("business_id").eq("user_id",currentUser.id).then(({data,error})=>{if(!error){saved=(data||[]).map(r=>r.business_id);render()}});render()});
+}
+document.getElementById("search").addEventListener("submit",e=>{e.preventDefault();render()});
+[q,type,mood].forEach(el=>el.addEventListener(el===q?"input":"change",render));
+document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;type.value="all";document.querySelectorAll("[data-filter]").forEach(c=>c.classList.toggle("active",c===b));render()}));
+init();
 </script></body></html>
