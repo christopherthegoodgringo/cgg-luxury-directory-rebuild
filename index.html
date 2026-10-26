@@ -133,7 +133,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
    <span class="mark" aria-hidden="true">C</span>
    <span><span class="brand-name">CGG Luxury Directory<small>™</small></span><span class="brand-sub">The Good Gringo Collection</span></span>
   </a>
-  <div class="nav-actions"><div class="nav-note">Thoughtfully selected · Colombia</div><button class="btn btn-outline dashboard-open" id="dashboardButton" type="button">Traveler Dashboard</button><button class="btn btn-gold account-open" id="accountButton" type="button">Free Traveler Account</button></div>
+  <div class="nav-actions"><div class="nav-note">Thoughtfully selected · Colombia</div><button class="btn btn-outline dashboard-open" id="dashboardButton" type="button">Travel Companion</button><button class="btn btn-gold account-open" id="accountButton" type="button">Free Traveler Account</button></div>
  </div>
 </header>
 <section class="hero">
@@ -177,6 +177,23 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
    <button type="button" data-tool="reminders" aria-pressed="false">Trip Reminders</button>
   </nav>
   <div id="toolsPanel" class="tools-panel" aria-live="polite"></div>
+ 
+  <div class="traveler-account-tools" id="travelerAccountTools" aria-labelledby="dashboardTitle">
+   <div class="tools-heading"><div class="eyebrow">Your account · synced traveler tools</div><h2 id="dashboardTitle">My CGG Account Tools</h2><p class="tools-help">Favorites, saved trips, reviews, chat, notifications and preferences are all together here. Sign in to access account-synced features.</p></div>
+   <nav class="dashboard-nav" aria-label="Traveler dashboard sections">
+   <button class="dashboard-tab" type="button" data-dashboard-tab="favorites" aria-selected="true">♡ Favorites</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="shared" aria-selected="false">↗ Shared</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="trips" aria-selected="false">My Trips</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="recent" aria-selected="false">Recently Viewed</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="reviews" aria-selected="false">My Reviews</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="chat" aria-selected="false">Traveler Chat</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="notifications" aria-selected="false">Notifications</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="preferences" aria-selected="false">Preferences</button>
+  </nav>
+   <div id="dashboardStatus" class="dashboard-status" role="status" aria-live="polite"></div>
+  <section id="dashboardPanel" class="dashboard-panel" aria-live="polite"><div class="dashboard-empty">Loading your traveler dashboard…</div></section>
+  
+  </div>
  </section>
 
 </main>
@@ -188,22 +205,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 <dialog id="accountDialog" aria-labelledby="accountTitle">
  <div class="modal-head"><div class="eyebrow">Free traveler membership</div><h2 id="accountTitle">Your travel favorites</h2></div>
  <div class="modal-content">
-  <div id="accountSignedIn" hidden><div class="account-user"><p class="account-message">Signed in as <strong id="accountName"></strong></p><p class="account-message" id="accountEmail"></p></div><p class="account-message" style="margin-top:14px">Your saved hearts are connected to your account and can follow you when you sign in on another device.</p><div class="account-actions"><button class="btn btn-gold" id="openDashboardFromAccount" type="button">Open Traveler Dashboard</button><button class="btn btn-outline" id="accountSignOut" type="button">Sign out</button><button class="btn btn-outline" id="accountCloseSignedIn" type="button">Close</button></div></div>
-  <form class="account-form" id="accountForm">
-   <p class="account-message" id="accountIntro">Create a free account to save your favorite places across devices.</p>
-   <div class="field" id="firstNameField"><label for="accountFirstName">First name</label><input id="accountFirstName" name="firstName" autocomplete="given-name" maxlength="80" required></div>
-   <div class="field" id="lastNameField"><label for="accountLastName">Last name</label><input id="accountLastName" name="lastName" autocomplete="family-name" maxlength="80" required></div>
-   <div class="field"><label for="accountEmailInput">Email address</label><input id="accountEmailInput" name="email" type="email" autocomplete="email" maxlength="254" required></div>
-   <div class="field"><label for="accountPassword">Password</label><input id="accountPassword" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
-   <p class="account-message" id="accountMessage" aria-live="polite"></p>
-   <div class="account-actions"><button class="btn btn-gold" id="accountSubmit" type="submit">Create free account</button><button class="btn btn-outline" id="accountCancel" type="button">Close</button></div>
-   <button class="account-switch" id="accountModeToggle" type="button">Already have an account? Sign in</button>
-  </form>
- </div>
-</dialog>
-
-<dialog id="dashboardDialog" aria-labelledby="dashboardTitle">
- <div class="modal-head"><div class="eyebrow">Private traveler space</div><h2 id="dashboardTitle">Traveler Dashboard</h2></div>
+  <div id="accountSignedIn" hidden><div class="account-user"><p class="account-message">Signed in as <strong id="accountName"></strong></p><p class="account-message" id="accountEmail"></p></div><p class="account-message" style="margin-top:14px">Your saved hearts are connected to your account and can fdiv class="modal-head"><div class="eyebrow">Private traveler space</div><h2 id="dashboardTitle">Traveler Dashboard</h2></div>
  <div class="modal-content">
   <p class="dashboard-note">Your favorites, trip ideas, shared properties, and preferences — synced to your CGG account.</p>
   <nav class="dashboard-nav" aria-label="Traveler dashboard sections">
@@ -218,7 +220,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
   </nav>
   <div id="dashboardStatus" class="dashboard-status" role="status" aria-live="polite"></div>
   <section id="dashboardPanel" class="dashboard-panel" aria-live="polite"><div class="dashboard-empty">Loading your traveler dashboard…</div></section>
-  <div class="modal-actions"><button class="btn btn-outline" id="closeDashboard" type="button">Close dashboard</button></div>
+  
  </div>
 </dialog>
 
@@ -327,7 +329,7 @@ document.getElementById('accountForm').addEventListener('submit',async event=>{e
 if(supabaseClient){supabaseClient.auth.getSession().then(async({data})=>{if(data.session?.user){try{await syncAccountData(data.session.user);}catch(error){console.error('Traveler account sync failed',error);currentUser=data.session.user;updateAccountButton();}}});supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;updateAccountButton();render();}else if(session?.user){currentUser=session.user;updateAccountButton();setTimeout(()=>syncAccountData(session.user).catch(error=>console.error('Traveler account sync failed',error)),0);}});}
 
 
-const dashboardDialog=document.getElementById('dashboardDialog');
+const dashboardDialog={get open(){return true;},showModal(){document.getElementById('travelerAccountTools')?.scrollIntoView({behavior:'smooth',block:'start'});},close(){document.getElementById('travelerTools')?.scrollIntoView({behavior:'smooth',block:'start'});}};
 let dashboardTab='favorites',dashboardCollections=[];
 function dashboardStatus(message='',isError=false){const el=document.getElementById('dashboardStatus');if(!el)return;el.textContent=message;el.classList.toggle('error',!!isError);}
 function dashboardEscape(v){return esc(v==null?'':String(v));}
@@ -335,7 +337,7 @@ function updateDashboardButton(){const b=document.getElementById('dashboardButto
 async function trackTravelerActivity(kind,x){if(!currentUser||!supabaseClient||!x)return;try{await supabaseClient.from('traveler_activity').insert({user_id:currentUser.id,activity_type:kind,listing_id:x.id,listing_name:x.name,listing_url:location.href.split('#')[0]+'#discover',city:x.city,country:x.country,photo_url:x.image,metadata:{source:'directory'}});}catch(error){console.warn('Traveler activity was not recorded',error);}}
 async function submitTravelerReview(event){event.preventDefault();if(!currentUser||!supabaseClient){dashboardStatus('Please sign in to publish a review.',true);return;}const slug=document.getElementById('reviewListing').value,x=listings.find(item=>item.id===slug),rating=Number(document.getElementById('reviewRating').value),reviewText=document.getElementById('reviewText').value.trim();if(!x||rating<1||rating>5||reviewText.length<5||reviewText.length>500){dashboardStatus('Choose a property, a 1–5 star rating, and a review between 5 and 500 characters.',true);return;}const btn=event.submitter; if(btn){btn.disabled=true;btn.textContent='Publishing…';}try{const {error}=await supabaseClient.from('traveler_reviews').upsert({user_id:currentUser.id,listing_slug:x.id,listing_name:x.name,city:x.city,country:x.country,rating,review_text:reviewText,status:'published',updated_at:new Date().toISOString()},{onConflict:'user_id,listing_slug'});if(error)throw error;reviewSelectedListing=x.id;dashboardStatus('Your review for '+x.name+' has been published.');await loadPublicReviews();await loadDashboardTab('reviews');}catch(error){dashboardStatus('Could not publish your review: '+(error.message||'Please try again.'),true);if(btn){btn.disabled=false;btn.textContent='Publish review';}}}
 function dashboardListingRow(row){return '<div class="dashboard-row">'+(row.photo_url?'<img src="'+dashboardEscape(row.photo_url)+'" alt="" loading="lazy">':'')+'<div class="dashboard-row-main"><strong>'+dashboardEscape(row.listing_name)+'</strong><span>'+dashboardEscape([row.city,row.country].filter(Boolean).join(', '))+'</span></div>'+(row.listing_url?'<a class="btn btn-outline" href="'+dashboardEscape(String(row.listing_url).split('#')[0]+'#discover')+'" target="_blank" rel="noopener noreferrer">View</a>':'')+'</div>';}
-let travelerNotificationChannel=null; function showTravelerToast(title,body){const toast=document.getElementById('travelerToast');if(!toast)return;document.getElementById('travelerToastTitle').textContent=title||'CGG Traveler Alert';document.getElementById('travelerToastBody').textContent=body||'You have a new traveler update.';toast.style.display='block';} document.getElementById('travelerToastDismiss')?.addEventListener('click',()=>{document.getElementById('travelerToast').style.display='none';});document.getElementById('travelerToastOpen')?.addEventListener('click',()=>{document.getElementById('travelerToast').style.display='none';openDashboard('notifications');}); async function openDashboard(tab='favorites',listingId=''){reviewSelectedListing=listingId||reviewSelectedListing;if(!currentUser){showAccountDialog();accountNotice('Please sign in to open your private Traveler Dashboard.');return;}dashboardTab=tab;document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.dashboardTab===tab)));document.getElementById('dashboardTitle').textContent='Traveler Dashboard';if(!dashboardDialog.open)dashboardDialog.showModal();await loadDashboardTab(tab);if(supabaseClient&&!travelerNotificationChannel){travelerNotificationChannel=supabaseClient.channel('traveler-notifications-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'traveler_notifications',filter:'user_id=eq.'+currentUser.id},payload=>{const n=payload.new||{};showTravelerToast(n.title||'CGG Traveler Alert',n.body||'A new update is available in your Traveler Dashboard.');if(dashboardDialog.open&&dashboardTab==='notifications')loadDashboardTab('notifications');else if(dashboardDialog.open)dashboardStatus('You have a new traveler notification.');}).subscribe();}}
+let travelerNotificationChannel=null; function showTravelerToast(title,body){const toast=document.getElementById('travelerToast');if(!toast)return;document.getElementById('travelerToastTitle').textContent=title||'CGG Traveler Alert';document.getElementById('travelerToastBody').textContent=body||'You have a new traveler update.';toast.style.display='block';} document.getElementById('travelerToastDismiss')?.addEventListener('click',()=>{document.getElementById('travelerToast').style.display='none';});document.getElementById('travelerToastOpen')?.addEventListener('click',()=>{document.getElementById('travelerToast').style.display='none';openDashboard('notifications');}); async function openDashboard(tab='favorites',listingId=''){reviewSelectedListing=listingId||reviewSelectedListing;if(!currentUser){showAccountDialog();accountNotice('Please sign in to open your private Traveler Dashboard.');return;}dashboardTab=tab;document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.dashboardTab===tab)));document.getElementById('dashboardTitle').textContent='Traveler Dashboard';dashboardDialog.showModal();await loadDashboardTab(tab);if(supabaseClient&&!travelerNotificationChannel){travelerNotificationChannel=supabaseClient.channel('traveler-notifications-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'traveler_notifications',filter:'user_id=eq.'+currentUser.id},payload=>{const n=payload.new||{};showTravelerToast(n.title||'CGG Traveler Alert',n.body||'A new update is available in your Traveler Dashboard.');if(dashboardTab==='notifications')loadDashboardTab('notifications');else dashboardStatus('You have a new traveler notification.');}).subscribe();}}
 async function loadDashboardTab(tab){dashboardTab=tab;document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.dashboardTab===tab)));const panel=document.getElementById('dashboardPanel');panel.innerHTML='<div class="dashboard-empty">Loading…</div>';dashboardStatus('');if(!currentUser||!supabaseClient){panel.innerHTML='<div class="dashboard-empty">Sign in to load your saved traveler data.</div>';return;}
 try{
  if(tab==='favorites'){const {data,error}=await supabaseClient.from('traveler_saved_places').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});if(error)throw error;panel.innerHTML=(data&&data.length)?'<div class="dashboard-list">'+data.map(dashboardListingRow).join('')+'</div>':'<div class="dashboard-empty">No favorites yet. Tap a heart on any property to save it here.</div>';}
@@ -370,7 +372,7 @@ async function renderTravelerChat(panel){
   if(!chatRealtimeChannel){
    chatRealtimeChannel=supabaseClient.channel('cgg-traveler-chat-'+currentUser.id)
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'traveler_chat_messages'},payload=>{
-      if(!dashboardDialog.open||dashboardTab!=='chat')return;
+      if(dashboardTab!=='chat')return;
       if(activeChatView==='rooms'||activeChatView==='city'||activeChatView==='private')renderChatView();
     }).subscribe();
   }
@@ -440,9 +442,9 @@ async function disableTravelerPush(){const status=document.getElementById('pushS
 function initTravelerPushControls(){const enable=document.getElementById('enablePush'),disable=document.getElementById('disablePush');if(enable)enable.addEventListener('click',enableTravelerPush);if(disable)disable.addEventListener('click',disableTravelerPush);const status=document.getElementById('pushStatus');if(!status)return;if(!('serviceWorker'in navigator)||!('PushManager'in window)){status.textContent='This browser does not support web push notifications.';if(enable)enable.disabled=true;if(disable)disable.disabled=true;return;}navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(async reg=>{const sub=await reg.pushManager.getSubscription();status.textContent=sub?'This browser has a push subscription.':'Not enabled on this device.';}).catch(e=>status.textContent='Service worker setup failed: '+e.message);}
 async function saveTravelerPreferences(event){event.preventDefault();const form=event.currentTarget;const values=name=>[...form.querySelectorAll('input[name="'+name+'"]:checked')].map(el=>el.value);const payload={user_id:currentUser.id,preferred_countries:['Colombia'],preferred_cities:values('cities'),accommodation_types:values('types'),booking_platforms:values('platforms'),email_notifications:document.getElementById('emailNotifications').checked,updated_at:new Date().toISOString()};const {error}=await supabaseClient.from('traveler_preferences').upsert(payload,{onConflict:'user_id'});if(error){dashboardStatus(error.message,true);return;}dashboardStatus('Your preferences are saved to your account.');}
 document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>loadDashboardTab(b.dataset.dashboardTab)));
-document.getElementById('dashboardButton').addEventListener('click',()=>openDashboard());
-document.getElementById('openDashboardFromAccount').addEventListener('click',()=>{accountDialog.close();openDashboard();});
-document.getElementById('closeDashboard').addEventListener('click',()=>dashboardDialog.close());dashboardDialog.addEventListener('close',()=>{});
+document.getElementById('dashboardButton').addEventListener('click',()=>{document.getElementById('travelerTools').scrollIntoView({behavior:'smooth',block:'start'});openDashboard();});
+document.getElementById('openDashboardFromAccount').addEventListener('click',()=>{accountDialog.close();document.getElementById('travelerTools').scrollIntoView({behavior:'smooth',block:'start'});openDashboard();});
+
 
 function openDetails(id){currentListing=listings.find(x=>x.id===id);if(!currentListing)return;trackTravelerActivity('view',currentListing);document.getElementById('modalTitle').textContent=currentListing.name;document.getElementById('modalLocation').textContent=currentListing.city+', '+currentListing.country;document.getElementById('modalDescription').textContent=currentListing.description;document.getElementById('modalCategory').textContent=currentListing.type+' · '+currentListing.tier;dialog.showModal();}
 function reset(){country.value='all';city.value='all';type.value='all';search.value='';activeCategory='all';showFavorites=false;document.querySelectorAll('.cat-btn[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category==='all')));render();}
