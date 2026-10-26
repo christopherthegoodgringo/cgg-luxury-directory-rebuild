@@ -14,7 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.getElementById("year").textContent=new Date().getFullYear();
-const form=document.getElementById("businessForm"),box=document.getElementById("status"),submit=form.querySelector('button[type="submit]");
+const form=document.getElementById("businessForm"),box=document.getElementById("status"),submit=form.querySelector('button[type="submit"]');
 let client=null;
 function showStatus(message,kind="info"){box.className="status show";box.style.background=kind==="error"?"#f5e5e0":kind==="success"?"#e3efe5":"#f3eee2";box.style.color=kind==="error"?"#984b39":kind==="success"?"#2b6545":"#665b42";box.textContent=message;}
 function getClient(){const cfg=window.STAYLATIN_SUPABASE_CONFIG;if(!cfg||!window.supabase)throw new Error("StayLatin's account service is not configured on this page.");return client||(client=window.supabase.createClient(cfg.url,cfg.anonKey));}
