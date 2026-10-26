@@ -1,0 +1,1 @@
+alter table public.traveler_chat_reports add column if not exists admin_notes text not null default '';
