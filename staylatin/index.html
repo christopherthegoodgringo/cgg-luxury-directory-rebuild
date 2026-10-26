@@ -216,7 +216,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .card-actions .booking-buttons.multiple{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row}
 .card-actions .booking-buttons .staylatin-booking{width:100%;min-width:0;min-height:42px;padding:10px 7px;font-size:11px;line-height:1.2;white-space:normal}
 /* Airbnb uses the same standard booking-button color as Expedia/direct. */
-.card-actions .hostelworld-booking{background:linear-gradient(135deg,#f47721,#ce4815);border-color:#ce4815;color:#fff!important}
+/* Hostelworld inherits the same standard green booking-button style as direct booking. */
 @media(max-width:560px){.card-actions .booking-buttons.multiple{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -296,9 +296,9 @@ function render(){
   if(s.airbnb)links.push(link(s.airbnb,"Book Airbnb","airbnb-booking"));
   if(s.trip)links.push(link(s.trip,"Book Trip.com","trip-booking"));
   if(s.expedia)links.push(link(s.expedia,"Book Expedia"));
-  if(s.website)links.push(link(s.website,s.bookingLabel==="View hostel listing"?"Book direct":(s.bookingLabel||"Book direct")));
-  // Preserve hostel-specific inventory as an extra option after the four preferred buttons.
+  // Always place Hostelworld immediately before the direct property website button when both exist.
   if(s.hostelworld)links.push(link(s.hostelworld,"Book Hostelworld","hostelworld-booking"));
+  if(s.website)links.push(link(s.website,s.bookingLabel==="View hostel listing"?"Book direct":(s.bookingLabel||"Book direct")));
   if(!links.length)links.push('<span class="booking-note">Contact the property directly for booking information.</span>');
   const layout=links.length>1?"multiple":"single";
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
