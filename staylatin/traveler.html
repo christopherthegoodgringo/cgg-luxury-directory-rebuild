@@ -167,7 +167,7 @@ function renderTrips(){
  list.querySelectorAll("[data-delete-trip]").forEach(b=>b.addEventListener("click",()=>{if(!confirm("Delete this trip and its notes?"))return;writeTrips(readTrips().filter(t=>String(t.id)!==b.dataset.deleteTrip));renderTrips()}));
  list.querySelectorAll("[data-save-trip-note]").forEach(b=>b.addEventListener("click",()=>{const area=list.querySelector('[data-trip-note="'+b.dataset.saveTripNote+'"]');const rows=readTrips();const item=rows.find(t=>String(t.id)===b.dataset.saveTripNote);if(item&&area){item.notes=area.value;writeTrips(rows);const old=b.textContent;b.textContent="Saved ✓";setTimeout(()=>{b.textContent=old},1400);}}));
 }
-document.getElementById("tripPlannerForm").addEventListener("submit",e=>{e.preventDefault();if(!activeTripUserId){document.getElementById("tripPlannerStatus").textContent="Please sign in to create a personal trip plan.";return}const title=document.getElementById("tripTitle").value.trim(),destination=document.getElementById("tripDestination").value.trim(),start=document.getElementById("tripStart").value,end=document.getElementById("tripEnd").value;if(start&&end&&end<start){document.getElementById("tripPlannerStatus").textContent="The end date must be on or after the start date.";return}const rows=readTrips();rows.unshift({id:String(Date.now())+"-"+Math.random().toString(36).slice(2,8),title,destination,start,end,notes:document.getElementById("tripNotes").value.trim(),createdAt:new Date().toISOString()});if(writeTrips(rows)){e.target.reset();renderTrips();document.getElementById("tripPlannerStatus").textContent="Trip saved. You can update its notes below whenever you like."}});
+document.getElementById("tripPlannerForm")?.addEventListener("submit",e=>{e.preventDefault();if(!activeTripUserId){document.getElementById("tripPlannerStatus").textContent="Please sign in to create a personal trip plan.";return}const title=document.getElementById("tripTitle").value.trim(),destination=document.getElementById("tripDestination").value.trim(),start=document.getElementById("tripStart").value,end=document.getElementById("tripEnd").value;if(start&&end&&end<start){document.getElementById("tripPlannerStatus").textContent="The end date must be on or after the start date.";return}const rows=readTrips();rows.unshift({id:String(Date.now())+"-"+Math.random().toString(36).slice(2,8),title,destination,start,end,notes:document.getElementById("tripNotes").value.trim(),createdAt:new Date().toISOString()});if(writeTrips(rows)){e.target.reset();renderTrips();document.getElementById("tripPlannerStatus").textContent="Trip saved. You can update its notes below whenever you like."}});
 const introFields = {
  display_name:["introDisplayName","introShowName"], introduction:["introText","introShowText"],
  home_country:["introHomeCountry","introShowCountry"], favorite_destinations:["introDestinations","introShowDestinations"],
@@ -228,7 +228,7 @@ function showTravelerDashboard(session){
   document.querySelector(".traveler-auth").hidden=true;signin.closest(".tabs").hidden=true;form.hidden=true;document.getElementById("privacyNote").hidden=true;document.getElementById("travelerDashboard").hidden=false;const freeBenefits=document.querySelector("#travelerDashboard .member-benefits");if(freeBenefits){freeBenefits.hidden=false;freeBenefits.style.display="block";freeBenefits.style.visibility="visible";}
   resetPassword.hidden=true;resendConfirmation.hidden=true;signout.hidden=true;
   document.getElementById("dashboardGreeting").textContent="Welcome back. Where will you go next?";
-  document.getElementById("savedStayCount").textContent="…";
+  const savedCountEl=document.getElementById("savedStayCount");if(savedCountEl)savedCountEl.textContent="…";
   loadDashboardStays(session);
 }
 const dashResults=document.getElementById("dashboardStayResults");
@@ -272,21 +272,22 @@ async function toggleDashboardFavorite(id,button){
  try{
   if(dashSaved.includes(id)){const {error}=await client.from("staylatin_favorites").delete().eq("user_id",(await client.auth.getUser()).data.user.id).eq("business_id",id);if(error)throw error;dashSaved=dashSaved.filter(x=>x!==id)}
   else{const {data,error:userError}=await client.auth.getUser();if(userError)throw userError;if(!data.user)throw new Error("Please sign in again to save favorites.");const {error}=await client.from("staylatin_favorites").insert({user_id:data.user.id,business_id:id});if(error)throw error;dashSaved.push(id)}
-  document.getElementById("savedStayCount").textContent=String(dashSaved.length);renderDashboardStays();
+  const savedCountEl=document.getElementById("savedStayCount");if(savedCountEl)savedCountEl.textContent=String(dashSaved.length);renderDashboardStays();
  }catch(e){button.disabled=false;const note=document.createElement("div");note.className="status error";note.textContent="Could not update this favorite. Please refresh and try again.";dashResults.prepend(note)}
 }
 let chatSubscription=null;let currentTravelerSession=null;let chatBusy=false;
 const chatMessages=document.getElementById("chatMessages"),chatNotice=document.getElementById("chatNotice"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatMessage"),sendChat=document.getElementById("sendChat"),chatUnreadBadge=document.getElementById("chatUnreadBadge"),chatNewMessageAlert=document.getElementById("chatNewMessageAlert"),chatNotificationsToggle=document.getElementById("chatNotificationsToggle"),chatNotificationStatus=document.getElementById("chatNotificationStatus");
 let chatKnownLatestId=null,chatUnreadCount=0,chatInitialLoad=true;
 function chatUnreadKey(){return "staylatin-chat-unread-"+(currentTravelerSession&&currentTravelerSession.user?currentTravelerSession.user.id:"guest")}
-function renderChatUnread(){chatUnreadBadge.hidden=chatUnreadCount<1;chatUnreadBadge.textContent=chatUnreadCount?chatUnreadCount+" new":"";chatNewMessageAlert.hidden=chatUnreadCount<1;chatNewMessageAlert.textContent=chatUnreadCount?chatUnreadCount+" new chat message"+(chatUnreadCount===1?"":"s")+" — open the Traveler Lounge to catch up.":""}
+function renderChatUnread(){if(!chatUnreadBadge||!chatNewMessageAlert)return;chatUnreadBadge.hidden=chatUnreadCount<1;chatUnreadBadge.textContent=chatUnreadCount?chatUnreadCount+" new":"";chatNewMessageAlert.hidden=chatUnreadCount<1;chatNewMessageAlert.textContent=chatUnreadCount?chatUnreadCount+" new chat message"+(chatUnreadCount===1?"":"s")+" — open the Traveler Lounge to catch up.":""}
 function resetChatUnread(){chatUnreadCount=0;try{localStorage.setItem(chatUnreadKey(),"0")}catch(e){}renderChatUnread()}
-function updateChatNotificationLabel(){if(!("Notification"in window)){chatNotificationStatus.textContent="Browser notifications are not supported here.";chatNotificationsToggle.hidden=true;return}if(Notification.permission==="granted"){chatNotificationStatus.textContent="Browser notifications are enabled on this device.";chatNotificationsToggle.textContent="Notifications enabled";chatNotificationsToggle.disabled=true}else if(Notification.permission==="denied"){chatNotificationStatus.textContent="Notifications are blocked by your browser settings.";chatNotificationsToggle.textContent="Notifications blocked";chatNotificationsToggle.disabled=true}else{chatNotificationStatus.textContent="Optional browser alerts while this browser is open.";chatNotificationsToggle.textContent="Enable chat notifications";chatNotificationsToggle.disabled=false}}
-chatNotificationsToggle.addEventListener("click",async()=>{if(!("Notification"in window))return;try{const permission=await Notification.requestPermission();updateChatNotificationLabel();if(permission==="granted")chatNotificationStatus.textContent="Notifications enabled on this device while this browser is available."}catch(e){chatNotificationStatus.textContent="Could not enable browser notifications."}});
+function updateChatNotificationLabel(){if(!chatNotificationStatus||!chatNotificationsToggle)return;if(!("Notification"in window)){chatNotificationStatus.textContent="Browser notifications are not supported here.";chatNotificationsToggle.hidden=true;return}if(Notification.permission==="granted"){chatNotificationStatus.textContent="Browser notifications are enabled on this device.";chatNotificationsToggle.textContent="Notifications enabled";chatNotificationsToggle.disabled=true}else if(Notification.permission==="denied"){chatNotificationStatus.textContent="Notifications are blocked by your browser settings.";chatNotificationsToggle.textContent="Notifications blocked";chatNotificationsToggle.disabled=true}else{chatNotificationStatus.textContent="Optional browser alerts while this browser is open.";chatNotificationsToggle.textContent="Enable chat notifications";chatNotificationsToggle.disabled=false}}
+chatNotificationsToggle?.addEventListener("click",async()=>{if(!("Notification"in window))return;try{const permission=await Notification.requestPermission();updateChatNotificationLabel();if(permission==="granted")chatNotificationStatus.textContent="Notifications enabled on this device while this browser is available."}catch(e){chatNotificationStatus.textContent="Could not enable browser notifications."}});
 updateChatNotificationLabel();
 
-function setChatNotice(message,kind=""){chatNotice.className="status"+(kind?" "+kind:"");chatNotice.textContent=message;}
+function setChatNotice(message,kind=""){if(!chatNotice)return;chatNotice.className="status"+(kind?" "+kind:"");chatNotice.textContent=message;}
 async function loadTravelerChat(){
+ if(!chatMessages||!chatNotice)return;
  if(!client||!currentTravelerSession){setChatNotice("Sign in to join the Traveler Lounge.");chatMessages.innerHTML="";return;}
  setChatNotice("Loading recent messages…");
  try{
@@ -301,7 +302,7 @@ async function loadTravelerChat(){
   chatMessages.scrollTop=chatMessages.scrollHeight;setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
  }catch(e){chatMessages.innerHTML="";setChatNotice("Traveler chat is not available right now. Please refresh or try again later.","error");}
 }
-chatForm.addEventListener("submit",async e=>{
+chatForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(chatBusy)return;
  if(!client||!currentTravelerSession){setChatNotice("Please sign in again to send a message.","error");return;}
  const body=chatInput.value.trim();if(!body)return;
@@ -310,17 +311,17 @@ chatForm.addEventListener("submit",async e=>{
  catch(e){setChatNotice("Your message could not be sent. Please check your connection and try again.","error");}
  finally{chatBusy=false;sendChat.disabled=false;sendChat.textContent="Send message ↗";}
 });
-document.getElementById("refreshChat").addEventListener("click",loadTravelerChat);
-chatMessages.addEventListener("scroll",()=>{if(chatMessages.scrollTop+chatMessages.clientHeight>=chatMessages.scrollHeight-12)resetChatUnread()});
-document.getElementById("chatTitle").addEventListener("click",resetChatUnread);
-function connectTravelerChat(session){currentTravelerSession=session||null;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe();}
+document.getElementById("refreshChat")?.addEventListener("click",loadTravelerChat);
+chatMessages?.addEventListener("scroll",()=>{if(chatMessages.scrollTop+chatMessages.clientHeight>=chatMessages.scrollHeight-12)resetChatUnread()});
+document.getElementById("chatTitle")?.addEventListener("click",resetChatUnread);
+function connectTravelerChat(session){currentTravelerSession=session||null;if(!chatMessages||!chatNotice||!chatForm)return;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe();}
 async function loadDashboardStays(session){
  try{
   const {data:favs,error}=await client.from("staylatin_favorites").select("business_id").eq("user_id",session.user.id);
   if(error)throw error;
   dashSaved=(favs||[]).map(x=>x.business_id);
-  document.getElementById("savedStayCount").textContent=String(dashSaved.length);
- }catch(e){document.getElementById("savedStayCount").textContent="—";}
+  const savedCountEl=document.getElementById("savedStayCount");if(savedCountEl)savedCountEl.textContent=String(dashSaved.length);
+ }catch(e){const savedCountEl=document.getElementById("savedStayCount");if(savedCountEl)savedCountEl.textContent="—";}
 }
 document.getElementById("dashboardStaySearch")?.addEventListener("submit",e=>{e.preventDefault();renderDashboardStays()});
 document.getElementById("dashboardStayQuery")?.addEventListener("input",renderDashboardStays);
