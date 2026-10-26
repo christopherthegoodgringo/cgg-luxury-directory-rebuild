@@ -166,7 +166,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
  <section class="traveler-tools" id="travelerTools" aria-labelledby="toolsTitle">
   <div class="tools-heading"><div class="eyebrow">Beyond the directory</div><h2 id="toolsTitle">Your CGG travel companion</h2><p class="tools-help">Plan privately, keep your travel memories, explore local guidance and compare booking options. Create an account to sync your favorites and traveler features across devices.</p><div class="account-actions companion-account-actions"><button class="btn btn-gold account-open" id="accountButton" type="button">Create Free Account</button><button class="btn btn-outline" id="companionSignIn" type="button">Sign In</button><span class="account-status" id="companionAccountStatus" style="color:var(--muted)"></span></div></div>
   <div id="companionLocked" class="tools-panel companion-locked"><h3>Sign in to open your Travel Companion</h3><p>Your travel tools and account options will appear here after you sign in.</p><div class="account-actions"><button class="btn btn-gold" type="button" id="lockedCreateAccount">Create Free Account</button><button class="btn btn-outline" type="button" id="lockedSignIn">Sign In</button></div></div>
-   <nav class="tools-nav" aria-label="CGG Travel Companion tools">
+   <nav class="tools-nav" aria-label="CGG Travel Companion tools" hidden>
    <button type="button" data-tool="planner" aria-pressed="true">Quick Trip Planner · This device</button>
    <button type="button" data-tool="map" aria-pressed="false">Explore on a Map</button>
    <button type="button" data-tool="passport" aria-pressed="false">My Travel Passport</button>
@@ -182,8 +182,8 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
    <button class="dashboard-tab" type="button" data-dashboard-tab="notifications" aria-selected="false">Notifications</button>
    <button class="dashboard-tab" type="button" data-dashboard-tab="preferences" aria-selected="false">Account Preferences</button>
   </nav>
-  <div id="toolsPanel" class="tools-panel" aria-live="polite"></div>
-  <div id="dashboardStatus" class="dashboard-status" role="status" aria-live="polite"></div>
+  <div id="toolsPanel" class="tools-panel" aria-live="polite" hidden></div>
+  <div id="dashboardStatus" class="dashboard-status" role="status" aria-live="polite" hidden></div>
   <section id="dashboardPanel" class="dashboard-panel" aria-live="polite" hidden><div class="dashboard-empty">Sign in to access account-synced traveler features.</div></section>
  </section>
 
