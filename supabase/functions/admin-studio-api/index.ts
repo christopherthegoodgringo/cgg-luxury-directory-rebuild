@@ -65,7 +65,7 @@ Deno.serve(async (req: Request) => {
         admin.from("directory_listing_audit").select("id,listing_id,listing_slug,action,old_record,new_record,changed_at").order("changed_at", { ascending: false }).limit(100),
         admin.from("directory_listing_views").select("listing_slug,view_count,updated_at").order("view_count", { ascending: false }).limit(100),
         admin.from("traveler_reviews").select("id,listing_slug,listing_name,city,country,rating,review_text,status,created_at,updated_at").order("created_at", { ascending: false }).limit(300),
-        admin.from("traveler_chat_reports").select("id,reporter_id,message_id,reported_user_id,reason,details,status,created_at").order("created_at", { ascending: false }).limit(300),
+        admin.from("traveler_chat_reports").select("id,reporter_id,message_id,reported_user_id,reason,details,admin_notes,status,created_at").order("created_at", { ascending: false }).limit(300),
         admin.from("independent_associates").select("*").order("created_at", { ascending: false }).limit(1000),
         admin.from("associate_commissions").select("*").order("earned_at", { ascending: false }).limit(2000),
         admin.from("independent_associate_audit").select("*").order("created_at", { ascending: false }).limit(200),
@@ -270,6 +270,18 @@ Deno.serve(async (req: Request) => {
       const {data,error}=await admin.from("membership_transactions").update({status}).eq("id",id).select("*").single();if(error)throw error;return reply({ok:true,transaction:data});
     }
 
+
+    if (action === "update_traveler_review") {
+      const id=String(payload.id||""),changes=payload.changes;if(!id||!changes||typeof changes!=="object"||Array.isArray(changes))return reply({error:"Review id and editable fields required."},400);
+      const safe:Record<string,unknown>={updated_at:new Date().toISOString()};if(Object.hasOwn(changes,"review_text"))safe.review_text=String(changes.review_text||"").slice(0,5000);
+      if(Object.hasOwn(changes,"rating")){const rating=Number(changes.rating);if(!Number.isInteger(rating)||rating<1||rating>5)return reply({error:"Rating must be a whole number from 1 to 5."},400);safe.rating=rating;}
+      if(Object.keys(safe).length===1)return reply({error:"No editable review fields provided."},400);
+      const {data,error}=await admin.from("traveler_reviews").update(safe).eq("id",id).select("id,listing_slug,listing_name,city,country,rating,review_text,status,created_at,updated_at").single();if(error)throw error;return reply({ok:true,review:data});
+    }
+    if (action === "update_report_notes") {
+      const id=String(payload.id||""),notes=String(payload.admin_notes||"").slice(0,4000);if(!id)return reply({error:"Report id required."},400);
+      const {data,error}=await admin.from("traveler_chat_reports").update({admin_notes:notes}).eq("id",id).select("id,reason,details,admin_notes,status,created_at").single();if(error)throw error;return reply({ok:true,report:data});
+    }
     if (action === "review_report") {
       const id = String(payload.id || "");
       const status = String(payload.status || "");
