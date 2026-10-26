@@ -128,7 +128,7 @@ function setAuthBusy(busy){const b=document.getElementById("adminLoginButton");b
 document.getElementById("adminLoginForm").addEventListener("submit",async e=>{
  e.preventDefault();setAuthBusy(true);authMessage("");
  try{
-  const {error}=await supabaseClient.auth.signInWithOtp({email:ADMIN_EMAIL,options:{emailRedirectTo:location.href,shouldCreateUser:false}});
+  const {error}=await supabaseClient.auth.signInWithOtp({email:ADMIN_EMAIL,options:{emailRedirectTo:location.href,shouldCreateUser:true}});
   if(error)throw error;
   authMessage("If this email is authorized in Supabase Auth, a sign-in link is on its way. Open it in this browser.");
  }catch(err){authMessage(err.message||"Could not send the sign-in link. Check Supabase Auth email settings.",true)}
