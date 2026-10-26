@@ -81,6 +81,17 @@
 #travelerAvatarWrap:hover #travelerAvatarOverlay,#travelerAvatarWrap:focus-within #travelerAvatarOverlay{opacity:1}
 /* Shared homepage header: use on every StayLatin page */
 .sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:1.5px solid #c8a86b;border-radius:50%;display:grid;place-items:center;color:#c86d4a;font:20px Georgia,serif;flex:none}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}.sl-language{font-size:11px;font-weight:850;white-space:nowrap;text-decoration:none;color:#173f35;background:#fffdf8;border:1px solid #e5e0d5;border-radius:999px;padding:9px 12px}@media(max-width:850px){.sl-mainnav{align-items:flex-start;flex-wrap:wrap;gap:12px}.sl-brand{font-size:25px}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start;gap:10px 16px}.sl-language{margin-left:auto}.sl-tagline .sl-shell{align-items:flex-start;flex-direction:column;gap:3px}}@media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a{font-size:11px}}
+
+/* Traveler Lounge chat layout */
+#travelerLounge .lounge-messages .status{display:block}
+#travelerLounge .lounge-toolbar .minor-action{font-size:12px}
+#travelerLounge #chatNotificationStatus{flex:1 1 220px}
+#travelerLounge #chatNotice.status,#travelerLounge #chatNewMessageAlert.status{display:block}
+#travelerLounge #chatNotice.error,#travelerLounge #chatNewMessageAlert.error{color:#a43d2e;background:#f8e9e5}
+#travelerLounge #chatNotice.success{color:#245448;background:#e8f2e8}
+#travelerLounge #sendChat{border:0;border-radius:7px;background:var(--forest);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+#travelerLounge #sendChat:disabled{opacity:.6;cursor:wait}
+@media(max-width:560px){#travelerLounge .lounge-compose{grid-template-columns:minmax(0,1fr)!important}#travelerLounge #sendChat{width:100%!important}#travelerLounge .lounge-toolbar .minor-action{padding:9px 10px}}
 </style></head><body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a href="traveler-signup.html">Traveler Join / Sign in</a><span class="sl-nav-disabled">Business Join / Sign in</span><span class="sl-nav-disabled">Agent Join / Sign in</span><a href="admin-signup.html">Admin Join / Sign in</a></nav><a class="sl-language" href="index.html#top" aria-label="Language options">ES / EN</a></div></header>
@@ -132,7 +143,28 @@
   <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
 </section>
 
-<section id="travelerLoungeLocked" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px"><div class="kicker" style="color:var(--terra)">Paid traveler feature</div><h3 style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge</h3><p style="font-size:13px;color:var(--muted);max-width:720px;margin:0">Community chat and traveler messaging are reserved for a future paid membership.</p><div style="margin-top:12px;padding:14px 16px;background:#fffdf8;border:1px solid #e5d6b9;border-radius:10px;color:var(--muted);font-size:12px">Included with a future paid traveler membership. Paid plans are not active yet, so this feature is currently locked.</div></section>
+<section id="travelerLounge" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+  <div class="kicker" style="color:var(--terra)">Paid traveler feature</div>
+  <h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0">Share travel tips, ask questions, and meet other StayLatin travelers in the community lounge.</p>
+  <p style="font-size:11px;color:var(--muted);margin:8px 0 14px">Preview access is open to signed-in traveler accounts while membership billing is being prepared. Messages can be seen by other traveler members; please don't share passwords, private contact details, or sensitive information.</p>
+  <div id="chatNewMessageAlert" class="status show" role="status" aria-live="polite" hidden style="margin:0 0 10px"></div>
+  <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
+    <span id="chatUnreadBadge" hidden style="background:#e8d2a2;color:var(--forest);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800"></span>
+    <button id="refreshChat" type="button" class="minor-action" style="width:auto;margin:0">Refresh messages ↻</button>
+    <button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin:0">Enable chat notifications</button>
+    <span id="chatNotificationStatus" style="font-size:11px;color:var(--muted)"></span>
+  </div>
+  <div id="chatMessages" class="lounge-messages" role="log" aria-live="polite" aria-relevant="additions" style="height:min(45vh,420px);min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#f6f7f1;border:1px solid #dce8dd;border-radius:10px">
+    <div class="status show">Connecting to the Traveler Lounge…</div>
+  </div>
+  <form id="chatForm" class="lounge-compose" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:12px">
+    <label for="chatMessage" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">YOUR MESSAGE</label>
+    <textarea id="chatMessage" name="chatMessage" maxlength="1200" required placeholder="Share a travel tip or ask the community…" style="width:100%;min-width:0;min-height:76px;resize:vertical;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></textarea>
+    <button id="sendChat" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px;white-space:nowrap">Send message ↗</button>
+  </form>
+  <div id="chatNotice" class="status show" role="status" aria-live="polite" style="margin-top:10px">Preparing the Traveler Lounge…</div>
+</section>
 
 <section class="wrap section traveler-memberships" id="traveler-memberships"><div class="head"><div class="kicker">Traveler memberships</div><h2>More ways to make every trip yours.</h2><p>Free travelers get a profile photo and privacy-controlled Traveler Introductions. Future paid memberships may add advanced planning and community features.</p></div><div class="traveler-plans"><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">Available to start</div><h3>Basic</h3><strong>Free</strong><p class="disclaimer">Free includes your profile photo and privacy-controlled Traveler Introductions.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For organized trips</div><h3>Plus</h3><strong>$4.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For serious planners</div><h3>Premium</h3><strong>$9.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article></div><p class="disclaimer">Plus and Premium prices and features are proposals only. No traveler subscription payments are being collected. The Traveler Lounge is being connected now; destination rooms, private group chat, trip reminders, collaboration and export features require further implementation before launch.</p></section><section class="wrap section" id="trip-planning-upgrades" style="margin:24px auto;border-top:1px solid var(--line);padding-top:22px">
 <div style="margin-top:0">
@@ -271,7 +303,7 @@ function updateChatNotificationLabel(){if(!chatNotificationStatus||!chatNotifica
 chatNotificationsToggle?.addEventListener("click",async()=>{if(!("Notification"in window))return;try{const permission=await Notification.requestPermission();updateChatNotificationLabel();if(permission==="granted")chatNotificationStatus.textContent="Notifications enabled on this device while this browser is available."}catch(e){chatNotificationStatus.textContent="Could not enable browser notifications."}});
 updateChatNotificationLabel();
 
-function setChatNotice(message,kind=""){if(!chatNotice)return;chatNotice.className="status"+(kind?" "+kind:"");chatNotice.textContent=message;}
+function setChatNotice(message,kind=""){if(!chatNotice)return;chatNotice.className="status show"+(kind?" "+kind:"");chatNotice.textContent=message;}
 async function loadTravelerChat(){
  if(!chatMessages||!chatNotice)return;
  if(!client||!currentTravelerSession){setChatNotice("Sign in to join the Traveler Lounge.");chatMessages.innerHTML="";return;}
@@ -283,10 +315,10 @@ async function loadTravelerChat(){
   const latest=messages.length?messages[messages.length-1]:null;
   if(chatInitialLoad){chatKnownLatestId=latest?latest.id:null;try{chatUnreadCount=Number(localStorage.getItem(chatUnreadKey())||0)}catch(e){chatUnreadCount=0}chatInitialLoad=false;renderChatUnread()}
   else if(latest&&latest.id!==chatKnownLatestId){const fresh=messages.filter(m=>m.id!==chatKnownLatestId&&m.sender_id!==currentTravelerSession.user.id);if(fresh.length){chatUnreadCount+=fresh.length;try{localStorage.setItem(chatUnreadKey(),String(chatUnreadCount))}catch(e){}renderChatUnread();if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("New StayLatin chat message",{body:"A traveler posted in the Traveler Lounge."})}chatKnownLatestId=latest.id}
-  if(!messages.length){chatMessages.innerHTML='<div class="status">You’re first in the lounge. Say hello or share a useful travel tip.</div>';setChatNotice("Chat is ready.");return;}
+  if(!messages.length){chatMessages.innerHTML='<div class="status show">You’re first in the lounge. Say hello or share a useful travel tip.</div>';setChatNotice("Chat is ready.");return;}
   chatMessages.innerHTML=messages.map(m=>'<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(m.sender_id===currentTravelerSession.user.id?'#f0f3eb':'#fffefb')+'"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest)">'+dashSafe(m.sender_id===currentTravelerSession.user.id?'You':'Traveler')+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></article>').join("");
   chatMessages.scrollTop=chatMessages.scrollHeight;setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
- }catch(e){chatMessages.innerHTML="";setChatNotice("Traveler chat is not available right now. Please refresh or try again later.","error");}
+ }catch(e){chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';setChatNotice("Could not load the Traveler Lounge: "+(e&&e.message?e.message:"please refresh and try again."),"error");}
 }
 chatForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(chatBusy)return;
@@ -294,13 +326,13 @@ chatForm?.addEventListener("submit",async e=>{
  const body=chatInput.value.trim();if(!body)return;
  chatBusy=true;sendChat.disabled=true;sendChat.textContent="Sending…";
  try{const {error}=await client.from("staylatin_traveler_chat_messages").insert({sender_id:currentTravelerSession.user.id,destination:"General Traveler Lounge",body});if(error)throw error;chatInput.value="";await loadTravelerChat();}
- catch(e){setChatNotice("Your message could not be sent. Please check your connection and try again.","error");}
+ catch(e){setChatNotice("Could not send your message: "+(e&&e.message?e.message:"please check your connection and try again."),"error");}
  finally{chatBusy=false;sendChat.disabled=false;sendChat.textContent="Send message ↗";}
 });
 document.getElementById("refreshChat")?.addEventListener("click",loadTravelerChat);
 chatMessages?.addEventListener("scroll",()=>{if(chatMessages.scrollTop+chatMessages.clientHeight>=chatMessages.scrollHeight-12)resetChatUnread()});
 document.getElementById("chatTitle")?.addEventListener("click",resetChatUnread);
-function connectTravelerChat(session){currentTravelerSession=session||null;if(!chatMessages||!chatNotice||!chatForm)return;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe();}
+function connectTravelerChat(session){currentTravelerSession=session||null;if(!chatMessages||!chatNotice||!chatForm)return;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML='<div class="status show">Sign in to view lounge messages.</div>';setChatNotice("Sign in to join the Traveler Lounge.");return;}setChatNotice("Connecting to the Traveler Lounge…");loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe((status)=>{if(status==="SUBSCRIBED")setChatNotice("Connected. New messages will appear automatically.");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setChatNotice("Live updates are unavailable. Use Refresh messages to check for new posts.","error");});}
 async function loadDashboardStays(session){
  try{
   const {data:favs,error}=await client.from("staylatin_favorites").select("business_id").eq("user_id",session.user.id);
