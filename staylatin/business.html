@@ -51,7 +51,7 @@ async function connectBusinessChat(session){
  await loadBusinessChat();
  businessChatChannel=client.channel("staylatin-business-owner-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_business_chat_messages"},()=>loadBusinessChat()).subscribe();
 }
-let ownerWorkspaceSession=null,ownerBusinesses=[],activeSupportThread=null;
+let ownerWorkspaceSession=null,ownerBusinesses=[],activeSupportThread=null,ownerSupportChannel=null;
 const ownerById=id=>ownerBusinesses.find(b=>b.id===id);
 function ownerStatus(id,msg,error=false){const el=document.getElementById(id);el.className="status show";el.style.background=error?"#f5e5e0":"#f3eee2";el.style.color=error?"#984b39":"#665b42";el.textContent=msg;}
 async function loadOwnerWorkspace(session){
@@ -62,6 +62,8 @@ async function loadOwnerWorkspace(session){
   if(profile?.account_type!=="business_owner"){ownerStatus("supportStatus","Submit your property above to activate business-owner tools.");ownerStatus("changeStatus","Business-owner tools activate after your property submission.");ownerStatus("leadStatus","Business-owner tools activate after your property submission.");ownerStatus("analyticsStatus","Business-owner tools activate after your property submission.");return;}
   const {data:businesses,error:be}=await client.from("staylatin_businesses").select("id,name,city,country,listing_status").eq("owner_id",session.user.id).order("name");if(be)throw be;ownerBusinesses=businesses||[];
   await Promise.all([loadSupportThreads(),loadChangeRequests(),loadBusinessLeads(),loadBusinessAnalytics()]);
+  if(ownerSupportChannel){client.removeChannel(ownerSupportChannel);ownerSupportChannel=null;}
+  ownerSupportChannel=client.channel("staylatin-owner-support-"+session.user.id).on("postgres_changes",{event:"*",schema:"public",table:"staylatin_business_support_messages"},async()=>{try{await loadSupportThreads();if(activeSupportThread)await openSupportThread(activeSupportThread.id)}catch(e){}}).subscribe();
  }catch(e){ownerStatus("supportStatus","Could not load owner workspace. Please refresh and try again.",true);}
 }
 async function loadSupportThreads(){
