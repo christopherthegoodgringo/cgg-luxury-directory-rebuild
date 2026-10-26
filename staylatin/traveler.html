@@ -118,6 +118,36 @@
   <div id="tripPlannerList" style="display:grid;gap:12px;margin-top:12px"></div>
 </section>
 
+<section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+  <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
+  <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Share a little about yourself and discover travelers with similar interests. Every detail has its own visibility switch. Only details you choose to share are copied to the member directory; private details remain in your own profile.</p>
+  <form id="travelerIntroForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;background:#fffdf8;border:1px solid #dce8dd;border-radius:12px;padding:16px">
+    <div style="display:grid;gap:6px"><label for="introDisplayName" style="font-size:11px;font-weight:800;color:#506056">DISPLAY NAME</label><input id="introDisplayName" maxlength="80" placeholder="Name you'd like members to see" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px"><label for="introHomeCountry" style="font-size:11px;font-weight:800;color:#506056">HOME COUNTRY</label><input id="introHomeCountry" maxlength="100" placeholder="e.g. Canada" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px;grid-column:1/-1"><label for="introText" style="font-size:11px;font-weight:800;color:#506056">SHORT INTRODUCTION</label><textarea id="introText" maxlength="500" rows="3" placeholder="A little about you and how you like to travel…" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px;resize:vertical"></textarea></div>
+    <div style="display:grid;gap:6px"><label for="introDestinations" style="font-size:11px;font-weight:800;color:#506056">FAVORITE DESTINATIONS</label><input id="introDestinations" maxlength="400" placeholder="e.g. Colombia, Oaxaca, Lisbon" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px"><label for="introLanguages" style="font-size:11px;font-weight:800;color:#506056">LANGUAGES SPOKEN</label><input id="introLanguages" maxlength="200" placeholder="e.g. English, Spanish" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px;grid-column:1/-1"><label for="introInterests" style="font-size:11px;font-weight:800;color:#506056">TRAVEL INTERESTS</label><input id="introInterests" maxlength="300" placeholder="e.g. boutique hotels, food, hiking, culture" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px">
+      <strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:8px">Privacy controls</strong>
+      <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="introShowDirectory" type="checkbox" style="margin-top:4px"> <span><b>Include me in the member directory</b><br><span style="color:var(--muted)">If unchecked, your introduction will not appear to other members.</span></span></label>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowName" type="checkbox" checked> Show display name</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowText" type="checkbox" checked> Show introduction</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowCountry" type="checkbox"> Show home country</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowDestinations" type="checkbox"> Show destinations</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowLanguages" type="checkbox"> Show languages</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowInterests" type="checkbox"> Show interests</label>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin:10px 0 0">Your email, login details and private versions of these fields are never shown in the directory.</p>
+    </div>
+    <div style="grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="primary-action" style="width:auto;margin:0">Save introduction</button><span id="travelerIntroStatus" role="status" style="font-size:12px;color:var(--muted)">Your introduction is private until you choose to share it.</span></div>
+  </form>
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-top:24px"><div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members.</p></div><button id="refreshTravelerIntroductions" type="button" class="minor-action" style="width:auto;margin:0">Refresh directory</button></div>
+  <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
+</section>
+
 <section class="traveler-chat" aria-labelledby="chatTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="kicker" style="color:var(--terra)">Traveler community</div><h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge <span id="chatUnreadBadge" hidden style="vertical-align:middle;margin-left:6px;padding:4px 8px;border-radius:999px;background:#a64b32;color:#fff;font:700 11px Arial,sans-serif"></span></h3><p id="chatNewMessageAlert" hidden role="status" style="margin:6px 0 0;padding:8px 10px;border-radius:7px;background:#fff3d9;color:#654516;font-size:12px"></p><button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin-top:8px">Enable chat notifications</button><span id="chatNotificationStatus" style="display:block;font-size:11px;color:var(--muted);margin-top:4px">Optional browser alerts while this browser is open.</span><p class="desc">Talk travel, ask questions and share practical tips with other signed-in StayLatin travelers. Be respectful and don't post private contact or payment information.</p></div><button id="refreshChat" type="button" class="minor-action" style="width:auto;margin-top:0">Refresh chat ↻</button></div><div id="chatNotice" class="status" role="status">Loading traveler chat…</div><div id="chatMessages" style="display:grid;gap:9px;max-height:360px;overflow:auto;margin:12px 0;padding:2px"></div><form id="chatForm" style="display:grid;gap:9px"><label for="chatMessage" style="font-size:11px;font-weight:800;color:#506056">YOUR MESSAGE</label><textarea id="chatMessage" maxlength="1200" rows="3" required placeholder="Share a destination tip or ask the community…" style="width:100%;border:1px solid #dcd8cd;background:#fffefb;border-radius:7px;padding:12px;resize:vertical"></textarea><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:11px;color:var(--muted)">Messages are visible to signed-in traveler accounts.</span><button id="sendChat" class="btn primary" type="submit">Send message ↗</button></div></form><p class="disclaimer">Community chat is for travel discussion, not emergency assistance. Report abusive content to StayLatin support; moderation tools are being expanded.</p></section></section>
 </main>
 <section class="wrap section traveler-memberships" id="traveler-memberships"><div class="head"><div class="kicker">Traveler memberships</div><h2>More ways to make every trip yours.</h2><p>Clear levels for travelers: start free, then upgrade for richer trip organization and planning as those tools launch.</p></div><div class="traveler-plans"><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">Available to start</div><h3>Basic</h3><strong>Free</strong><p class="disclaimer">Core account features; chat availability depends on a successful sign-in.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For organized trips</div><h3>Plus</h3><strong>$4.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For serious planners</div><h3>Premium</h3><strong>$9.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article></div><p class="disclaimer">Plus and Premium prices and features are proposals only. No traveler subscription payments are being collected. The Traveler Lounge is being connected now; destination rooms, private group chat, trip reminders, collaboration and export features require further implementation before launch.</p></section><section class="wrap section" id="trip-planning-upgrades" style="margin:24px auto;border-top:1px solid var(--line);padding-top:22px">
@@ -152,10 +182,59 @@ function renderTrips(){
  list.querySelectorAll("[data-save-trip-note]").forEach(b=>b.addEventListener("click",()=>{const area=list.querySelector('[data-trip-note="'+b.dataset.saveTripNote+'"]');const rows=readTrips();const item=rows.find(t=>String(t.id)===b.dataset.saveTripNote);if(item&&area){item.notes=area.value;writeTrips(rows);const old=b.textContent;b.textContent="Saved ✓";setTimeout(()=>{b.textContent=old},1400);}}));
 }
 document.getElementById("tripPlannerForm").addEventListener("submit",e=>{e.preventDefault();if(!activeTripUserId){document.getElementById("tripPlannerStatus").textContent="Please sign in to create a personal trip plan.";return}const title=document.getElementById("tripTitle").value.trim(),destination=document.getElementById("tripDestination").value.trim(),start=document.getElementById("tripStart").value,end=document.getElementById("tripEnd").value;if(start&&end&&end<start){document.getElementById("tripPlannerStatus").textContent="The end date must be on or after the start date.";return}const rows=readTrips();rows.unshift({id:String(Date.now())+"-"+Math.random().toString(36).slice(2,8),title,destination,start,end,notes:document.getElementById("tripNotes").value.trim(),createdAt:new Date().toISOString()});if(writeTrips(rows)){e.target.reset();renderTrips();document.getElementById("tripPlannerStatus").textContent="Trip saved. You can update its notes below whenever you like."}});
+const introFields = {
+ display_name:["introDisplayName","introShowName"], introduction:["introText","introShowText"],
+ home_country:["introHomeCountry","introShowCountry"], favorite_destinations:["introDestinations","introShowDestinations"],
+ languages_spoken:["introLanguages","introShowLanguages"], travel_interests:["introInterests","introShowInterests"]
+};
+function setIntroStatus(message,isError=false){const el=document.getElementById("travelerIntroStatus");if(el){el.textContent=message;el.style.color=isError?"#a43d2e":"var(--muted)"}}
+function introEscape(v){return tripEscape(v||"")}
+function introClient(){if(!client){const cfg=window.STAYLATIN_SUPABASE_CONFIG;if(!cfg||!window.supabase)return null;client=window.supabase.createClient(cfg.url,cfg.anonKey)}return client}
+async function loadTravelerIntroduction(){
+ const db=introClient(),userId=activeTripUserId;if(!db||!userId)return;
+ setIntroStatus("Loading your introduction…");
+ const {data,error}=await db.from("staylatin_traveler_introductions").select("*").eq("user_id",userId).maybeSingle();
+ if(error){setIntroStatus("Could not load your introduction. Please refresh and try again.",true);return}
+ const row=data||{};
+ for(const [field,ids] of Object.entries(introFields)){document.getElementById(ids[0]).value=row[field]||"";document.getElementById(ids[1]).checked=row["show_"+field]===undefined?(field==="display_name"||field==="introduction"):!!row["show_"+field]}
+ document.getElementById("introShowDirectory").checked=!!row.show_in_directory;
+ setIntroStatus(row.show_in_directory?"Your selected details are shared with signed-in members.":"Your introduction is private.");
+ await loadTravelerIntroductionDirectory();
+}
+async function saveTravelerIntroduction(e){
+ e.preventDefault();const db=introClient(),userId=activeTripUserId;if(!db||!userId){setIntroStatus("Please sign in to save your introduction.",true);return}
+ const button=document.querySelector('#travelerIntroForm button[type="submit"]');button.disabled=true;setIntroStatus("Saving your privacy settings…");
+ const row={user_id:userId,show_in_directory:document.getElementById("introShowDirectory").checked,updated_at:new Date().toISOString()};
+ for(const [field,ids] of Object.entries(introFields)){row[field]=document.getElementById(ids[0]).value.trim();row["show_"+field]=document.getElementById(ids[1]).checked}
+ const {error}=await db.from("staylatin_traveler_introductions").upsert(row,{onConflict:"user_id"});
+ if(error){button.disabled=false;setIntroStatus("Could not save. Check the connection and try again.",true);return}
+ if(row.show_in_directory){
+   const pub={user_id:userId,updated_at:row.updated_at};
+   for(const [field,ids] of Object.entries(introFields))pub[field]=row["show_"+field]?row[field]:null;
+   const result=await db.from("staylatin_traveler_introduction_directory").upsert(pub,{onConflict:"user_id"});
+   if(result.error){button.disabled=false;setIntroStatus("Your private profile saved, but sharing could not be updated. Please try saving again.",true);return}
+ }else{
+   const result=await db.from("staylatin_traveler_introduction_directory").delete().eq("user_id",userId);
+   if(result.error){button.disabled=false;setIntroStatus("Your profile saved, but directory removal failed. Please try saving again.",true);return}
+ }
+ button.disabled=false;setIntroStatus(row.show_in_directory?"Saved. Only the details you selected are visible to signed-in members.":"Saved privately. You are not listed in the member directory.");await loadTravelerIntroductionDirectory();
+}
+async function loadTravelerIntroductionDirectory(){
+ const box=document.getElementById("travelerIntroDirectory"),db=introClient();if(!box||!db)return;
+ box.innerHTML='<div class="status">Loading shared introductions…</div>';
+ const {data,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").order("updated_at",{ascending:false}).limit(100);
+ if(error){box.innerHTML='<div class="status error">The member directory could not load. Please try again.</div>';return}
+ const rows=(data||[]).filter(x=>x.user_id!==activeTripUserId);
+ if(!rows.length){box.innerHTML='<div class="status">No other introductions shared yet. You can be one of the first to introduce yourself.</div>';return}
+ box.innerHTML=rows.map(r=>'<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px"><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 7px">'+introEscape(r.display_name||"StayLatin traveler")+'</h5>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+[['Home country',r.home_country],['Favorite destinations',r.favorite_destinations],['Languages',r.languages_spoken],['Travel interests',r.travel_interests]].filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("")+'</article>').join("");
+}
+document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
+document.getElementById("refreshTravelerIntroductions").addEventListener("click",loadTravelerIntroductionDirectory);
 function showTravelerDashboard(session){
   activeTripUserId=session&&session.user?session.user.id:null;
   loadTravelerAvatar();
   renderTrips();
+  loadTravelerIntroduction();
   connectTravelerChat(session);
   document.querySelector(".traveler-intro").hidden=true;
   document.getElementById("traveler-memberships").hidden=true;
