@@ -19,6 +19,10 @@
 body.auth-locked .layout,body.auth-locked .modal-backdrop,body.auth-locked .toast{display:none!important}
 .live-panel{margin-bottom:20px}.live-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px 18px}.live-stat{border:1px solid var(--line);background:#fbfcf8;border-radius:9px;padding:13px}.live-stat span{display:block;font-size:10px;color:var(--muted)}.live-stat strong{display:block;font:26px Georgia,serif;color:var(--g);margin-top:6px}.live-note{margin:0 18px 16px;padding:10px 12px;background:#edf5ee;border:1px solid #d2e6d5;color:#37674a;border-radius:8px;font-size:11px}.live-table{width:100%;border-collapse:collapse}.live-table th,.live-table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0e9;font-size:11px;vertical-align:top}.live-table th{font-size:9px}.live-table input,.live-table select,.live-table textarea{max-width:100%;border:1px solid var(--line);border-radius:5px;padding:7px;font-size:11px}.live-edit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:18px}.live-edit label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#788279;font-weight:800;margin-bottom:5px}.live-edit input,.live-edit select,.live-edit textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:9px;font-size:12px}.live-edit .full{grid-column:1/-1}.live-actions{display:flex;gap:8px;justify-content:flex-end;padding:0 18px 18px}.live-empty{padding:22px;color:var(--muted);font-size:12px}
 @media(max-width:700px){.live-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.live-edit{grid-template-columns:1fr}.live-edit .full{grid-column:auto}.auth-body{padding:22px}}
+.mode-switch{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:10px;padding:4px;background:#f8f9f5;flex-wrap:wrap}.mode-label{font-size:9px;letter-spacing:1px;font-weight:850;color:#7b867d;padding:0 6px}.mode-button{border:1px solid transparent;border-radius:6px;background:transparent;color:#59675e;padding:7px 11px;font-size:10px;font-weight:800}.mode-button.active{background:var(--g);color:#fff;border-color:var(--g)}.mode-button:disabled{opacity:.45;cursor:not-allowed}.mode-switch .status-pill{padding:6px 8px;margin-left:3px}.mode-switch .dot{background:#c9a64f}body[data-data-mode="live"] .mode-switch .dot{background:#3f9461}body[data-data-mode="live"] .mode-button.active{background:#286b49;border-color:#286b49}body[data-data-mode="live"] #section-overview .demo-banner,body[data-data-mode="live"] #section-overview .metrics,body[data-data-mode="live"] #section-overview>.dashboard-grid,body[data-data-mode="live"] #section-overview>.bottom-grid{display:none!important}body[data-data-mode="live"] #section-overview .pagehead .head-actions button{display:none!important}.mode-notice{margin-bottom:18px;padding:12px 14px;border:1px solid #e8d9b0;background:#fff9eb;color:#715b2a;border-radius:9px;font-size:11px;line-height:1.6}.mode-notice.live{border-color:#cde3d1;background:#eef7ef;color:#326447}.mode-notice strong{display:block;margin-bottom:3px}
+@media(max-width:900px){.topbar{height:auto;min-height:76px;padding-top:12px;padding-bottom:12px}.top-actions{justify-content:flex-end;flex-wrap:wrap}.mode-switch .status-pill{display:none}}
+@media(max-width:520px){.mode-label{display:none}.mode-switch{gap:2px}.mode-button{padding:7px 8px}.top-actions{gap:5px}}
+
 </style></head>
 <body>
 <div class="auth-gate" id="authGate">
@@ -42,7 +46,7 @@ body.auth-locked .layout,body.auth-locked .modal-backdrop,body.auth-locked .toas
  <div class="sidebar-foot">CGG™ Luxury Directory<br>Admin workspace · Preview mode<div class="admin-user"><div class="avatar">CK</div><div><strong style="display:block;font-size:11px">Directory Administrator</strong><span style="font-size:9px;color:#b1c2b6">Owner access · Preview</span></div></div></div>
 </aside>
 <main class="main">
-<header class="topbar"><div class="crumb">CGG / <strong id="crumb">Dashboard</strong></div><div class="top-actions"><span class="status-pill"><i class="dot"></i> DEMO DATA · NOT CONNECTED</span><button class="icon-btn" title="Notifications" onclick="toast('Notifications will appear here when the portal is connected to live data.')">♧</button><button class="icon-btn" title="Help" onclick="toast('Admin Studio preview. Live member access and secure admin permissions still need to be connected.')">?</button></div></header>
+<header class="topbar"><div class="crumb">CGG / <strong id="crumb">Dashboard</strong></div><div class="top-actions"><div class="mode-switch" role="group" aria-label="Admin data mode"><span class="mode-label">DATA MODE</span><button type="button" id="demoModeButton" class="mode-button active" aria-pressed="true">Demo</button><button type="button" id="liveModeButton" class="mode-button" aria-pressed="false">Live</button><span id="dataModeStatus" class="status-pill"><i class="dot"></i> DEMO · SAMPLE DATA</span></div><button class="icon-btn" title="Notifications" onclick="toast('Notifications will appear here when the portal is connected to live data.')">♧</button><button class="icon-btn" title="Help" onclick="toast('Use Demo to explore sample data, or Live after secure administrator sign-in to work with real database records.')">?</button></div></header>
 <div class="content">
 <section class="section active" id="section-overview">
  <div class="pagehead"><div><div class="eyebrow">OWNER CONTROL CENTER</div><h1>Good afternoon, Christopher.</h1><p>Your directory at a glance. Monitor growth, member health and work that needs attention.</p></div><div class="head-actions"><button class="btn" onclick="toast('Export becomes available after live data is connected.')">⇩ Export report</button><button class="btn primary" onclick="openMember()">＋ Add member</button></div></div>
@@ -133,6 +137,26 @@ function drawChart(id,n){const svg=document.getElementById(id);if(!svg)return;co
 document.getElementById("growthPeriod").addEventListener("change",e=>drawChart("growthChart",Number(e.target.value)));drawChart("growthChart",12);drawChart("growthChart2",12);renderRows();renderAllMembers();
 document.getElementById("memberModal").addEventListener("click",e=>{if(e.target.id==="memberModal")closeMember()});
 
+// --- Demo/live data mode toggle ---
+let adminDataMode="demo";
+function setAdminDataMode(mode){
+ if(mode==="live"&&!liveDataReady){toast("Live mode requires an authorized sign-in and a successful database connection.");return;}
+ adminDataMode=mode;document.body.dataset.dataMode=mode;
+ const demo=document.getElementById("demoModeButton"),live=document.getElementById("liveModeButton"),status=document.getElementById("dataModeStatus");
+ demo.classList.toggle("active",mode==="demo");demo.setAttribute("aria-pressed",String(mode==="demo"));
+ live.classList.toggle("active",mode==="live");live.setAttribute("aria-pressed",String(mode==="live"));
+ status.innerHTML=mode==="live" ? '<i class="dot"></i> LIVE · CONNECTED' : '<i class="dot"></i> DEMO · SAMPLE DATA';
+ status.title=mode==="live"?"Showing verified records loaded from Supabase":"Showing illustrative sample data; edits are not saved to the database";
+ let notice=document.getElementById("dataModeNotice");
+ if(!notice){notice=document.createElement("div");notice.id="dataModeNotice";notice.className="mode-notice";const content=document.querySelector(".content");if(content)content.insertBefore(notice,content.firstChild);}
+ if(mode==="demo"){notice.className="mode-notice";notice.innerHTML="<strong>Demo mode · Sample data</strong>Dashboard charts and sample member records are illustrative. Changes in the demo do not update the live directory database. Select Live to work with verified Supabase records.";}
+ else {notice.className="mode-notice live";notice.innerHTML="<strong>Live mode · Connected to Supabase</strong>Live listings, traveler subscriber records, submissions and claims below are loaded from the connected database. Changes saved in live mode affect real records and may be audited.";}
+}
+document.getElementById("demoModeButton").addEventListener("click",()=>setAdminDataMode("demo"));
+document.getElementById("liveModeButton").addEventListener("click",()=>setAdminDataMode("live"));
+let liveDataReady=false;
+setAdminDataMode("demo");
+
 // --- Secure Supabase administrator session and live data workspace ---
 const SUPABASE_URL = "https://argdxsqbvtwheitsunbf.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_h60yi5i1veCeJ6Shbv9hyA_56__5xvS";
@@ -166,6 +190,7 @@ async function unlockAdmin(session){
   if(error||!user||String(user.email||"").toLowerCase()!==ADMIN_EMAIL){await supabaseClient.auth.signOut();throw new Error("This account is not authorized for CGG Admin Studio.")}
   const result=await api("dashboard");
   liveData=result.data;
+  liveDataReady=true;
   document.getElementById("authGate").style.display="none";
   document.body.classList.remove("auth-locked");
   addAdminSessionControls(user.email);
@@ -174,6 +199,7 @@ async function unlockAdmin(session){
   document.getElementById("liveListingCaption").textContent=liveData.listings.length+" live listings loaded from Supabase";
   authMessage("");
  }catch(err){
+  liveDataReady=false;
   document.getElementById("authGate").style.display="grid";
   document.body.classList.add("auth-locked");
   authMessage(err.message||"Secure connection failed.",true);
@@ -251,7 +277,7 @@ async function reviewLiveItem(kind,id,status){
  }catch(err){toast("Review failed: "+err.message)}
 }
 async function refreshLiveData(){
- const result=await api("dashboard");liveData=result.data;renderLiveListings();renderLiveReviews();renderSubscribers();updateLiveOverview();
+ const result=await api("dashboard");liveData=result.data;liveDataReady=true;renderLiveListings();renderLiveReviews();renderSubscribers();updateLiveOverview();
  document.getElementById("liveListingCaption").textContent=liveData.listings.length+" live listings loaded from Supabase";
  toast("Live database data refreshed.");
 }
