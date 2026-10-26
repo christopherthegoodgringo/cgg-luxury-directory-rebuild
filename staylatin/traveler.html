@@ -86,8 +86,8 @@
 #travelerLounge .lounge-messages .status{display:block}
 #travelerLounge .lounge-toolbar .minor-action{font-size:12px}
 #travelerLounge #chatNotificationStatus{flex:1 1 220px}
-#travelerLounge #chatNotice.status,#travelerLounge #chatNewMessageAlert.status{display:block}
-#travelerLounge #chatNotice.error,#travelerLounge #chatNewMessageAlert.error{color:#a43d2e;background:#f8e9e5}
+#travelerLounge #chatNotice.status{display:block}
+#travelerLounge #chatNotice.error{color:#a43d2e;background:#f8e9e5}
 #travelerLounge #chatNotice.success{color:#245448;background:#e8f2e8}
 #travelerLounge #sendChat{border:0;border-radius:7px;background:var(--forest);color:#fff;font:inherit;font-weight:800;cursor:pointer}
 #travelerLounge #sendChat:disabled{opacity:.6;cursor:wait}
@@ -148,7 +148,7 @@
   <h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge</h3>
   <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0">Share travel tips, ask questions, and meet other StayLatin travelers in the community lounge.</p>
   <p style="font-size:11px;color:var(--muted);margin:8px 0 14px">Preview access is open to signed-in traveler accounts while membership billing is being prepared. Messages can be seen by other traveler members; please don't share passwords, private contact details, or sensitive information.</p>
-  <div id="chatNewMessageAlert" class="status show" role="status" aria-live="polite" hidden style="margin:0 0 10px"></div>
+  
   <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
     <span id="chatUnreadBadge" hidden style="background:#e8d2a2;color:var(--forest);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800"></span>
     <button id="refreshChat" type="button" class="minor-action" style="width:auto;margin:0">Refresh messages ↻</button>
@@ -171,8 +171,8 @@
     <h3 style="font:500 25px Georgia,serif;color:var(--forest);margin:0 0 6px">Want more trip-planning tools?</h3>
     <p style="margin:0 0 12px;color:var(--muted);font-size:13px">Plus and Premium are planned upgrades. Their extra planning features are not active yet, and no traveler subscription payments are being collected.</p>
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
-      <article style="border:1px solid #e5d6b9;border-radius:10px;padding:16px;background:linear-gradient(135deg,#fff7e8,#fffdf8)"><div class="kicker" style="color:#9b762e">Planned upgrade</div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:5px 0">Plus</h4><strong style="color:var(--forest)">$4.99 <small>/ month</small></strong><p style="font-size:12px;color:var(--muted);margin:8px 0">Planned: multiple destination lists, detailed notes, comparison shortlists and trip reminders.</p><span style="font-size:10px;font-weight:800;color:#8b6a2f">NOT AVAILABLE YET</span></article>
-      <article style="border:1px solid #d9d0ee;border-radius:10px;padding:16px;background:linear-gradient(135deg,#f3efff,#fffdf8)"><div class="kicker" style="color:#7163a5">Planned upgrade</div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:5px 0">Premium</h4><strong style="color:var(--forest)">$9.99 <small>/ month</small></strong><p style="font-size:12px;color:var(--muted);margin:8px 0">Planned: collaborative trip boards, private group planning, multi-city itineraries and sharing or exporting plans.</p><span style="font-size:10px;font-weight:800;color:#7163a5">NOT AVAILABLE YET</span></article>
+      <article style="border:1px solid #e5d6b9;border-radius:10px;padding:16px;background:linear-gradient(135deg,#fff7e8,#fffdf8)"><div class="kicker" style="color:#9b762e">Planned upgrade</div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:5px 0">Plus</h4><strong style="color:var(--forest)">$4.99 <small>/ month</small></strong><span style="font-size:10px;font-weight:800;color:#8b6a2f">NOT AVAILABLE YET</span></article>
+      <article style="border:1px solid #d9d0ee;border-radius:10px;padding:16px;background:linear-gradient(135deg,#f3efff,#fffdf8)"><div class="kicker" style="color:#7163a5">Planned upgrade</div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:5px 0">Premium</h4><strong style="color:var(--forest)">$9.99 <small>/ month</small></strong><span style="font-size:10px;font-weight:800;color:#7163a5">NOT AVAILABLE YET</span></article>
     </div>
   </div>
 </section>
@@ -294,10 +294,10 @@ async function toggleDashboardFavorite(id,button){
  }catch(e){button.disabled=false;const note=document.createElement("div");note.className="status error";note.textContent="Could not update this favorite. Please refresh and try again.";dashResults.prepend(note)}
 }
 let chatSubscription=null;let currentTravelerSession=null;let chatBusy=false;
-const chatMessages=document.getElementById("chatMessages"),chatNotice=document.getElementById("chatNotice"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatMessage"),sendChat=document.getElementById("sendChat"),chatUnreadBadge=document.getElementById("chatUnreadBadge"),chatNewMessageAlert=document.getElementById("chatNewMessageAlert"),chatNotificationsToggle=document.getElementById("chatNotificationsToggle"),chatNotificationStatus=document.getElementById("chatNotificationStatus");
+const chatMessages=document.getElementById("chatMessages"),chatNotice=document.getElementById("chatNotice"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatMessage"),sendChat=document.getElementById("sendChat"),chatUnreadBadge=document.getElementById("chatUnreadBadge"),chatNotificationsToggle=document.getElementById("chatNotificationsToggle"),chatNotificationStatus=document.getElementById("chatNotificationStatus");
 let chatKnownLatestId=null,chatUnreadCount=0,chatInitialLoad=true;
 function chatUnreadKey(){return "staylatin-chat-unread-"+(currentTravelerSession&&currentTravelerSession.user?currentTravelerSession.user.id:"guest")}
-function renderChatUnread(){if(!chatUnreadBadge||!chatNewMessageAlert)return;chatUnreadBadge.hidden=chatUnreadCount<1;chatUnreadBadge.textContent=chatUnreadCount?chatUnreadCount+" new":"";chatNewMessageAlert.hidden=chatUnreadCount<1;chatNewMessageAlert.textContent=chatUnreadCount?chatUnreadCount+" new chat message"+(chatUnreadCount===1?"":"s")+" — open the Traveler Lounge to catch up.":""}
+function renderChatUnread(){if(!chatUnreadBadge)return;chatUnreadBadge.hidden=chatUnreadCount<1;chatUnreadBadge.textContent=chatUnreadCount?chatUnreadCount+" new":""}
 function resetChatUnread(){chatUnreadCount=0;try{localStorage.setItem(chatUnreadKey(),"0")}catch(e){}renderChatUnread()}
 function updateChatNotificationLabel(){if(!chatNotificationStatus||!chatNotificationsToggle)return;if(!("Notification"in window)){chatNotificationStatus.textContent="Browser notifications are not supported here.";chatNotificationsToggle.hidden=true;return}if(Notification.permission==="granted"){chatNotificationStatus.textContent="Browser notifications are enabled on this device.";chatNotificationsToggle.textContent="Notifications enabled";chatNotificationsToggle.disabled=true}else if(Notification.permission==="denied"){chatNotificationStatus.textContent="Notifications are blocked by your browser settings.";chatNotificationsToggle.textContent="Notifications blocked";chatNotificationsToggle.disabled=true}else{chatNotificationStatus.textContent="Optional browser alerts while this browser is open.";chatNotificationsToggle.textContent="Enable chat notifications";chatNotificationsToggle.disabled=false}}
 chatNotificationsToggle?.addEventListener("click",async()=>{if(!("Notification"in window))return;try{const permission=await Notification.requestPermission();updateChatNotificationLabel();if(permission==="granted")chatNotificationStatus.textContent="Notifications enabled on this device while this browser is available."}catch(e){chatNotificationStatus.textContent="Could not enable browser notifications."}});
