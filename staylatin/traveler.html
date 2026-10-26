@@ -27,6 +27,11 @@
       </form>
       <div id="dashboardStayResults" style="display:grid;gap:9px" aria-live="polite"><div class="status">Loading published stays…</div></div>
       <p class="fine">Only properties approved and published by StayLatin appear here. Your saved stays are private to your account.</p>
+      <section style="margin-top:20px;border-top:1px solid var(--line);padding-top:18px">
+        <h3 style="font:500 23px Georgia,serif;color:var(--forest);margin:0 0 5px">Your homepage likes</h3>
+        <p class="sub">Stays you hearted on the StayLatin homepage are saved in this browser. They will appear here when you return on the same device and browser.</p>
+        <div id="homepageSavedIdeas" style="display:grid;gap:9px"><div class="status">Checking your saved homepage ideas…</div></div>
+      </section>
     </section>
     <div style="display:grid;gap:9px">
       <a href="stays.html" style="display:block;padding:13px 14px;border-radius:8px;background:var(--forest);color:white;font-weight:750;text-align:center">Explore stays &amp; manage favorites →</a>
@@ -50,6 +55,25 @@ function showTravelerDashboard(session){
   loadDashboardStays(session);
 }
 const dashResults=document.getElementById("dashboardStayResults");
+const homepageSavedIdeas=document.getElementById("homepageSavedIdeas");
+const homepageStayIdeas=[
+{id:1,name:"Casa de Patio",city:"Cartagena, Colombia",type:"Boutique hotel",desc:"A courtyard-inspired sample stay for travelers drawn to architecture, history and walkable old-town streets."},
+{id:2,name:"Selva Social House",city:"Medellín, Colombia",type:"Hostel",desc:"A social-style sample listing imagined for meeting other travelers and finding neighborhood cafés."},
+{id:3,name:"The Slow House",city:"Oaxaca, Mexico",type:"Long-stay base",desc:"A sample long-stay concept for remote workers who want a comfortable routine and a rich local food scene."},
+{id:4,name:"Casa Brisa",city:"Santa Marta, Colombia",type:"Boutique hotel",desc:"A sample boutique stay concept for slow mornings, coastal air and easy access to outdoor adventures."},
+{id:5,name:"Patio de Viajeros",city:"Antigua, Guatemala",type:"Hostel",desc:"A sample guesthouse concept for shared stories, colorful streets and exploring the highlands at an easy pace."},
+{id:6,name:"Andes Work Lodge",city:"Cusco, Peru",type:"Long-stay base",desc:"A sample long-stay concept for travelers balancing laptop time with history, mountain air and weekend escapes."}
+];
+function readHomepageSaved(){try{const raw=JSON.parse(localStorage.getItem("staylatin-saved")||"[]");return Array.isArray(raw)?raw.map(Number).filter(Number.isFinite):[]}catch(e){return[]}}
+function renderHomepageSavedIdeas(){
+ if(!homepageSavedIdeas)return;
+ const ids=readHomepageSaved(),rows=homepageStayIdeas.filter(x=>ids.includes(x.id));
+ if(!rows.length){homepageSavedIdeas.innerHTML='<div class="status">No homepage likes saved in this browser yet. Go to the StayLatin homepage and tap the heart on any stay idea; it will show up here.</div>';return}
+ homepageSavedIdeas.innerHTML=rows.map(x=>'<article style="border:1px solid var(--line);border-radius:9px;background:#fffefb;padding:13px;display:flex;justify-content:space-between;gap:12px"><div><strong style="display:block;color:var(--forest);font:500 19px Georgia,serif">'+x.name+'</strong><div style="font-size:11px;color:var(--terra);font-weight:800;margin:3px 0">'+x.city+' · '+x.type+'</div><p style="font-size:12px;color:var(--muted);margin:5px 0 0">'+x.desc+'</p><div style="font-size:10px;color:var(--muted);margin-top:6px">Homepage inspiration · sample concept, not a confirmed property</div></div><button type="button" data-home-unsave="'+x.id+'" style="align-self:flex-start;flex-shrink:0;border:1px solid var(--line);border-radius:7px;background:white;color:var(--forest);padding:8px;font-size:12px;cursor:pointer">Remove ♥</button></article>').join("");
+ homepageSavedIdeas.querySelectorAll("[data-home-unsave]").forEach(b=>b.addEventListener("click",()=>{const next=readHomepageSaved().filter(id=>id!==Number(b.dataset.homeUnsave));localStorage.setItem("staylatin-saved",JSON.stringify(next));renderHomepageSavedIdeas()}));
+}
+window.addEventListener("storage",e=>{if(e.key==="staylatin-saved")renderHomepageSavedIdeas()});
+renderHomepageSavedIdeas();
 let dashListings=[],dashSaved=[];
 const dashTypeLabels={boutique_hotel:"Boutique hotel",posada:"Posada",hostel:"Hostel",long_stay:"Long-stay base",serviced_apartment:"Serviced apartment",guesthouse_bnb:"Guesthouse / B&B"};
 function dashSafe(s){return String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
