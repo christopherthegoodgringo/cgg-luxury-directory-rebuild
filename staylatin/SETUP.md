@@ -6,16 +6,16 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 
 - Static page prototypes: homepage, directory, traveler account, business onboarding, and admin dashboard.
 - Dedicated Supabase project created and verified: `lrfyoundimxakuhwuood` (US East, N. Virginia).
-- `database/schema.sql` applied to the dedicated StayLatin project; 10 StayLatin tables verified.
+- `database/schema.sql` and follow-up migrations applied to the dedicated StayLatin project; 11 StayLatin tables verified.
 - `staylatin-config.js` points to the dedicated project using its browser-safe publishable key.
 - Traveler sign-up profile trigger installed: new Auth users receive a `staylatin_profiles` row with the default traveler role.
-- Security advisor was rerun after the admin-review RPC hardening; review its current result before launch.
+- Latest security advisor check reports one warning: leaked-password protection is disabled. Enable it in Supabase Auth password settings before launch. Performance advisor also reports unindexed foreign keys and overlapping permissive policies; these are review items, not evidence of a data breach.
 - Business onboarding now writes to a dedicated private `staylatin_business_submissions` table; only the submitting owner can read their own submission through client policies.
 - Admin dashboard is connected to the private submission queue and checks the trusted `app_metadata.role=admin` claim before revealing data.
 - Protected review RPC validates the admin claim and uses invoker security with RLS; approvals create published listings marked `unverified`, while rejections require a reason. A real admin account still needs to be configured and the full workflow tested.
 - Image uploads and memberships are not yet connected.
 - Payments: not connected; do not collect payment details in the prototype.
-- Sample listings are illustrative and must not be presented as verified partners.
+- Sample listings are illustrative and must not be presented as verified partners. Homepage hearts currently save sample concepts in browser local storage; they do not create database favorites. Account favorites are stored in `staylatin_favorites` and require published database listings.
 
 ## Non-negotiable separation
 
@@ -43,6 +43,7 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - [x] Schema migration applied only to that project.
 - [x] New-user profile trigger installed.
 - [ ] Production site URL and allowed auth redirect URLs configured in Supabase Auth.
+- [ ] Enable leaked-password protection in Supabase Auth password settings.
 - [ ] RLS policies tested for anonymous, traveler, business owner, and admin access.
 - [ ] Admin authorization is enforced server-side.
 - [x] Business form persists private pending-review submissions for signed-in users.
