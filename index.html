@@ -205,24 +205,21 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 <dialog id="accountDialog" aria-labelledby="accountTitle">
  <div class="modal-head"><div class="eyebrow">Free traveler membership</div><h2 id="accountTitle">Your travel favorites</h2></div>
  <div class="modal-content">
-  <div id="accountSignedIn" hidden><div class="account-user"><p class="account-message">Signed in as <strong id="accountName"></strong></p><p class="account-message" id="accountEmail"></p></div><p class="account-message" style="margin-top:14px">Your saved hearts are connected to your account and can fdiv class="modal-head"><div class="eyebrow">Private traveler space</div><h2 id="dashboardTitle">Traveler Dashboard</h2></div>
- <div class="modal-content">
-  <p class="dashboard-note">Your favorites, trip ideas, shared properties, and preferences — synced to your CGG account.</p>
-  <nav class="dashboard-nav" aria-label="Traveler dashboard sections">
-   <button class="dashboard-tab" type="button" data-dashboard-tab="favorites" aria-selected="true">♡ Favorites</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="shared" aria-selected="false">↗ Shared</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="trips" aria-selected="false">My Trips</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="recent" aria-selected="false">Recently Viewed</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="reviews" aria-selected="false">My Reviews</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="chat" aria-selected="false">Traveler Chat</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="notifications" aria-selected="false">Notifications</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="preferences" aria-selected="false">Preferences</button>
-  </nav>
-  <div id="dashboardStatus" class="dashboard-status" role="status" aria-live="polite"></div>
-  <section id="dashboardPanel" class="dashboard-panel" aria-live="polite"><div class="dashboard-empty">Loading your traveler dashboard…</div></section>
-  
+  <div id="accountSignedIn" hidden><div class="account-user"><p class="account-message">Signed in as <strong id="accountName"></strong></p><p class="account-message" id="accountEmail"></p></div><p class="account-message" style="margin-top:14px">Your saved hearts are connected to your account and can follow you when you sign in on another device.</p><div class="account-actions"><button class="btn btn-gold" id="openDashboardFromAccount" type="button">Open Travel Companion</button><button class="btn btn-outline" id="accountSignOut" type="button">Sign out</button><button class="btn btn-outline" id="accountCloseSignedIn" type="button">Close</button></div></div>
+  <form class="account-form" id="accountForm">
+   <p class="account-message" id="accountIntro">Create a free account to save your favorite places across devices.</p>
+   <div class="field" id="firstNameField"><label for="accountFirstName">First name</label><input id="accountFirstName" name="firstName" autocomplete="given-name" maxlength="80" required></div>
+   <div class="field" id="lastNameField"><label for="accountLastName">Last name</label><input id="accountLastName" name="lastName" autocomplete="family-name" maxlength="80" required></div>
+   <div class="field"><label for="accountEmailInput">Email address</label><input id="accountEmailInput" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+   <div class="field"><label for="accountPassword">Password</label><input id="accountPassword" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
+   <p class="account-message" id="accountMessage" aria-live="polite"></p>
+   <div class="account-actions"><button class="btn btn-gold" id="accountSubmit" type="submit">Create free account</button><button class="btn btn-outline" id="accountCancel" type="button">Close</button></div>
+   <button class="account-switch" id="accountModeToggle" type="button">Already have an account? Sign in</button>
+  </form>
  </div>
 </dialog>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script>
@@ -329,7 +326,7 @@ document.getElementById('accountForm').addEventListener('submit',async event=>{e
 if(supabaseClient){supabaseClient.auth.getSession().then(async({data})=>{if(data.session?.user){try{await syncAccountData(data.session.user);}catch(error){console.error('Traveler account sync failed',error);currentUser=data.session.user;updateAccountButton();}}});supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;updateAccountButton();render();}else if(session?.user){currentUser=session.user;updateAccountButton();setTimeout(()=>syncAccountData(session.user).catch(error=>console.error('Traveler account sync failed',error)),0);}});}
 
 
-const dashboardDialog={get open(){return true;},showModal(){document.getElementById('travelerAccountTools')?.scrollIntoView({behavior:'smooth',block:'start'});},close(){document.getElementById('travelerTools')?.scrollIntoView({behavior:'smooth',block:'start'});}};
+const dashboardDialog={get open(){return true;},showModal(){document.getElementById('travelerAccountTools')?.scrollIntoView({behavior:'smooth',block:'start'});},close(){document.getElementById('travelerTools')?.scrollIntoView({behavior:'smooth',block:'start');}};
 let dashboardTab='favorites',dashboardCollections=[];
 function dashboardStatus(message='',isError=false){const el=document.getElementById('dashboardStatus');if(!el)return;el.textContent=message;el.classList.toggle('error',!!isError);}
 function dashboardEscape(v){return esc(v==null?'':String(v));}
