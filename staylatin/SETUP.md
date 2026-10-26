@@ -5,9 +5,12 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 ## Current status
 
 - Static page prototypes: homepage, directory, traveler account, business onboarding, and admin dashboard.
-- Database schema draft: `database/schema.sql`.
-- Backend: **not connected**.
-- Business submissions, admin decisions, and memberships: prototype-only until a dedicated backend is configured.
+- Dedicated Supabase project created and verified: `lrfyoundimxakuhwuood` (US East, N. Virginia).
+- `database/schema.sql` applied to the dedicated StayLatin project; 10 StayLatin tables verified.
+- `staylatin-config.js` points to the dedicated project using its browser-safe publishable key.
+- Traveler sign-up profile trigger installed: new Auth users receive a `staylatin_profiles` row with the default traveler role.
+- Security advisor check currently reports no security findings; performance advisor findings remain for later optimization.
+- Business submissions, admin decisions, image uploads, and memberships are not yet fully connected.
 - Payments: not connected; do not collect payment details in the prototype.
 - Sample listings are illustrative and must not be presented as verified partners.
 
@@ -22,20 +25,21 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 
 ## Backend connection sequence
 
-1. Confirm authorization to create the separate StayLatin Supabase project and review the quoted project cost.
-2. Create the project in the CGG organization without changing either existing project.
-3. Verify the new project's ID, region, and health status.
-4. Review `database/schema.sql` and apply it only to the new StayLatin project.
-5. Inspect migration results, row-level-security policies, and database security advisors.
-6. Configure `staylatin-config.js` with the new project's URL and publishable key only.
-7. Implement and test authentication, profile ownership, business submission/review, image storage, favorites, and membership status.
-8. Keep payment checkout disabled until recurring plans and verified webhook handling are configured and tested.
-9. Test traveler, business-owner, and admin permissions with separate test accounts before launch.
+1. Create and verify the dedicated StayLatin project; do not modify either existing project.
+2. Apply the reviewed schema only to StayLatin and inspect migration results, RLS policies, and security advisors.
+3. Configure `staylatin-config.js` with the dedicated project's URL and publishable key only.
+4. Configure the production site URL and allowed email-confirmation redirect URLs in Supabase Auth settings.
+5. Test account creation, confirmation email, sign-in, sign-out, and password recovery with a test account.
+6. Implement and test business submission/review, image storage, favorites, and membership status.
+7. Keep payment checkout disabled until recurring plans and verified webhook handling are configured and tested.
+8. Test traveler, business-owner, and admin permissions with separate test accounts before launch.
 
 ## Launch checklist
 
-- [ ] Dedicated StayLatin backend exists and is healthy.
-- [ ] Schema migration applied only to that project.
+- [x] Dedicated StayLatin backend exists and is healthy.
+- [x] Schema migration applied only to that project.
+- [x] New-user profile trigger installed.
+- [ ] Production site URL and allowed auth redirect URLs configured in Supabase Auth.
 - [ ] RLS policies tested for anonymous, traveler, business owner, and admin access.
 - [ ] Admin authorization is enforced server-side.
 - [ ] Business forms persist submissions and support moderation.
@@ -46,4 +50,4 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - [ ] Illustrative listings replaced or clearly kept labeled until each partner is verified.
 - [ ] Mobile, accessibility, and production URL checks completed.
 
-**Do not treat the prototype UI as a live account system, approval system, or billing system.**
+**Traveler authentication is wired to the dedicated project, but it still needs a real end-to-end test. Do not treat business approvals or billing as live until their workflows are implemented and tested.**
