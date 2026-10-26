@@ -92,7 +92,7 @@
 <form id="authForm"><div class="field" id="nameField" hidden><label for="name">YOUR NAME</label><input id="name" name="name" autocomplete="name" placeholder="Your name"></div><div class="field"><label for="email">EMAIL ADDRESS</label><input id="email" type="email" name="email" autocomplete="email" required placeholder="you@example.com"></div><div class="field"><label for="password">PASSWORD</label><input id="password" type="password" name="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></div><button class="btn primary submit" id="submit" type="submit">Sign in</button><button class="minor-action" id="resetPassword" type="button">Email me a password-reset link</button><button class="minor-action" id="resendConfirmation" type="button" hidden>Resend confirmation email</button><button class="minor-action" id="signout" type="button" hidden>Sign out</button></form><div class="status" id="status" role="status">StayLatin uses its own dedicated account service, separate from the existing CGG database.</div><p class="disclaimer" id="privacyNote">Your account details are sent to StayLatin's dedicated authentication service only. Never share your password with anyone.</p></section>
 <section id="travelerDashboard" class="traveler-dashboard" hidden aria-live="polite"><div class="dashboard-topline"><div><div class="kicker" style="color:var(--terra)">Your StayLatin space</div><h2>Your travel dashboard</h2><p id="dashboardGreeting">Your travel space is ready.</p></div><button id="dashSignout" type="button" class="minor-action" style="width:auto;margin-top:0">Sign out</button></div><div class="dashboard-stats"><div class="dashboard-stat"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted)">YOUR MEMBERSHIP</div><strong style="display:block;margin-top:7px">Free traveler</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">Free to use</div></div><div class="dashboard-stat"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted)">SAVED STAYS</div><strong id="savedStayCount" style="display:block;margin-top:7px">—</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">Your favorites</div></div></div>
 
-<section aria-labelledby="publishedStaysTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><h3 id="publishedStaysTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:0">Published stays · Save favorites</h3><a href="index.html" style="color:var(--forest);font-size:12px;font-weight:800">Explore directory ↗</a></div><div id="dashboardStayResults" style="display:grid;gap:10px"><div class="status">Your published stays will appear here.</div></div></section>
+
 <section id="personalTripPlanner" aria-labelledby="tripPlannerTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Your plans · Free traveler</div>
   <h3 id="tripPlannerTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Personal trip planner</h3>
@@ -221,14 +221,12 @@ chatForm.addEventListener("submit",async e=>{
 document.getElementById("refreshChat").addEventListener("click",loadTravelerChat);
 function connectTravelerChat(session){currentTravelerSession=session||null;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(!session){chatMessages.innerHTML="";setChatNotice("Sign in to join the Traveler Lounge.");return;}loadTravelerChat();chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe();}
 async function loadDashboardStays(session){
- dashResults.innerHTML='<div class="status">Loading published stays…</div>';
  try{
-  const {data,error}=await client.from("staylatin_businesses").select("id,name,business_type,description,country,city,official_website").eq("listing_status","published").order("name");
-  if(error)throw error;dashListings=data||[];
-  const {data:favs,error:favError}=await client.from("staylatin_favorites").select("business_id").eq("user_id",session.user.id);
-  if(favError)throw favError;dashSaved=(favs||[]).map(x=>x.business_id);
-  document.getElementById("savedStayCount").textContent=String(dashSaved.length);renderDashboardStays();
- }catch(e){dashResults.innerHTML='<div class="status error">Could not load published stays. Please refresh and try again.</div>'}
+  const {data:favs,error}=await client.from("staylatin_favorites").select("business_id").eq("user_id",session.user.id);
+  if(error)throw error;
+  dashSaved=(favs||[]).map(x=>x.business_id);
+  document.getElementById("savedStayCount").textContent=String(dashSaved.length);
+ }catch(e){document.getElementById("savedStayCount").textContent="—";}
 }
 document.getElementById("dashboardStaySearch")?.addEventListener("submit",e=>{e.preventDefault();renderDashboardStays()});
 document.getElementById("dashboardStayQuery")?.addEventListener("input",renderDashboardStays);
