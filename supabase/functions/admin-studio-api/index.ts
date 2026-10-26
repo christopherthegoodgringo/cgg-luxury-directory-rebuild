@@ -57,7 +57,7 @@ Deno.serve(async (req: Request) => {
     const action = String(payload.action || "dashboard");
 
     if (action === "dashboard") {
-      const [listings, submissions, claims, subscribers, audit, views, reviews, reports, associates, commissions, associateAudit] = await Promise.all([
+      const [listings, submissions, claims, subscribers, audit, views, reviews, reports, associates, commissions, associateAudit, plans, memberships, transactions] = await Promise.all([
         admin.from("directory_listings").select("*").order("updated_at", { ascending: false }).limit(500),
         admin.from("listing_submissions").select("*").order("created_at", { ascending: false }).limit(200),
         admin.from("listing_claim_requests").select("*").order("created_at", { ascending: false }).limit(200),
@@ -69,15 +69,18 @@ Deno.serve(async (req: Request) => {
         admin.from("independent_associates").select("*").order("created_at", { ascending: false }).limit(1000),
         admin.from("associate_commissions").select("*").order("earned_at", { ascending: false }).limit(2000),
         admin.from("independent_associate_audit").select("*").order("created_at", { ascending: false }).limit(200),
+        admin.from("membership_plans").select("*").order("sort_order", { ascending: true }).limit(200),
+        admin.from("traveler_memberships").select("*").order("updated_at", { ascending: false }).limit(1000),
+        admin.from("membership_transactions").select("*").order("occurred_at", { ascending: false }).limit(2000),
       ]);
-      for (const x of [listings, submissions, claims, subscribers, audit, views, reviews, reports, associates, commissions, associateAudit]) if (x.error) throw x.error;
+      for (const x of [listings, submissions, claims, subscribers, audit, views, reviews, reports, associates, commissions, associateAudit, plans, memberships, transactions]) if (x.error) throw x.error;
       return reply({
         ok: true,
         admin: { email: user.email },
         data: {
           listings: listings.data || [], submissions: submissions.data || [], claims: claims.data || [],
           subscribers: subscribers.data || [], audit: audit.data || [], views: views.data || [],
-          reviews: reviews.data || [], reports: reports.data || [], associates: associates.data || [], commissions: commissions.data || [], associateAudit: associateAudit.data || [],
+          reviews: reviews.data || [], reports: reports.data || [], associates: associates.data || [], commissions: commissions.data || [], associateAudit: associateAudit.data || [], plans: plans.data || [], memberships: memberships.data || [], transactions: transactions.data || [],
         },
       });
     }
@@ -217,6 +220,54 @@ Deno.serve(async (req: Request) => {
     }
     if (action === "delete_commission") {
       const id=String(payload.id||"");if(!id)return reply({error:"Commission id required."},400);const {data:before,error:re}=await admin.from("associate_commissions").select("*").eq("id",id).single();if(re)throw re;if(before.status==="paid")return reply({error:"Paid commission records cannot be deleted."},409);await admin.from("independent_associate_audit").insert({associate_id:before.associate_id,commission_id:id,action:"commission_deleted",changed_by:user.email,details:{old_record:before}});const {error}=await admin.from("associate_commissions").delete().eq("id",id);if(error)throw error;return reply({ok:true,removed:true});
+    }
+
+
+    if (action === "save_membership_plan") {
+      const id=String(payload.id||"").trim(),p=payload.plan;if(!p||typeof p!=="object"||Array.isArray(p))return reply({error:"Plan fields are required."},400);
+      const code=String(p.code||"").trim().toLowerCase().replace(/[^a-z0-9_-]/g,"-").slice(0,60),name=String(p.name||"").trim().slice(0,120),audience=String(p.audience||"traveler"),status=String(p.status||"draft"),interval=String(p.billing_interval||"month"),price=Number(p.price),currency=String(p.currency||"USD").toUpperCase();
+      if(!code||!name||!Number.isFinite(price)||price<0||!/^[A-Z]{3}$/.test(currency))return reply({error:"Enter plan code, name, valid non-negative price and 3-letter currency."},400);
+      if(!["traveler","business_owner","both"].includes(audience)||!["draft","active","retired"].includes(status)||!["free","month","year","one_time"].includes(interval))return reply({error:"Invalid audience, status or interval."},400);
+      const features=Array.isArray(p.features)?p.features.map((v:unknown)=>String(v).trim().slice(0,160)).filter(Boolean).slice(0,30):String(p.features||"").split("\n").map((v:string)=>v.trim().slice(0,160)).filter(Boolean).slice(0,30);
+      const safe={code,name,audience,description:String(p.description||"").slice(0,2000),price,currency,billing_interval:interval,status,features,sort_order:Number.isFinite(Number(p.sort_order))?Math.trunc(Number(p.sort_order)):100,updated_at:new Date().toISOString(),updated_by:user.email};
+      const q=id?admin.from("membership_plans").update(safe).eq("id",id):admin.from("membership_plans").insert(safe);const {data,error}=await q.select("*").single();if(error)throw error;return reply({ok:true,plan:data});
+    }
+    if (action === "delete_membership_plan") {
+      const id=String(payload.id||"");if(!id)return reply({error:"Plan id required."},400);
+      const {count,error:ce}=await admin.from("traveler_memberships").select("id",{count:"exact",head:true}).eq("plan_id",id);if(ce)throw ce;
+      if((count||0)>0){const {error}=await admin.from("membership_plans").update({status:"retired",updated_at:new Date().toISOString(),updated_by:user.email}).eq("id",id);if(error)throw error;return reply({ok:true,retired:true});}
+      const {error}=await admin.from("membership_plans").delete().eq("id",id);if(error)throw error;return reply({ok:true,removed:true});
+    }
+    if (action === "save_traveler_membership") {
+      const id=String(payload.id||""),m=payload.membership;if(!m||typeof m!=="object"||Array.isArray(m))return reply({error:"Membership fields required."},400);
+      const userId=String(m.user_id||""),planId=String(m.plan_id||""),status=String(m.status||"pending");if(!userId||!["pending","trialing","active","past_due","paused","cancelled","expired","comped"].includes(status))return reply({error:"Choose a traveler and valid status."},400);
+      const {data:sub,error:se}=await admin.from("traveler_subscribers").select("user_id").eq("user_id",userId).maybeSingle();if(se)throw se;if(!sub)return reply({error:"Traveler member not found."},404);
+      let planName=String(m.plan_name_snapshot||"").slice(0,120);if(planId){const {data:p,error:pe}=await admin.from("membership_plans").select("id,name,status").eq("id",planId).single();if(pe)throw pe;if(p.status==="retired"&&!id)return reply({error:"Cannot assign a retired plan."},400);planName=p.name;}
+      const safe={user_id:userId,plan_id:planId||null,plan_name_snapshot:planName,status,starts_at:m.starts_at||new Date().toISOString(),ends_at:m.ends_at||null,cancel_at_period_end:Boolean(m.cancel_at_period_end),external_customer_id:String(m.external_customer_id||"").slice(0,200)||null,external_subscription_id:String(m.external_subscription_id||"").slice(0,200)||null,admin_notes:String(m.admin_notes||"").slice(0,4000),updated_at:new Date().toISOString(),updated_by:user.email};
+      const q=id?admin.from("traveler_memberships").update(safe).eq("id",id):admin.from("traveler_memberships").insert(safe);const {data,error}=await q.select("*").single();if(error)throw error;return reply({ok:true,membership:data});
+    }
+    if (action === "set_traveler_membership_status") {
+      const id=String(payload.id||""),status=String(payload.status||"");if(!id||!["pending","trialing","active","past_due","paused","cancelled","expired","comped"].includes(status))return reply({error:"Valid membership and status required."},400);
+      const {data,error}=await admin.from("traveler_memberships").update({status,updated_at:new Date().toISOString(),updated_by:user.email}).eq("id",id).select("*").single();if(error)throw error;return reply({ok:true,membership:data});
+    }
+    if (action === "delete_traveler_membership") {
+      const id=String(payload.id||"");if(!id)return reply({error:"Membership id required."},400);
+      const {count,error:ce}=await admin.from("membership_transactions").select("id",{count:"exact",head:true}).eq("membership_id",id);if(ce)throw ce;if((count||0)>0)return reply({error:"Membership has transaction history; cancel or expire it instead."},409);
+      const {error}=await admin.from("traveler_memberships").delete().eq("id",id);if(error)throw error;return reply({ok:true,removed:true});
+    }
+    if (action === "record_membership_transaction") {
+      const t=payload.transaction;if(!t||typeof t!=="object"||Array.isArray(t))return reply({error:"Transaction fields required."},400);
+      const userId=String(t.user_id||""),membershipId=String(t.membership_id||""),amount=Number(t.amount),currency=String(t.currency||"USD").toUpperCase(),status=String(t.status||"recorded"),type=String(t.transaction_type||"manual");
+      if(!userId||!Number.isFinite(amount)||amount<0||!/^[A-Z]{3}$/.test(currency))return reply({error:"Choose a member and valid amount/currency."},400);
+      if(!["recorded","pending","paid","failed","refunded","void"].includes(status)||!["manual","charge","refund","adjustment"].includes(type))return reply({error:"Invalid transaction status or type."},400);
+      const {data:sub,error:se}=await admin.from("traveler_subscribers").select("user_id").eq("user_id",userId).maybeSingle();if(se)throw se;if(!sub)return reply({error:"Traveler member not found."},404);
+      let planName=String(t.plan_name_snapshot||"").slice(0,120);if(membershipId){const {data:m,error:me}=await admin.from("traveler_memberships").select("id,user_id,plan_name_snapshot").eq("id",membershipId).single();if(me)throw me;if(m.user_id!==userId)return reply({error:"Transaction member must match membership owner."},400);planName=m.plan_name_snapshot||planName;}
+      const safe={membership_id:membershipId||null,user_id:userId,plan_name_snapshot:planName,amount,currency,status,transaction_type:type,provider:String(t.provider||"manual").slice(0,80),provider_reference:String(t.provider_reference||"").slice(0,200)||null,occurred_at:new Date().toISOString(),notes:String(t.notes||"").slice(0,4000),created_by:user.email};
+      const {data,error}=await admin.from("membership_transactions").insert(safe).select("*").single();if(error)throw error;return reply({ok:true,transaction:data});
+    }
+    if (action === "update_membership_transaction_status") {
+      const id=String(payload.id||""),status=String(payload.status||"");if(!id||!["recorded","pending","paid","failed","refunded","void"].includes(status))return reply({error:"Valid transaction and status required."},400);
+      const {data,error}=await admin.from("membership_transactions").update({status}).eq("id",id).select("*").single();if(error)throw error;return reply({ok:true,transaction:data});
     }
 
     if (action === "review_report") {
