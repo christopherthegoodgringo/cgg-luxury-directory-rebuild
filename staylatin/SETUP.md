@@ -9,6 +9,8 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - `database/schema.sql` and follow-up migrations applied to the dedicated StayLatin project; 11 StayLatin tables verified.
 - `staylatin-config.js` points to the dedicated project using its browser-safe publishable key.
 - Traveler sign-up profile trigger installed: new Auth users receive a `staylatin_profiles` row with the default traveler role.
+- Traveler member directory now supports consent-based profile photos; photos stay private unless the member separately opts in to directory sharing.
+- Private traveler-to-traveler messages are stored in `staylatin_traveler_private_messages`; RLS restricts message reads to the sender and recipient, with recipient-only read receipts. End-to-end testing with two traveler accounts is still required.
 - Latest security advisor check reports one warning: leaked-password protection is disabled. Enable it in Supabase Auth password settings before launch. Performance advisor also reports unindexed foreign keys and overlapping permissive policies; these are review items, not evidence of a data breach.
 - Business onboarding now writes to a dedicated private `staylatin_business_submissions` table; only the submitting owner can read their own submission through client policies.
 - Admin dashboard is connected to the private submission queue and checks the trusted `app_metadata.role=admin` claim before revealing data.
