@@ -266,7 +266,10 @@ Deno.serve(async (req: Request) => {
       const {data,error}=await admin.from("membership_transactions").insert(safe).select("*").single();if(error)throw error;return reply({ok:true,transaction:data});
     }
     if (action === "update_membership_transaction_status") {
-      const id=String(payload.id||""),status=String(payload.status||"");if(!id||!["recorded","pending","paid","failed","refunded","void"].includes(status))return reply({error:"Valid transaction and status required."},400);
+      const id=String(payload.id||""),status=String(payload.status||"");if(!id||!["recorded","pending","paid","failed","void"].includes(status))return reply({error:"Valid transaction and status required. Refunds must be recorded as a separate transaction."},400);
+      const {data:before,error:be}=await admin.from("membership_transactions").select("*").eq("id",id).single();if(be)throw be;
+      if(["paid","refunded","void"].includes(String(before.status||""))&&status!==before.status)return reply({error:"Paid, refunded, and void transaction records are locked to preserve history. Record a separate refund or adjustment instead."},409);
+      if(before.status==="failed"&&status!=="failed")return reply({error:"Failed transaction records are locked. Create a separate corrected record if needed."},409);
       const {data,error}=await admin.from("membership_transactions").update({status}).eq("id",id).select("*").single();if(error)throw error;return reply({ok:true,transaction:data});
     }
 
