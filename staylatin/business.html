@@ -55,6 +55,7 @@ let ownerWorkspaceSession=null,ownerBusinesses=[],activeSupportThread=null,owner
 const ownerById=id=>ownerBusinesses.find(b=>b.id===id);
 function ownerStatus(id,msg,error=false){const el=document.getElementById(id);el.className="status show";el.style.background=error?"#f5e5e0":"#f3eee2";el.style.color=error?"#984b39":"#665b42";el.textContent=msg;}
 async function loadOwnerWorkspace(session){
+ if(ownerSupportChannel&&client){client.removeChannel(ownerSupportChannel);ownerSupportChannel=null;}
  ownerWorkspaceSession=session||null;activeSupportThread=null;document.getElementById("supportConversation").hidden=true;
  if(!session){["supportThreads","changeHistory","leadRows"].forEach(id=>document.getElementById(id).innerHTML="");ownerStatus("supportStatus","Sign in with your business-owner account to use the private inbox.");ownerStatus("changeStatus","Sign in to request listing changes.");ownerStatus("leadStatus","Sign in with your business-owner account to view traveler inquiries.");ownerStatus("analyticsStatus","Sign in with your business-owner account to view analytics.");return;}
  try{
