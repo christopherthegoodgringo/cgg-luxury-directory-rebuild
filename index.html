@@ -171,6 +171,49 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 .guide-list article{padding:15px;border:1px solid var(--line);border-radius:9px}
 @media(max-width:650px){.tools-grid,.tools-form,.guide-list{grid-template-columns:1fr}.tools-form .full{grid-column:auto}.tools-panel{padding:13px}.tools-map{height:270px}}
 
+
+/* CGG Phase 1 redesign: directory inventory + traveler acquisition */
+:root{--green:#12352a;--green2:#1d4a39;--gold:#c5a45c;--cream:#f8f6f0;--ink:#182720;--muted:#68766e;--line:#e4e1d6;--white:#fff}
+body{background:#fbfaf6;color:var(--ink)}
+.site-header,header.site-header{background:rgba(251,250,246,.96);border-bottom:1px solid #e8e3d6;backdrop-filter:blur(14px)}
+.wrap{max-width:1220px}
+.hero{padding:76px 0 56px;background:linear-gradient(115deg,#102d24 0%,#174333 62%,#244f3d 100%);color:#fff;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-100px;top:-180px;width:520px;height:520px;border:1px solid #ffffff22;border-radius:50%;box-shadow:0 0 0 42px #ffffff08,0 0 0 84px #ffffff05;pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero .eyebrow{color:#e1c982;letter-spacing:.2em}
+.hero h1{max-width:780px;font-size:clamp(42px,6vw,76px);line-height:1.02;letter-spacing:-.045em;margin:18px 0}
+.hero h1 em{color:#dfc37d;font-family:Georgia,serif;font-weight:500}
+.hero p{max-width:610px;color:#e1e8e1;font-size:16px;line-height:1.8}
+.hero-rule{width:76px;height:3px;background:var(--gold);margin-top:30px}
+.section-head{align-items:end;margin-top:44px;margin-bottom:20px}
+.section-head h2{font-size:clamp(26px,3vw,38px);letter-spacing:-.03em}
+.section-head>p{color:var(--muted);font-size:13px}
+.filters{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 32px #162c2009}
+.filter-grid{gap:12px}
+.field label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#68766e}
+.field input,.field select{min-height:46px;border-radius:9px;border-color:#deded4;background:#fdfcf9}
+.btn{border-radius:9px;font-weight:700;transition:transform .18s,box-shadow .18s}
+.btn:hover{transform:translateY(-1px)}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#17281f}
+.categories{margin:18px 0 22px;gap:8px}
+.cat-btn{border-radius:999px;padding:9px 15px}
+.cards{gap:22px;align-items:stretch}
+.cards>*{border-radius:15px;overflow:hidden;border:1px solid #e8e3d7;box-shadow:0 12px 28px #14271d0a;transition:transform .2s,box-shadow .2s}
+.cards>*:hover{transform:translateY(-3px);box-shadow:0 18px 38px #14271d14}
+.traveler-tools{margin-top:64px;padding:34px 0;background:#f2f0e8;border-top:1px solid #e6e1d3;border-bottom:1px solid #e6e1d3}
+.traveler-tools .tools-heading h2{font-size:clamp(25px,3vw,36px)}
+.studio-promo,.portal-choice{padding-top:58px;padding-bottom:58px}
+.portal-choice{background:#fff}
+.portal-choice-head{max-width:760px;margin:0 auto 28px;text-align:center}
+.portal-choice-head h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.035em}
+.portal-choice-head p{line-height:1.75;color:var(--muted)}
+.portal-choice-grid{gap:20px}
+.portal-choice-card{border-radius:16px;padding:28px;border:1px solid #e6e0d2;box-shadow:0 12px 32px #182a2008}
+.portal-choice-card.traveler{background:linear-gradient(145deg,#f9f6eb,#fff)}
+.portal-choice-card.business{background:#f8faf7}
+.portal-choice-card h3{font-size:24px;letter-spacing:-.025em}
+footer{background:#102d24;color:#edf0e9}
+@media(max-width:700px){.hero{padding:54px 0 42px}.hero:after{right:-300px}.filters{padding:12px}.portal-choice-card{padding:20px}}
 </style>
 </head>
 <body>
@@ -187,18 +230,18 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 <section class="hero">
  <div class="wrap">
   <div class="eyebrow">Discover somewhere exceptional</div>
-  <h1>Good places.<br><em>Great stories.</em></h1>
-  <p>A considered collection of hostels in Colombia, curated for travelers who value character, comfort and connection.</p>
+  <h1>Exceptional places.<br><em>Better journeys.</em></h1>
+  <p>Discover carefully selected hotels, hostels, restaurants and bars in Colombia. Find your next great stay, explore local favorites and join a growing community of travelers.</p>
   <div class="hero-rule"></div>
  </div>
 </section>
 <main class="wrap" id="discover">
- <div class="section-head"><div><div class="eyebrow">The directory</div><h2>Find your next favorite</h2></div><p>Masaya Santa Marta</p></div>
+ <div class="section-head"><div><div class="eyebrow">The directory</div><h2>Explore the directory</h2></div><p>Explore the directory · Start with Santa Marta and Tunja</p></div>
  <section class="filters" aria-label="Filter listings">
   <div class="filter-grid">
    <div class="field"><label for="country">Country</label><select id="country"><option value="all">All countries</option><option value="Colombia">Colombia</option></select></div>
    <div class="field"><label for="city">City</label><select id="city"><option value="all">All cities</option><option value="Barranquilla">Barranquilla</option><option value="Bogotá">Bogotá</option><option value="Cartagena">Cartagena</option><option value="Medellín">Medellín</option><option value="Santa Marta">Santa Marta</option><option value="Tunja">Tunja</option></select></div>
-   <div class="field"><label for="type">Experience</label><select id="type"><option value="all">All experiences</option><option value="Hostel">Hostels</option></select></div>
+   <div class="field"><label for="type">Experience</label><select id="type"><option value="all">All experiences</option><option value="Hotel">Hotels</option><option value="Hostel">Hostels</option><option value="Restaurant">Restaurants</option><option value="Bar">Bars</option></select></div>
    <div class="field search-field"><label for="search">Search</label><input id="search" type="search" placeholder="Name, city or keyword…" autocomplete="off"></div>
    <button class="btn btn-gold" id="applyFilters" type="button">Explore</button>
   </div>
@@ -215,7 +258,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 
  <section class="traveler-tools" id="travelerTools" aria-labelledby="toolsTitle">
   <div class="tools-heading"><div class="eyebrow">Beyond the directory</div><h2 id="toolsTitle">Your CGG travel companion</h2><p class="tools-help">Plan privately, keep your travel memories, explore local guidance and compare booking options. Create an account to sync your favorites and traveler features across devices.</p><div class="account-actions companion-account-actions" id="signedInAccountActions" hidden><button class="btn btn-gold account-open" id="accountButton" type="button">My Account</button><span class="account-status" id="companionAccountStatus" style="color:var(--muted)"></span></div></div>
-  <div id="companionLocked" class="tools-panel companion-locked"><div class="join-cta"><div class="join-cta-copy"><span class="join-cta-eyebrow">EARLY MEMBER INVITATION · FREE TO JOIN</span><h3>Join now. Explore more. Travel better.</h3><p class="join-cta-intro">Create your CGG account now to unlock the Travel Companion experience. Membership is free during our launch period. If monthly membership fees are introduced later, we will clearly communicate the change and applicable terms.</p><div class="join-benefits join-benefits-detailed"><div class="join-benefit"><b>✓</b><span><strong>My Travel Planner</strong><small>Organize destinations, dates, trip notes and ideas in one place.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Explore on a Map</strong><small>Explore destinations visually and open locations in Google Maps.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Compare Booking Options</strong><small>Find external booking and travel-search links for directory properties.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Local Insider Guides</strong><small>Get destination tips for planning days, getting around and local conditions.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>CGG Concierge</strong><small>Build a starting shortlist around your city, property type and travel style.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Saved Favorites</strong><small>Keep the places you love together and access account-linked favorites.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>My Trips &amp; Itineraries</strong><small>Keep track of your trip plans and the listings you want to visit.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>My Travel Passport</strong><small>Record destinations visited and save personal travel memories.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Traveler Profile &amp; Preferences</strong><small>Save your travel style, interests and preferred language.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Reviews &amp; Ratings</strong><small>Share firsthand property feedback and revisit your own reviews.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Reminders &amp; Notifications</strong><small>Keep an eye on trip tasks, dates and account updates.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Traveler Chat &amp; Messages</strong><small>Connect with the community through available chat and messaging features.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Recently Viewed &amp; Shared Listings</strong><small>Return to properties you viewed or listings shared with you.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Account Preferences</strong><small>Manage your traveler settings and preferences in one place.</small></span></div></div><div class="account-actions join-cta-actions"><button class="btn btn-gold join-cta-primary" type="button" id="lockedCreateAccount">Join Now — Free →</button><button class="btn btn-outline join-cta-secondary" type="button" id="lockedSignIn">Already a member? Sign in</button></div><p class="join-cta-footnote">Free during launch · Monthly membership fees may be introduced later with advance communication.</p></div><div class="join-cta-mark" aria-hidden="true"><div class="join-cta-orbit"><span>CGG</span><small>TRAVEL<br>COMPANION</small></div><span class="join-cta-star">✦</span></div></div></div>
+  <div id="companionLocked" class="tools-panel companion-locked"><div class="join-cta"><div class="join-cta-copy"><span class="join-cta-eyebrow">EARLY MEMBER INVITATION · FREE TO JOIN</span><h3>Join the CGG travel community</h3><p class="join-cta-intro">Create your CGG account now to unlock the Travel Companion experience. Membership is free during our launch period. If monthly membership fees are introduced later, we will clearly communicate the change and applicable terms.</p><div class="join-benefits join-benefits-detailed"><div class="join-benefit"><b>✓</b><span><strong>My Travel Planner</strong><small>Organize destinations, dates, trip notes and ideas in one place.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Explore on a Map</strong><small>Explore destinations visually and open locations in Google Maps.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Compare Booking Options</strong><small>Find external booking and travel-search links for directory properties.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Local Insider Guides</strong><small>Get destination tips for planning days, getting around and local conditions.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>CGG Concierge</strong><small>Build a starting shortlist around your city, property type and travel style.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Saved Favorites</strong><small>Keep the places you love together and access account-linked favorites.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>My Trips &amp; Itineraries</strong><small>Keep track of your trip plans and the listings you want to visit.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>My Travel Passport</strong><small>Record destinations visited and save personal travel memories.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Traveler Profile &amp; Preferences</strong><small>Save your travel style, interests and preferred language.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Reviews &amp; Ratings</strong><small>Share firsthand property feedback and revisit your own reviews.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Reminders &amp; Notifications</strong><small>Keep an eye on trip tasks, dates and account updates.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Traveler Chat &amp; Messages</strong><small>Connect with the community through available chat and messaging features.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Recently Viewed &amp; Shared Listings</strong><small>Return to properties you viewed or listings shared with you.</small></span></div><div class="join-benefit"><b>✓</b><span><strong>Account Preferences</strong><small>Manage your traveler settings and preferences in one place.</small></span></div></div><div class="account-actions join-cta-actions"><button class="btn btn-gold join-cta-primary" type="button" id="lockedCreateAccount">Join Now — Free →</button><button class="btn btn-outline join-cta-secondary" type="button" id="lockedSignIn">Already a member? Sign in</button></div><p class="join-cta-footnote">Free during launch · Monthly membership fees may be introduced later with advance communication.</p></div><div class="join-cta-mark" aria-hidden="true"><div class="join-cta-orbit"><span>CGG</span><small>TRAVEL<br>COMPANION</small></div><span class="join-cta-star">✦</span></div></div></div>
    <nav class="tools-nav" aria-label="CGG Travel Companion tools" hidden>
    <span class="tools-nav-label">PLAN &amp; EXPLORE</span>
    <button type="button" data-tool="planner" aria-pressed="true" id="tripPlannerNav" hidden>My Travel Planner</button>
@@ -262,7 +305,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 </section>
 <section class="portal-choice" id="member-studio" aria-labelledby="portalChoiceTitle">
   <div class="wrap">
-   <div class="portal-choice-head"><span class="eyebrow">Member Studio</span><h2 id="portalChoiceTitle">Your CGG account, your way</h2><p>Choose the right workspace below. Travel Members can organize personal travel and favorites; Business Owners use a separate portal to request and manage business listings. These account types have separate permissions.</p></div>
+   <div class="portal-choice-head"><span class="eyebrow">Member Studio</span><h2 id="portalChoiceTitle">Explore more. Save your favorites. Join CGG.</h2><p>Choose the right workspace below. Travel Members can organize personal travel and favorites; Business Owners use a separate portal to request and manage business listings. These account types have separate permissions.</p></div>
    <div class="portal-choice-grid">
     <article class="portal-choice-card traveler"><span class="portal-choice-label">01 · TRAVEL MEMBERS</span><h3>Travel Member Studio</h3><p>Your personal travel workspace for planning trips, saving favorite places and keeping travel details together. Travel membership does not provide business-listing access.</p><ul class="portal-choice-list"><li>Save favorite hotels and hostels</li><li>Plan trips, itineraries and reminders</li><li>Use traveler guides, reviews and companion tools</li></ul><a class="btn btn-gold" href="./traveler-portal.html">Open Travel Member Studio ↗</a></article>
     <article class="portal-choice-card business"><span class="portal-choice-label">02 · BUSINESS OWNERS</span><h3>Business Owner Studio</h3><p>For business owners and authorized representatives who need to submit a listing, request corrections or manage owner-related tasks. A travel account does not grant owner permissions.</p><ul class="portal-choice-list"><li>Submit a business claim or listing request</li><li>Request profile, photo and detail corrections</li><li>Keep owner-related tasks separate from travel membership</li></ul><a class="btn" href="./business-owners.html">Open Business Owner Portal ↗</a></article>
