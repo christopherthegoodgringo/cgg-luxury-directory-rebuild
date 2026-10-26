@@ -156,7 +156,7 @@ async function unlockAdmin(session){
   document.body.classList.remove("auth-locked");
   addAdminSessionControls(user.email);
   updateLiveOverview();
-  renderLiveListings();renderLiveReviews();renderWebsiteAnalytics();
+  renderLiveListings();renderLiveReviews();renderSubscribers();renderWebsiteAnalytics();
   document.getElementById("liveListingCaption").textContent=liveData.listings.length+" live listings loaded from Supabase";
   authMessage("");
  }catch(err){
