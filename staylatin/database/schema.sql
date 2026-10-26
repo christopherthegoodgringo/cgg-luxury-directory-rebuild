@@ -156,11 +156,9 @@ alter table public.staylatin_moderation_events enable row level security;
 -- Trusted admin claim must be set by privileged server-side code, never by a client.
 create policy "profile owner reads own profile" on public.staylatin_profiles
 for select to authenticated using ((select auth.uid()) = id);
-create policy "profile owner updates own non-role profile" on public.staylatin_profiles
-for update to authenticated using ((select auth.uid()) = id)
-with check ((select auth.uid()) = id);
--- No client INSERT/UPDATE policy allows changing account_type or admin claims.
--- Provision profiles through a trusted Auth trigger/server workflow.
+-- No client profile UPDATE policy yet: column-level grants or a validated server-side
+-- endpoint must be added so users cannot change account_type. Provision profiles through
+-- a trusted Auth trigger/server workflow; admin role comes only from trusted app_metadata.
 
 create policy "published listings are public" on public.staylatin_businesses
 for select to anon, authenticated using (listing_status = 'published');
