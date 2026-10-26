@@ -77,7 +77,7 @@
 .traveler-memberships .head h2{font-size:32px}
 .traveler-plans{gap:12px}
 .traveler-plan{box-shadow:none!important;border-radius:8px!important;padding:16px!important}
-@media(max-width:800px){.traveler-content{grid-template-columns:1fr;padding-top:8px}.traveler-plans{grid-template-columns:1fr}}
+@media(max-width:800px){.traveler-content{grid-template-columns:1fr;padding-top:8px}.traveler-plans{grid-template-columns:1fr}#preTripChecklistItems{grid-template-columns:1fr!important}}
 #travelerAvatarWrap:hover #travelerAvatarOverlay,#travelerAvatarWrap:focus-within #travelerAvatarOverlay{opacity:1}</style></head><body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="wrap nav">
@@ -116,6 +116,20 @@
   </form>
   <div id="tripPlannerStatus" class="status" role="status" style="margin-top:12px">Your saved trip plans will appear here.</div>
   <div id="tripPlannerList" style="display:grid;gap:12px;margin-top:12px"></div>
+</section>
+
+<section id="preTripChecklist" aria-labelledby="preTripChecklistTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+  <div class="kicker" style="color:var(--terra)">Travel ready · Free traveler</div>
+  <h3 id="preTripChecklistTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Smart pre-trip checklist</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:720px;margin:0 0 16px">Prepare for your next trip with a reusable checklist. Tick items off as you go; your progress is saved in this browser on this device.</p>
+  <div id="preTripProgress" role="status" style="font-size:12px;font-weight:800;color:var(--forest);margin:0 0 12px">0 of 12 complete</div>
+  <div id="preTripChecklistItems" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"></div>
+  <form id="preTripCustomForm" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+    <label for="preTripCustomTask" style="position:absolute;left:-9999px">Add a custom checklist item</label>
+    <input id="preTripCustomTask" maxlength="120" placeholder="Add your own reminder…" style="flex:1;min-width:180px;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px">
+    <button type="submit" class="btn primary" style="margin:0">Add reminder +</button>
+  </form>
+  <div id="preTripChecklistStatus" class="status" role="status" style="margin-top:10px">Checklist progress is saved in this browser on this device.</div>
 </section><section class="traveler-chat" aria-labelledby="chatTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="kicker" style="color:var(--terra)">Traveler community</div><h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge <span id="chatUnreadBadge" hidden style="vertical-align:middle;margin-left:6px;padding:4px 8px;border-radius:999px;background:#a64b32;color:#fff;font:700 11px Arial,sans-serif"></span></h3><p id="chatNewMessageAlert" hidden role="status" style="margin:6px 0 0;padding:8px 10px;border-radius:7px;background:#fff3d9;color:#654516;font-size:12px"></p><button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin-top:8px">Enable chat notifications</button><span id="chatNotificationStatus" style="display:block;font-size:11px;color:var(--muted);margin-top:4px">Optional browser alerts while this browser is open.</span><p class="desc">Talk travel, ask questions and share practical tips with other signed-in StayLatin travelers. Be respectful and don't post private contact or payment information.</p></div><button id="refreshChat" type="button" class="minor-action" style="width:auto;margin-top:0">Refresh chat ↻</button></div><div id="chatNotice" class="status" role="status">Loading traveler chat…</div><div id="chatMessages" style="display:grid;gap:9px;max-height:360px;overflow:auto;margin:12px 0;padding:2px"></div><form id="chatForm" style="display:grid;gap:9px"><label for="chatMessage" style="font-size:11px;font-weight:800;color:#506056">YOUR MESSAGE</label><textarea id="chatMessage" maxlength="1200" rows="3" required placeholder="Share a destination tip or ask the community…" style="width:100%;border:1px solid #dcd8cd;background:#fffefb;border-radius:7px;padding:12px;resize:vertical"></textarea><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:11px;color:var(--muted)">Messages are visible to signed-in traveler accounts.</span><button id="sendChat" class="btn primary" type="submit">Send message ↗</button></div></form><p class="disclaimer">Community chat is for travel discussion, not emergency assistance. Report abusive content to StayLatin support; moderation tools are being expanded.</p></section></section>
 </main>
 <section class="wrap section traveler-memberships" id="traveler-memberships"><div class="head"><div class="kicker">Traveler memberships</div><h2>More ways to make every trip yours.</h2><p>Clear levels for travelers: start free, then upgrade for richer trip organization and planning as those tools launch.</p></div><div class="traveler-plans"><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">Available to start</div><h3>Basic</h3><strong>Free</strong><p class="disclaimer">Core account features; chat availability depends on a successful sign-in.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For organized trips</div><h3>Plus</h3><strong>$4.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article><article class="traveler-plan"><div class="kicker" style="color:var(--terra)">For serious planners</div><h3>Premium</h3><strong>$9.99 <small>/ month</small></strong><p class="disclaimer">Proposed features; not active yet.</p></article></div><p class="disclaimer">Plus and Premium prices and features are proposals only. No traveler subscription payments are being collected. The Traveler Lounge is being connected now; destination rooms, private group chat, trip reminders, collaboration and export features require further implementation before launch.</p></section><section class="wrap section" id="trip-planning-upgrades" style="margin:24px auto;border-top:1px solid var(--line);padding-top:22px">
@@ -150,10 +164,37 @@ function renderTrips(){
  list.querySelectorAll("[data-save-trip-note]").forEach(b=>b.addEventListener("click",()=>{const area=list.querySelector('[data-trip-note="'+b.dataset.saveTripNote+'"]');const rows=readTrips();const item=rows.find(t=>String(t.id)===b.dataset.saveTripNote);if(item&&area){item.notes=area.value;writeTrips(rows);const old=b.textContent;b.textContent="Saved ✓";setTimeout(()=>{b.textContent=old},1400);}}));
 }
 document.getElementById("tripPlannerForm").addEventListener("submit",e=>{e.preventDefault();if(!activeTripUserId){document.getElementById("tripPlannerStatus").textContent="Please sign in to create a personal trip plan.";return}const title=document.getElementById("tripTitle").value.trim(),destination=document.getElementById("tripDestination").value.trim(),start=document.getElementById("tripStart").value,end=document.getElementById("tripEnd").value;if(start&&end&&end<start){document.getElementById("tripPlannerStatus").textContent="The end date must be on or after the start date.";return}const rows=readTrips();rows.unshift({id:String(Date.now())+"-"+Math.random().toString(36).slice(2,8),title,destination,start,end,notes:document.getElementById("tripNotes").value.trim(),createdAt:new Date().toISOString()});if(writeTrips(rows)){e.target.reset();renderTrips();document.getElementById("tripPlannerStatus").textContent="Trip saved. You can update its notes below whenever you like."}});
+const preTripDefaults=[
+{id:"passport",label:"Check passport validity",group:"Documents"},
+{id:"insurance",label:"Review travel insurance",group:"Documents"},
+{id:"booking",label:"Confirm accommodation",group:"Bookings"},
+{id:"transport",label:"Plan airport and local transport",group:"Bookings"},
+{id:"money",label:"Plan budget and payment options",group:"Money"},
+{id:"cards",label:"Notify bank if needed",group:"Money"},
+{id:"phone",label:"Arrange mobile data or eSIM",group:"Connectivity"},
+{id:"copies",label:"Save digital copies of documents",group:"Documents"},
+{id:"packing",label:"Prepare packing list",group:"Packing"},
+{id:"medicines",label:"Pack personal essentials",group:"Packing"},
+{id:"arrival",label:"Save arrival address and directions",group:"Arrival"},
+{id:"contacts",label:"Save emergency contacts",group:"Arrival"}
+];
+function preTripStorageKey(){return "staylatin-pretrip-checklist-"+String(activeTripUserId||"guest")}
+function readPreTripItems(){try{const parsed=JSON.parse(localStorage.getItem(preTripStorageKey())||"null");if(parsed&&Array.isArray(parsed.items))return parsed.items;return preTripDefaults.map(x=>({...x,done:false,custom:false}))}catch(e){return preTripDefaults.map(x=>({...x,done:false,custom:false}))}}
+function savePreTripItems(items){try{localStorage.setItem(preTripStorageKey(),JSON.stringify({items}));return true}catch(e){const el=document.getElementById("preTripChecklistStatus");if(el)el.textContent="Could not save checklist progress. Check available browser storage.";return false}}
+function renderPreTripChecklist(){
+ const host=document.getElementById("preTripChecklistItems"),progress=document.getElementById("preTripProgress");if(!host||!progress)return;
+ const items=readPreTripItems(),done=items.filter(x=>x.done).length;
+ progress.textContent=done+" of "+items.length+" complete";
+ host.innerHTML=items.map((item,index)=>'<label style="display:flex;align-items:flex-start;gap:10px;border:1px solid '+(item.done?'#c9dfcd':'var(--line)')+';border-radius:9px;padding:12px;background:'+(item.done?'#edf6ee':'#fffdf8')+';font-size:12px;color:var(--ink);cursor:pointer"><input type="checkbox" data-pretrip-index="'+index+'" '+(item.done?'checked':'')+' style="margin-top:2px;accent-color:var(--forest)"><span style="flex:1"><span style="display:block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--terra);margin-bottom:3px">'+tripEscape(item.group||"My reminders")+'</span><span style="'+(item.done?'text-decoration:line-through;color:var(--muted)':'')+'">'+tripEscape(item.label)+'</span></span>'+(item.custom?'<button type="button" data-pretrip-remove="'+index+'" aria-label="Remove reminder" style="border:0;background:transparent;color:var(--muted);font-size:16px;cursor:pointer">×</button>':'')+'</label>').join("");
+ host.querySelectorAll("[data-pretrip-index]").forEach(input=>input.addEventListener("change",()=>{const rows=readPreTripItems();rows[Number(input.dataset.pretripIndex)].done=input.checked;savePreTripItems(rows);renderPreTripChecklist()}));
+ host.querySelectorAll("[data-pretrip-remove]").forEach(button=>button.addEventListener("click",()=>{const rows=readPreTripItems();rows.splice(Number(button.dataset.pretripRemove),1);savePreTripItems(rows);renderPreTripChecklist()}));
+}
+document.getElementById("preTripCustomForm").addEventListener("submit",e=>{e.preventDefault();if(!activeTripUserId){document.getElementById("preTripChecklistStatus").textContent="Please sign in to save checklist items.";return}const input=document.getElementById("preTripCustomTask"),label=input.value.trim();if(!label)return;const rows=readPreTripItems();rows.push({id:"custom-"+Date.now(),label,group:"My reminders",done:false,custom:true});if(savePreTripItems(rows)){input.value="";renderPreTripChecklist();document.getElementById("preTripChecklistStatus").textContent="Reminder added. Your checklist is saved in this browser on this device."}});
 function showTravelerDashboard(session){
   activeTripUserId=session&&session.user?session.user.id:null;
   loadTravelerAvatar();
   renderTrips();
+  renderPreTripChecklist();
   connectTravelerChat(session);
   document.querySelector(".traveler-intro").hidden=true;
   document.getElementById("traveler-memberships").hidden=true;
