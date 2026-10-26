@@ -371,12 +371,66 @@ async function loadTravelerChat(){
   if(error)throw error;
   const messages=(data||[]).reverse();
   const latest=messages.length?messages[messages.length-1]:null;
-  if(chatInitialLoad){chatKnownLatestId=latest?latest.id:null;try{chatUnreadCount=Number(localStorage.getItem(chatUnreadKey())||0)}catch(e){chatUnreadCount=0}chatInitialLoad=false;renderChatUnread()}
-  else if(latest&&latest.id!==chatKnownLatestId){const fresh=messages.filter(m=>m.id!==chatKnownLatestId&&m.sender_id!==currentTravelerSession.user.id);if(fresh.length){chatUnreadCount+=fresh.length;try{localStorage.setItem(chatUnreadKey(),String(chatUnreadCount))}catch(e){}renderChatUnread();if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("New StayLatin chat message",{body:"A traveler posted in the Traveler Lounge."})}chatKnownLatestId=latest.id}
-  if(!messages.length){chatMessages.innerHTML='<div class="status show">You’re first in the lounge. Say hello or share a useful travel tip.</div>';setChatNotice("Chat is ready.");return;}
-  chatMessages.innerHTML=messages.map(m=>'<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(m.sender_id===currentTravelerSession.user.id?'#f0f3eb':'#fffefb')+'"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest)">'+dashSafe(m.sender_id===currentTravelerSession.user.id?'You':'Traveler')+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></article>').join("");
-  chatMessages.scrollTop=chatMessages.scrollHeight;setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
- }catch(e){chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';setChatNotice("Could not load the Traveler Lounge: "+(e&&e.message?e.message:"please refresh and try again."),"error");}
+  if(chatInitialLoad){
+   chatKnownLatestId=latest?latest.id:null;
+   try{chatUnreadCount=Number(localStorage.getItem(chatUnreadKey())||0)}catch(e){chatUnreadCount=0}
+   chatInitialLoad=false;
+   renderChatUnread();
+  }else if(latest&&latest.id!==chatKnownLatestId){
+   const fresh=messages.filter(m=>m.id!==chatKnownLatestId&&m.sender_id!==currentTravelerSession.user.id);
+   if(fresh.length){
+    chatUnreadCount+=fresh.length;
+    try{localStorage.setItem(chatUnreadKey(),String(chatUnreadCount))}catch(e){}
+    renderChatUnread();
+    if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("New StayLatin chat message",{body:"A traveler posted in the Traveler Lounge."});
+   }
+   chatKnownLatestId=latest.id;
+  }
+  if(!messages.length){
+   chatMessages.innerHTML='<div class="status show">You’re first in the lounge. Say hello or share a useful travel tip.</div>';
+   setChatNotice("Chat is ready.");
+   return;
+  }
+
+  // Only return display names and photos that each traveler explicitly opted to share.
+  const senderIds=[...new Set(messages.map(m=>m.sender_id))];
+  const profileById=Object.create(null);
+  const {data:sharedProfiles,error:profileError}=await client.from("staylatin_traveler_chat_profiles")
+    .select("user_id,display_name,share_name,share_photo,avatar_path")
+    .in("user_id",senderIds);
+  if(profileError)throw profileError;
+  await Promise.all((sharedProfiles||[]).map(async profile=>{
+    let avatarUrl="";
+    if(profile.share_photo&&profile.avatar_path){
+      try{
+        const {data:signed,error:signedError}=await client.storage
+          .from("staylatin-traveler-avatars").createSignedUrl(profile.avatar_path,3600);
+        if(!signedError&&signed&&signed.signedUrl)avatarUrl=signed.signedUrl;
+      }catch(e){}
+    }
+    profileById[profile.user_id]={
+      displayName:profile.share_name&&profile.display_name?profile.display_name:"",
+      avatarUrl:profile.share_photo?avatarUrl:"",
+      shareName:!!profile.share_name,
+      sharePhoto:!!profile.share_photo
+    };
+  }));
+
+  chatMessages.innerHTML=messages.map(m=>{
+   const own=m.sender_id===currentTravelerSession.user.id;
+   const profile=profileById[m.sender_id]||{};
+   const displayName=profile.shareName&&profile.displayName?profile.displayName:(own?"You":"Traveler");
+   const avatar=profile.sharePhoto&&profile.avatarUrl
+    ? '<img src="'+dashSafe(profile.avatarUrl)+'" alt="'+dashSafe(displayName)+' profile photo" style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;object-fit:cover;border:1px solid var(--line)">'
+    : '<div aria-hidden="true" style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#e5efe6;color:var(--forest);font-size:18px;border:1px solid var(--line)">✳</div>';
+   return '<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(own?'#f0f3eb':'#fffefb')+'"><div style="display:flex;align-items:flex-start;gap:10px">'+avatar+'<div style="min-width:0;flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest);overflow-wrap:anywhere">'+dashSafe(displayName)+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></div></div></article>';
+  }).join("");
+  chatMessages.scrollTop=chatMessages.scrollHeight;
+  setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
+ }catch(e){
+  chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';
+  setChatNotice("Could not load the Traveler Lounge: "+(e&&e.message?e.message:"please refresh and try again."),"error");
+ }
 }
 chatForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(chatBusy)return;
