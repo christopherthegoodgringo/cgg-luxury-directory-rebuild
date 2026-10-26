@@ -10,7 +10,9 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - `staylatin-config.js` points to the dedicated project using its browser-safe publishable key.
 - Traveler sign-up profile trigger installed: new Auth users receive a `staylatin_profiles` row with the default traveler role.
 - Security advisor check currently reports no security findings; performance advisor findings remain for later optimization.
-- Business submissions, admin decisions, image uploads, and memberships are not yet fully connected.
+- Business onboarding now writes to a dedicated private `staylatin_business_submissions` table; only the submitting owner can read their own submission through client policies.
+- Admin review UI is still a prototype and is not yet connected to the private submission queue. No automatic approval or publication occurs.
+- Image uploads and memberships are not yet connected.
 - Payments: not connected; do not collect payment details in the prototype.
 - Sample listings are illustrative and must not be presented as verified partners.
 
@@ -30,7 +32,7 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 3. Configure `staylatin-config.js` with the dedicated project's URL and publishable key only.
 4. Configure the production site URL and allowed email-confirmation redirect URLs in Supabase Auth settings.
 5. Test account creation, confirmation email, sign-in, sign-out, and password recovery with a test account.
-6. Implement and test business submission/review, image storage, favorites, and membership status.
+6. Business submission storage is implemented; next connect a protected admin review workflow, then test owner submission and admin-only review. Image storage and membership status remain pending.
 7. Keep payment checkout disabled until recurring plans and verified webhook handling are configured and tested.
 8. Test traveler, business-owner, and admin permissions with separate test accounts before launch.
 
@@ -42,7 +44,8 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - [ ] Production site URL and allowed auth redirect URLs configured in Supabase Auth.
 - [ ] RLS policies tested for anonymous, traveler, business owner, and admin access.
 - [ ] Admin authorization is enforced server-side.
-- [ ] Business forms persist submissions and support moderation.
+- [x] Business form persists private pending-review submissions for signed-in users.
+- [ ] Admin portal securely reads and reviews real submissions; approval must publish a separate listing through a trusted admin action.
 - [ ] Image uploads enforce size/type limits and safe access rules.
 - [ ] Account creation, sign-in, sign-out, and password recovery tested.
 - [ ] Membership billing and webhook verification tested in sandbox before live billing.
