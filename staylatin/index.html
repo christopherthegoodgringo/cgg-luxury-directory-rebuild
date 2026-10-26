@@ -348,8 +348,10 @@ document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDef
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
 document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
 document.getElementById("destination").addEventListener("input",()=>{showAllListings=false;render()});document.getElementById("style").addEventListener("change",()=>{showAllListings=false;render()});document.getElementById("vibe").addEventListener("change",()=>{showAllListings=false;render()});
-document.getElementById("language").addEventListener("click",()=>{language=language==="en"?"es":"en";document.documentElement.lang=language;document.querySelectorAll("[data-en]").forEach(el=>{const val=el.getAttribute("data-"+language);if(val!==null)el.textContent=val});document.querySelectorAll("[data-en-placeholder]").forEach(el=>el.placeholder=el.getAttribute("data-"+language+"-placeholder"));render()});
-document.getElementById("year").textContent=new Date().getFullYear();
+const languageButton=document.getElementById("language");
+if(languageButton)languageButton.addEventListener("click",()=>{language=language==="en"?"es":"en";document.documentElement.lang=language;document.querySelectorAll("[data-en]").forEach(el=>{const val=el.getAttribute("data-"+language);if(val!==null)el.textContent=val});document.querySelectorAll("[data-en-placeholder]").forEach(el=>el.placeholder=el.getAttribute("data-"+language+"-placeholder"));render()});
+const yearElement=document.getElementById("year");
+if(yearElement)yearElement.textContent=new Date().getFullYear();
 // Always start the homepage with the first eight listings in the directory's fixed tier/name order.
 function ensureInitialListings(){
  if(!grid.querySelector(".stay-card")){
