@@ -10,11 +10,10 @@
 </style>
 <script src="./supabase-config.js"></script>
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const cfg=window.CGG_SUPABASE_CONFIG;
 let client=null, session=null, listings=[];
 const $=id=>document.getElementById(id);
-const status=(msg,error=false)=>{ $('status').textContent=msg; $('status').style.color=error?'#a33':'var(--forest)'; };
+const status=(msg,error=false)=>{ const el=$('status'); if(el){el.textContent=msg;el.style.color=error?'#a33':'var(--forest)';} };
 const showAuth=()=>{$('auth').classList.remove('hidden');$('account').classList.add('hidden');};
 const showAccount=()=>{$('auth').classList.add('hidden');$('account').classList.remove('hidden');$('user-email').textContent=session?.user?.email||'';};
 async function loadOwnedListings(){
@@ -63,14 +62,31 @@ async function selectBusinessPlan(tier){
  status('PayPal did not return an approval link.',true);
 }
 window.authAction=authAction;window.selectTravelerPlan=selectTravelerPlan;window.selectBusinessPlan=selectBusinessPlan;
-if(cfg?.url&&cfg?.publishableKey){
- client=createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
- client.auth.onAuthStateChange((_event,s)=>{session=s;queueMicrotask(()=>refresh())});
- $('sign-in').addEventListener('click',()=>authAction('signin'));
- $('sign-up').addEventListener('click',()=>authAction('signup'));
- $('sign-out').addEventListener('click',async()=>{await client.auth.signOut();session=null;showAuth();status('Signed out.')});
- refresh();
-}else{status('Supabase public configuration is missing.',true);}
+// Wire buttons immediately so a failed SDK download never leaves silent, dead controls.
+$('sign-in').addEventListener('click',()=>authAction('signin'));
+$('sign-up').addEventListener('click',()=>authAction('signup'));
+$('sign-out').addEventListener('click',async()=>{if(!client){status('Account service is still loading. Refresh the page and try again.',true);return;}await client.auth.signOut();session=null;showAuth();status('Signed out.')});
+
+async function initializeAuth(){
+ if(!cfg?.url||!cfg?.publishableKey){status('Supabase public configuration is missing. Please contact support.',true);return;}
+ status('Loading secure account service…');
+ let createClient;
+ try {
+   ({createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.0'));
+ } catch(firstError) {
+   try { ({createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm')); }
+   catch(secondError) { status('The secure signup service could not load. Check your connection, disable script-blocking extensions for this site, and refresh.',true); return; }
+ }
+ try {
+   client=createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+   client.auth.onAuthStateChange((_event,s)=>{session=s;queueMicrotask(()=>refresh())});
+   await refresh();
+   status(session?'Account service ready.':'Enter your email and password, then choose Create account.');
+ } catch(error) {
+   status('Could not connect to the account service. Please refresh and try again.',true);
+ }
+}
+initializeAuth();
 </script>
 </head>
 <body>
