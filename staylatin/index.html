@@ -19,6 +19,9 @@
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#e4e2ff,#b9b7f2);color:#383a82;border-color:#a09ee0}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 
+
+/* Shared homepage header: use on every StayLatin page */
+.sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:1.5px solid #c8a86b;border-radius:50%;display:grid;place-items:center;color:#c86d4a;font:20px Georgia,serif;flex:none}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}.sl-language{font-size:11px;font-weight:850;white-space:nowrap;text-decoration:none;color:#173f35;background:#fffdf8;border:1px solid #e5e0d5;border-radius:999px;padding:9px 12px}@media(max-width:850px){.sl-mainnav{align-items:flex-start;flex-wrap:wrap;gap:12px}.sl-brand{font-size:25px}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start;gap:10px 16px}.sl-language{margin-left:auto}.sl-tagline .sl-shell{align-items:flex-start;flex-direction:column;gap:3px}}@media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a{font-size:11px}}
 </style>
 
 <style id="signup-action-nav-style">
@@ -251,11 +254,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
-<header class="wrap nav">
-<a class="brand" href="#top" aria-label="StayLatin home"><span class="brandmark">✳</span>StayLatin</a>
-<nav class="navlinks" aria-label="Main navigation"><a class="signup-action" href="traveler-signup.html">Traveler Join / Sign in</a><a class="signup-action" href="business-signup.html">Business Join / Sign in</a><a class="signup-action" href="agent-signup.html">Agent Join / Sign in</a><a class="signup-action" href="admin-signup.html">Admin Join / Sign in</a></nav>
-<div class="navright"><button class="btn btn-quiet" id="language" type="button">ES / EN</button></div>
-</header>
+<header class="sl-global-header"><div class="sl-tagline"><div class="sl-shell"><strong>LOCAL KNOWLEDGE. BETTER STAYS.</strong><span>Made for curious travelers across Latin America <b>✦</b></span></div></div><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a href="traveler-signup.html">Traveler Join / Sign in</a><a href="business-signup.html">Business Join / Sign in</a><a href="agent-signup.html">Agent Join / Sign in</a><a href="admin-signup.html">Admin Join / Sign in</a></nav><a class="sl-language" href="index.html#top" aria-label="Language options">ES / EN</a></div></header>
 <main id="top">
 <section class="hero wrap">
 <div class="hero-panel"><div class="hero-copy"><div class="eyebrow" data-en="A more personal way to travel" data-es="Una forma más personal de viajar">A more personal way to travel</div><h1 data-en="Find your place in Latin America." data-es="Encuentra tu lugar en Latinoamérica.">Find your place in Latin America.</h1><p data-en="Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in." data-es="Hoteles boutique con carácter, hostales acogedores y bases para largas estancias — para viajeros que quieren conectar, no solo registrarse.">Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in.</p></div></div>
