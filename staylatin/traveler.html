@@ -302,23 +302,52 @@ async function saveTravelerIntroduction(e){
 async function loadTravelerIntroductionDirectory(){
  const box=document.getElementById("travelerIntroDirectory"),db=introClient();if(!box||!db)return;
  if(!activeTripUserId){box.innerHTML='<div class="status">Sign in to see the member directory.</div>';return}
- box.innerHTML='<div class="status">Loading shared introductions…</div>';
- const {data,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").order("updated_at",{ascending:false}).limit(100);
+ box.innerHTML='<div class="status">Loading your profile and member directory…</div>';
+ const {data:directoryData,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").order("updated_at",{ascending:false}).limit(100);
  if(error){box.innerHTML='<div class="status error">The member directory could not load. Please try again.</div>';return}
- const rows=(data||[]).filter(x=>x.user_id!==activeTripUserId);
- if(!rows.length){box.innerHTML='<div class="status">No other introductions shared yet. You can be one of the first to introduce yourself.</div>';await loadPrivateInbox();return}
- const ids=rows.map(r=>r.user_id);
- const {data:photoProfiles,error:photoError}=await db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").in("user_id",ids);
- const photoById=Object.create(null);
- if(!photoError)await Promise.all((photoProfiles||[]).map(async p=>{
-   if(!p.share_photo_in_directory||!p.avatar_path)return;
-   try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!signedError&&signed?.signedUrl)photoById[p.user_id]=signed.signedUrl}catch(e){}
- }));
- box.innerHTML=rows.map(r=>{
-   const photo=photoById[r.user_id]?'<img src="'+introEscape(photoById[r.user_id])+'" alt="'+introEscape(r.display_name||"Traveler")+' profile photo" style="width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<div aria-hidden="true" style="width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:27px">✳</div>';
-   return '<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+photo+'<div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(r.display_name||"StayLatin traveler")+'</h5><div style="font-size:10px;color:var(--muted)">StayLatin member</div></div></div>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+[['Home country',r.home_country],['Favorite destinations',r.favorite_destinations],['Languages',r.languages_spoken],['Travel interests',r.travel_interests]].filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("")+'<button type="button" data-private-message="'+introEscape(r.user_id)+'" data-private-name="'+introEscape(r.display_name||"StayLatin traveler")+'" class="primary-action" style="width:100%;margin-top:14px">Message privately ↗</button></article>';
+ const otherRows=(directoryData||[]).filter(x=>x.user_id!==activeTripUserId);
+ let ownIntro=null,ownPhotoProfile=null,ownPhotoUrl="";
+ const [{data:ownIntroData,error:ownIntroError},{data:ownPhotoData,error:ownPhotoError}]=await Promise.all([
+   db.from("staylatin_traveler_introductions").select("*").eq("user_id",activeTripUserId).maybeSingle(),
+   db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").eq("user_id",activeTripUserId).maybeSingle()
+ ]);
+ if(ownIntroError){box.innerHTML='<div class="status error">Your profile could not be loaded. Please refresh and try again.</div>';return}
+ ownIntro=ownIntroData||{user_id:activeTripUserId,display_name:document.getElementById("introDisplayName")?.value||"",introduction:document.getElementById("introText")?.value||"",home_country:document.getElementById("introHomeCountry")?.value||"",favorite_destinations:document.getElementById("introDestinations")?.value||"",languages_spoken:document.getElementById("introLanguages")?.value||"",travel_interests:document.getElementById("introInterests")?.value||"",show_in_directory:false,show_display_name:true,show_introduction:true};
+ ownPhotoProfile=ownPhotoError?null:ownPhotoData;
+ if(ownPhotoProfile?.avatar_path){
+   try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(ownPhotoProfile.avatar_path,3600);if(!signedError&&signed?.signedUrl)ownPhotoUrl=signed.signedUrl}catch(e){}
+ }
+ if(!ownPhotoUrl){
+   try{const localPhoto=localStorage.getItem(avatarStorageKey());if(localPhoto&&/^data:image\/(png|jpeg|webp|gif);base64,/i.test(localPhoto))ownPhotoUrl=localPhoto}catch(e){}
+ }
+ const otherIds=otherRows.map(r=>r.user_id),photoById=Object.create(null);
+ if(otherIds.length){
+   const {data:photoProfiles,error:photoError}=await db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").in("user_id",otherIds);
+   if(!photoError)await Promise.all((photoProfiles||[]).map(async p=>{
+     if(!p.share_photo_in_directory||!p.avatar_path)return;
+     try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!signedError&&signed?.signedUrl)photoById[p.user_id]=signed.signedUrl}catch(e){}
+   }));
+ }
+ function memberPhoto(url,name){
+   return url?'<img src="'+introEscape(url)+'" alt="'+introEscape(name||"Traveler")+' profile photo" style="width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<div aria-hidden="true" style="width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:27px">✳</div>';
+ }
+ function memberDetails(r,fields){
+   return fields.filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("");
+ }
+ const ownName=ownIntro.display_name||"Your profile";
+ const ownVisible=!!ownIntro.show_in_directory;
+ const ownFields=ownVisible
+   ? [["Home country",ownIntro.show_home_country?ownIntro.home_country:""],["Favorite destinations",ownIntro.show_favorite_destinations?ownIntro.favorite_destinations:""],["Languages",ownIntro.show_languages_spoken?ownIntro.languages_spoken:""],["Travel interests",ownIntro.show_travel_interests?ownIntro.travel_interests:""]]
+   : [["Home country",ownIntro.home_country],["Favorite destinations",ownIntro.favorite_destinations],["Languages",ownIntro.languages_spoken],["Travel interests",ownIntro.travel_interests]];
+ const ownCard='<article style="background:linear-gradient(135deg,#f1f7ef,#fffdf8);border:2px solid #c8a86b;border-radius:11px;padding:15px;order:-1"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(ownPhotoUrl,ownName)+'<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b6a2f;font-weight:900;margin-bottom:4px">YOUR PROFILE · FIRST</div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(ownName)+'</h5><div style="font-size:10px;color:var(--muted)">'+(ownVisible?"Visible to signed-in members":"Private preview · only you can see this profile")+'</div></div></div>'+(ownIntro.show_introduction&&ownIntro.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(ownIntro.introduction)+'</p>':'')+memberDetails(ownIntro,ownFields)+'<button type="button" id="editOwnMemberProfile" class="primary-action" style="width:100%;margin-top:14px">Edit my profile ↗</button></article>';
+ const otherCards=otherRows.map(r=>{
+   const name=r.display_name||"StayLatin traveler";
+   return '<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px">'+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(photoById[r.user_id],name)+'<div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(name)+'</h5><div style="font-size:10px;color:var(--muted)">StayLatin member</div></div></div>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+memberDetails(r,[["Home country",r.home_country],["Favorite destinations",r.favorite_destinations],["Languages",r.languages_spoken],["Travel interests",r.travel_interests]])+'<button type="button" data-private-message="'+introEscape(r.user_id)+'" data-private-name="'+introEscape(name)+'" class="primary-action" style="width:100%;margin-top:14px">Message privately ↗</button></article>';
  }).join("");
+ box.innerHTML=ownCard+otherCards;
+ document.getElementById("editOwnMemberProfile")?.addEventListener("click",()=>document.getElementById("travelerIntroForm")?.scrollIntoView({behavior:"smooth",block:"start"}));
  box.querySelectorAll("[data-private-message]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.privateMessage,button.dataset.privateName)));
+ if(!otherRows.length)box.insertAdjacentHTML("beforeend",'<div class="status" style="grid-column:1/-1">Your profile is shown first. No other members have shared introductions yet.</div>');
  await loadPrivateInbox();
 }
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
