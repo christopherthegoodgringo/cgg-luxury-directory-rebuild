@@ -137,7 +137,7 @@
       </div>
       <p style="font-size:11px;color:var(--muted);margin:10px 0 0">Your email, login details and private versions of these fields are never shown in the directory.</p>
     </div>
-    <div style="grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="primary-action" style="width:auto;margin:0">Save introduction</button><span id="travelerIntroStatus" role="status" style="font-size:12px;color:var(--muted)">Your introduction is private until you choose to share it.</span></div>
+    <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px"><strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:6px">Traveler Lounge privacy</strong><p style="font-size:11px;color:var(--muted);margin:0 0 8px">These choices are separate from your member-directory settings. Your name and photo stay hidden in chat unless you opt in below.</p><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatShareName" type="checkbox" style="margin-top:4px"><span>Show my display name beside my messages</span></label><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatSharePhoto" type="checkbox" style="margin-top:4px"><span>Show my profile photo beside my messages</span></label><p id="chatProfilePrivacyStatus" role="status" aria-live="polite" style="font-size:11px;color:var(--muted);margin:8px 0 0">Your name and photo are hidden from other travelers by default. Save your profile to apply any changes.</p></div><div style="grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="primary-action" style="width:auto;margin:0">Save profile &amp; privacy settings</button><span id="travelerIntroStatus" role="status" style="font-size:12px;color:var(--muted)">Your introduction is private until you choose to share it.</span></div>
   </form>
   <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-top:24px"><div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members.</p></div><button id="refreshTravelerIntroductions" type="button" class="minor-action" style="width:auto;margin:0">Refresh directory</button></div>
   <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
@@ -193,36 +193,94 @@ const introFields = {
  languages_spoken:["introLanguages","introShowLanguages"], travel_interests:["introInterests","introShowInterests"]
 };
 function setIntroStatus(message,isError=false){const el=document.getElementById("travelerIntroStatus");if(el){el.textContent=message;el.style.color=isError?"#a43d2e":"var(--muted)"}}
+function setChatPrivacyStatus(message,isError=false){const el=document.getElementById("chatProfilePrivacyStatus");if(el){el.textContent=message;el.style.color=isError?"#a43d2e":"var(--muted)"}}
 function introEscape(v){return tripEscape(v||"")}
 function introClient(){if(!client){const cfg=window.STAYLATIN_SUPABASE_CONFIG;if(!cfg||!window.supabase)return null;client=window.supabase.createClient(cfg.url,cfg.anonKey)}return client}
+async function saveTravelerChatProfile(db,userId){
+ const shareName=!!document.getElementById("chatShareName")?.checked;
+ const sharePhoto=!!document.getElementById("chatSharePhoto")?.checked;
+ const displayName=document.getElementById("introDisplayName").value.trim();
+ if(shareName&&!displayName)throw new Error("Add a display name above before choosing to show your name in the Traveler Lounge.");
+ const {data:existing,error:existingError}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",userId).maybeSingle();
+ if(existingError)throw existingError;
+ let avatarPath=existing?.avatar_path||null;
+ if(sharePhoto){
+   const saved=localStorage.getItem(avatarStorageKey());
+   if(saved){
+     const blob=await (await fetch(saved)).blob();
+     const mime=blob.type||"image/jpeg";
+     if(!["image/png","image/jpeg","image/webp","image/gif"].includes(mime))throw new Error("Choose a JPG, PNG, WEBP or GIF profile photo.");
+     const objectPath=userId+"/avatar";
+     const {error:uploadError}=await db.storage.from("staylatin-traveler-avatars").upload(objectPath,blob,{cacheControl:"3600",upsert:true,contentType:mime});
+     if(uploadError)throw uploadError;
+     avatarPath=objectPath;
+   }
+   if(!avatarPath)throw new Error("Add a profile photo above before choosing to show your photo in the Traveler Lounge.");
+ }else{
+   avatarPath=null;
+ }
+ const {error:saveError}=await db.from("staylatin_traveler_chat_profiles").upsert({user_id:userId,display_name:shareName?displayName:"",share_name:shareName,share_photo:sharePhoto,avatar_path:avatarPath,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ if(saveError)throw saveError;
+ setChatPrivacyStatus(!shareName&&!sharePhoto?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":"Your profile photo will appear beside your chat messages.");
+}
 async function loadTravelerIntroduction(){
- const db=introClient(),userId=activeTripUserId;if(!db||!userId)return;
+ const db=introClient(),userId=activeTripUserId;
+ if(!db||!userId)return;
  setIntroStatus("Loading your introduction…");
  const {data,error}=await db.from("staylatin_traveler_introductions").select("*").eq("user_id",userId).maybeSingle();
  if(error){setIntroStatus("Could not load your introduction. Please refresh and try again.",true);return}
  const row=data||{};
  for(const [field,ids] of Object.entries(introFields)){document.getElementById(ids[0]).value=row[field]||"";document.getElementById(ids[1]).checked=row["show_"+field]===undefined?(field==="display_name"||field==="introduction"):!!row["show_"+field]}
  document.getElementById("introShowDirectory").checked=!!row.show_in_directory;
+ try{
+   const {data:loungeProfile,error:loungeProfileError}=await db.from("staylatin_traveler_chat_profiles").select("share_name,share_photo").eq("user_id",userId).maybeSingle();
+   if(loungeProfileError)throw loungeProfileError;
+   document.getElementById("chatShareName").checked=!!loungeProfile?.share_name;
+   document.getElementById("chatSharePhoto").checked=!!loungeProfile?.share_photo;
+   setChatPrivacyStatus(!loungeProfile||(!loungeProfile.share_name&&!loungeProfile.share_photo)?"Your name and photo are hidden from other travelers.":loungeProfile.share_name&&loungeProfile.share_photo?"Your display name and photo are shared in chat.":loungeProfile.share_name?"Your display name is shared in chat.":"Your profile photo is shared in chat.");
+ }catch(e){
+   setChatPrivacyStatus("Could not load your Traveler Lounge privacy settings. Check the connection and save again if needed.",true);
+ }
  setIntroStatus(row.show_in_directory?"Your selected details are shared with signed-in members.":"Your introduction is private.");
  await loadTravelerIntroductionDirectory();
 }
 async function saveTravelerIntroduction(e){
- e.preventDefault();const db=introClient(),userId=activeTripUserId;if(!db||!userId){setIntroStatus("Please sign in to save your introduction.",true);return}
- const button=document.querySelector('#travelerIntroForm button[type="submit"]');button.disabled=true;setIntroStatus("Saving your privacy settings…");
+ e.preventDefault();
+ const db=introClient(),userId=activeTripUserId;
+ if(!db||!userId){setIntroStatus("Please sign in to save your introduction.",true);return}
+ const button=document.querySelector('#travelerIntroForm button[type="submit"]');
+ button.disabled=true;
+ setIntroStatus("Saving your privacy settings…");
  const row={user_id:userId,show_in_directory:document.getElementById("introShowDirectory").checked,updated_at:new Date().toISOString()};
  for(const [field,ids] of Object.entries(introFields)){row[field]=document.getElementById(ids[0]).value.trim();row["show_"+field]=document.getElementById(ids[1]).checked}
- const {error}=await db.from("staylatin_traveler_introductions").upsert(row,{onConflict:"user_id"});
- if(error){button.disabled=false;setIntroStatus("Could not save. Check the connection and try again.",true);return}
- if(row.show_in_directory){
-   const pub={user_id:userId,updated_at:row.updated_at};
-   for(const [field,ids] of Object.entries(introFields))pub[field]=row["show_"+field]?row[field]:null;
-   const result=await db.from("staylatin_traveler_introduction_directory").upsert(pub,{onConflict:"user_id"});
-   if(result.error){button.disabled=false;setIntroStatus("Your private profile saved, but sharing could not be updated. Please try saving again.",true);return}
- }else{
-   const result=await db.from("staylatin_traveler_introduction_directory").delete().eq("user_id",userId);
-   if(result.error){button.disabled=false;setIntroStatus("Your profile saved, but directory removal failed. Please try saving again.",true);return}
+ try{
+   const {error}=await db.from("staylatin_traveler_introductions").upsert(row,{onConflict:"user_id"});
+   if(error)throw error;
+   if(row.show_in_directory){
+     const pub={user_id:userId,updated_at:row.updated_at};
+     for(const [field,ids] of Object.entries(introFields))pub[field]=row["show_"+field]?row[field]:null;
+     const result=await db.from("staylatin_traveler_introduction_directory").upsert(pub,{onConflict:"user_id"});
+     if(result.error)throw result.error;
+   }else{
+     const result=await db.from("staylatin_traveler_introduction_directory").delete().eq("user_id",userId);
+     if(result.error)throw result.error;
+   }
+ }catch(err){
+   button.disabled=false;
+   setIntroStatus(err.message||"Could not save your introduction. Please try again.",true);
+   return;
  }
- button.disabled=false;setIntroStatus(row.show_in_directory?"Saved. Only the details you selected are visible to signed-in members.":"Saved privately. You are not listed in the member directory.");await loadTravelerIntroductionDirectory();
+ try{
+   await saveTravelerChatProfile(db,userId);
+ }catch(err){
+   button.disabled=false;
+   setChatPrivacyStatus(err.message||"Could not save Traveler Lounge privacy settings.",true);
+   setIntroStatus("Your introduction was saved, but the Traveler Lounge privacy choices could not be saved. Please correct the issue above and save again.",true);
+   return;
+ }
+ button.disabled=false;
+ setIntroStatus(row.show_in_directory?"Saved. Only the details you selected are visible to signed-in members.":"Saved privately. You are not listed in the member directory.");
+ await loadTravelerIntroductionDirectory();
 }
 async function loadTravelerIntroductionDirectory(){
  const box=document.getElementById("travelerIntroDirectory"),db=introClient();if(!box||!db)return;
