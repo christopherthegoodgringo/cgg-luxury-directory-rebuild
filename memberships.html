@@ -54,7 +54,7 @@ async function selectBusinessPlan(tier){
  if(!session){status('Please sign in first.',true);return;}
  const listingId=$('business-listing').value;
  if(!listingId){status('Choose a business listing first.',true);return;}
- if(tier==='free'){status('Free listing remains available at no charge. Ask the listing administrator to assign or confirm the free tier.');return;}
+ if(tier==='free'){status('Setting the free business tier…');const {data,error}=await client.functions.invoke('set-business-free-tier',{body:{listing_id:listingId}});if(error){let message=error.message||'Could not set free tier.';try{const d=await error.context?.json?.();if(d?.error)message=d.error;}catch{}status(message,true);return;}status('Your listing is on the free tier.');await loadOwnedListings();return;}
  status('Preparing PayPal Sandbox checkout…');
  const {data,error}=await client.functions.invoke('create-paypal-subscription',{body:{listing_id:listingId,plan_tier:tier}});
  if(error){let message=error.message||'Could not start business subscription.';try{const d=await error.context?.json?.();if(d?.error)message=d.error;}catch{}status(message,true);return;}
