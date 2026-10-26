@@ -101,7 +101,7 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 /* CGG traveler tools */
 .traveler-tools{margin-top:48px;border-top:1px solid var(--line);padding-top:34px}
 .tools-heading{margin-bottom:18px}.tools-heading h2{font:400 31px Georgia,serif;margin:7px 0;color:var(--green)}
-[hidden]{display:none!important}.tools-nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+[hidden]{display:none!important}.tools-nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.tools-nav-label{flex-basis:100%;margin-top:10px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.tools-nav-label:first-child{margin-top:0}
 .tools-nav button{border:1px solid #d8ddd6;background:#fff;border-radius:22px;padding:9px 13px;font-size:12px;color:#526158}
 .tools-nav button[aria-pressed=true],.tools-nav button[aria-selected=true]{background:var(--green);color:#fff;border-color:var(--green)}
 .tools-panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;min-height:230px}.companion-locked h3{font-family:Georgia,serif;font-weight:400;font-size:22px;color:var(--green);margin:0 0 8px}.companion-locked p{color:var(--muted);font-size:13px;line-height:1.6;margin:0}.companion-locked .account-actions{margin-top:16px}
@@ -167,17 +167,20 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
   <div class="tools-heading"><div class="eyebrow">Beyond the directory</div><h2 id="toolsTitle">Your CGG travel companion</h2><p class="tools-help">Plan privately, keep your travel memories, explore local guidance and compare booking options. Create an account to sync your favorites and traveler features across devices.</p><div class="account-actions companion-account-actions" id="signedInAccountActions" hidden><button class="btn btn-gold account-open" id="accountButton" type="button">My Account</button><span class="account-status" id="companionAccountStatus" style="color:var(--muted)"></span></div></div>
   <div id="companionLocked" class="tools-panel companion-locked"><h3>Sign in to open your Travel Companion</h3><p>Your travel tools and account options will appear here after you sign in.</p><div class="account-actions"><button class="btn btn-gold" type="button" id="lockedCreateAccount">Create Free Account</button><button class="btn btn-outline" type="button" id="lockedSignIn">Sign In</button></div></div>
    <nav class="tools-nav" aria-label="CGG Travel Companion tools" hidden>
-   <button type="button" data-tool="planner" aria-pressed="true" id="tripPlannerNav" hidden>Quick Trip Planner · This device</button>
+   <span class="tools-nav-label">PLAN &amp; EXPLORE</span>
+   <button type="button" data-tool="planner" aria-pressed="true" id="tripPlannerNav" hidden>My Travel Planner</button>
    <button type="button" data-tool="map" aria-pressed="false">Explore on a Map</button>
-   <button type="button" data-tool="passport" aria-pressed="false">My Travel Passport</button>
-   <button type="button" data-tool="concierge" aria-pressed="false">CGG Concierge</button>
-   <button type="button" data-tool="guides" aria-pressed="false">Local Insider Guides</button>
    <button type="button" data-tool="booking" aria-pressed="false">Compare Booking Options</button>
+   <button type="button" data-tool="guides" aria-pressed="false">Local Insider Guides</button>
+   <button type="button" data-tool="concierge" aria-pressed="false">CGG Concierge</button>
+   <span class="tools-nav-label">YOUR TRAVEL</span>
    <button class="dashboard-tab" type="button" data-dashboard-tab="favorites" aria-selected="false">♡ Saved Favorites</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="shared" aria-selected="false">Shared Listings</button>
-   <button class="dashboard-tab" type="button" data-dashboard-tab="trips" aria-selected="false">My Trips · Account</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="trips" aria-selected="false">My Trips</button>
+   <button type="button" data-tool="passport" aria-pressed="false">My Travel Passport</button>
    <button class="dashboard-tab" type="button" data-dashboard-tab="recent" aria-selected="false">Recently Viewed</button>
+   <button class="dashboard-tab" type="button" data-dashboard-tab="shared" aria-selected="false">Shared Listings</button>
    <button class="dashboard-tab" type="button" data-dashboard-tab="reviews" aria-selected="false">My Reviews</button>
+   <span class="tools-nav-label">ACCOUNT &amp; COMMUNITY</span>
    <button class="dashboard-tab" type="button" data-dashboard-tab="chat" aria-selected="false">Traveler Chat</button>
    <button class="dashboard-tab" type="button" data-dashboard-tab="notifications" aria-selected="false">Notifications</button>
    <button class="dashboard-tab" type="button" data-dashboard-tab="preferences" aria-selected="false">Account Preferences</button>
