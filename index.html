@@ -25,7 +25,18 @@ main{padding:38px 0 72px}.section-head{display:flex;align-items:end;justify-cont
 .studio-launch strong,.studio-launch small{display:block}
 .studio-launch strong{font-size:12px}
 .studio-launch small{font-size:10px;margin-top:4px;opacity:.78}
-@media(max-width:700px){.studio-promo-inner{align-items:flex-start;flex-direction:column;gap:18px}.studio-launch{width:100%;justify-content:center}}.nav-actions{display:flex;align-items:center;gap:16px}.account-open{min-height:38px;padding:0 13px;font-size:11px}.account-status{font-size:12px;color:#dce6dd}.account-form{display:grid;gap:12px}.account-form .field label{margin-bottom:6px}.account-form input{width:100%;min-height:44px;border:1px solid #d9ded8;border-radius:7px;padding:0 12px;background:#fff;color:var(--ink)}.account-form input:focus{outline:2px solid var(--gold);outline-offset:1px}.account-message{font-size:13px;line-height:1.5;color:#536057;margin:0}.account-message.error{color:#9b2935}.account-switch{border:0;background:transparent;color:#826a32;text-decoration:underline;padding:5px;font-size:12px}.account-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}.account-user{background:#f5f4ee;border:1px solid var(--line);padding:15px;border-radius:9px}.account-user strong{color:var(--green)}.companion-account-actions{margin-top:16px;margin-bottom:4px}.companion-account-actions .account-status{font-size:12px}.companion-account-actions .btn{min-height:40px}
+@media(max-width:700px){.studio-promo-inner{align-items:flex-start;flex-direction:column;gap:18px}.studio-launch{width:100%;justify-content:center}} 
+.admin-benefits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px}
+.admin-benefit{padding:17px 16px;border:1px solid #ffffff2b;border-radius:10px;background:#ffffff0a;min-width:0}
+.admin-benefit>span{color:#f0d17b;font-size:10px;font-weight:850;letter-spacing:1.5px}
+.admin-benefit h3{font:400 18px/1.2 Georgia,serif;color:#fff;margin:10px 0 7px}
+.admin-benefit p{font-size:11px;line-height:1.65;color:#d8e4dc;margin:0}
+.studio-admin-access{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid #ffffff2b;color:#c8d7cd;font-size:10px}
+.studio-admin-access a{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid #d8c078;border-radius:7px;color:#f0d17b;font-weight:800;text-decoration:none}
+.studio-admin-access a:hover{background:#f0d17b;color:#172b21}
+@media(max-width:900px){.admin-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.admin-benefits{grid-template-columns:1fr}.studio-admin-access{align-items:flex-start;flex-direction:column}}
+.nav-actions{display:flex;align-items:center;gap:16px}.account-open{min-height:38px;padding:0 13px;font-size:11px}.account-status{font-size:12px;color:#dce6dd}.account-form{display:grid;gap:12px}.account-form .field label{margin-bottom:6px}.account-form input{width:100%;min-height:44px;border:1px solid #d9ded8;border-radius:7px;padding:0 12px;background:#fff;color:var(--ink)}.account-form input:focus{outline:2px solid var(--gold);outline-offset:1px}.account-message{font-size:13px;line-height:1.5;color:#536057;margin:0}.account-message.error{color:#9b2935}.account-switch{border:0;background:transparent;color:#826a32;text-decoration:underline;padding:5px;font-size:12px}.account-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}.account-user{background:#f5f4ee;border:1px solid var(--line);padding:15px;border-radius:9px}.account-user strong{color:var(--green)}.companion-account-actions{margin-top:16px;margin-bottom:4px}.companion-account-actions .account-status{font-size:12px}.companion-account-actions .btn{min-height:40px}
 dialog{width:min(520px,calc(100% - 28px));border:1px solid #d7d9ce;border-radius:13px;padding:0;box-shadow:0 24px 90px #0005;color:var(--ink)}dialog::backdrop{background:#081a14b8;backdrop-filter:blur(3px)}.modal-head{background:var(--green);color:white;padding:21px 23px;border-bottom:2px solid var(--gold)}.modal-head .eyebrow{font-size:9px}.modal-head h2{font-family:Georgia,serif;font-weight:400;font-size:27px;margin:7px 0 0}.modal-content{padding:22px 23px}.modal-content p{font-size:14px;line-height:1.7;color:#56645b}.modal-location{color:#967c3f!important;font-size:11px!important;text-transform:uppercase;letter-spacing:1px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
 
 /* Traveler dashboard */
@@ -206,13 +217,22 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 
 </main>
 <section class="studio-promo" aria-labelledby="studio-promo-title">
-  <div class="wrap studio-promo-inner">
-    <div class="studio-promo-copy">
-      <span class="studio-kicker">CGG™ · PREVIEW ACCESS</span>
-      <h2 id="studio-promo-title">Step inside the <em>Admin Studio</em></h2>
-      <p>Explore the CGG Luxury Directory administration demo. This is a preview with sample data, not the live member-management system.</p>
+  <div class="wrap">
+    <div class="studio-promo-inner">
+      <div class="studio-promo-copy">
+        <span class="studio-kicker">CGG™ · MEMBER-FIRST STANDARDS</span>
+        <h2 id="studio-promo-title">A better directory takes <em>a team.</em></h2>
+        <p>Our administrator team helps keep CGG useful, trustworthy and easy to navigate. Multiple sets of eyes mean member feedback, listing updates and quality concerns can be reviewed more consistently—not left to a single unchecked decision.</p>
+      </div>
+      <a class="studio-launch" href="#admin-team-benefits"><span class="studio-launch-icon" aria-hidden="true">✦</span><span><strong>Why our admin team matters</strong><small>See the benefits for members ↓</small></span></a>
     </div>
-    <a class="studio-launch" href="./admin.html"><span class="studio-launch-icon" aria-hidden="true">✦</span><span><strong>Open Admin Studio Demo</strong><small>Launch the interactive preview ↗</small></span></a>
+    <div class="admin-benefits" id="admin-team-benefits">
+      <article class="admin-benefit"><span>01</span><h3>More reliable listings</h3><p>Administrators can review reported changes and corrections so outdated details are easier to spot and address.</p></article>
+      <article class="admin-benefit"><span>02</span><h3>Fair, consistent reviews</h3><p>A shared review process helps apply directory standards consistently across businesses and categories.</p></article>
+      <article class="admin-benefit"><span>03</span><h3>Member feedback gets noticed</h3><p>Questions, reports and suggested corrections have a clear path for review instead of disappearing into the crowd.</p></article>
+      <article class="admin-benefit"><span>04</span><h3>Clear accountability</h3><p>Careful administration and change records help the team understand what was updated and why.</p></article>
+    </div>
+    <div class="studio-admin-access"><span>Authorized administrators only</span><a href="./admin.html">Admin sign-in <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>
 <footer class="footer"><div class="wrap footer-inner"><div><strong>CGG™ Luxury Directory</strong><br>Discover Colombia, beautifully.</div><div>Independent directory · <a href="#discover">Explore listings ↑</a></div></div></footer>
