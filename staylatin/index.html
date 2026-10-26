@@ -101,6 +101,35 @@
 .tier-premium .card-foot{margin-top:auto;min-height:38px;padding:11px 0 8px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tier-premium .card-foot .type{display:block;font-size:12px;font-weight:650;line-height:18px;letter-spacing:.01em;color:#5b6a61}
 </style>
+ 
+<style id="staylatin-colorful-home-refresh">
+/* Carry the account setup pages' colorful, welcoming visual language onto the homepage. */
+:root{--join-green:#167b68;--join-mint:#69b98b;--join-gold:#d9ad55;--join-coral:#dc805a;--join-lilac:#9c7bd0}
+body{background:radial-gradient(ellipse at 0% 12%,rgba(248,217,199,.38),transparent 26%),radial-gradient(ellipse at 100% 28%,rgba(205,233,220,.48),transparent 28%),var(--cream)}
+.topbar{background:linear-gradient(100deg,#153d32 0%,#21644f 58%,#2d7660 100%)}
+.brandmark{background:linear-gradient(145deg,#fff8e7,#e1f3e8);border-color:var(--join-gold);box-shadow:0 3px 12px #173f3510}
+.navlinks .signup-action{background:linear-gradient(125deg,#167b68,#239b86);border:1px solid rgba(255,255,255,.25);box-shadow:0 4px 12px rgba(13,72,61,.14);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.navlinks .signup-action:nth-child(2){background:linear-gradient(125deg,#b9852f,#d9ad55)}
+.navlinks .signup-action:nth-child(3){background:linear-gradient(125deg,#6b65ad,#9583d0)}
+.navlinks .signup-action:nth-child(4){background:linear-gradient(125deg,#c56b4b,#df8c67)}
+.navlinks .signup-action:hover,.navlinks .signup-action:focus-visible{filter:brightness(1.05);transform:translateY(-2px);box-shadow:0 7px 16px rgba(13,72,61,.2)}
+.hero-panel{box-shadow:0 18px 48px #173f351c}
+.eyebrow,.kicker{color:#b76b4c}
+.searchbox{border:1px solid #d9e5d9;box-shadow:0 16px 42px #0d201b20}
+.searchbox .btn-primary{background:linear-gradient(100deg,#174c3c,#2c8061 60%,#4a9b70)}
+.category{background:linear-gradient(145deg,#fffdf8 0%,#f7fbf5 100%);border-color:#e0e6da}
+.category:nth-child(3n+2){background:linear-gradient(145deg,#fffdf8 0%,#fff5e9 100%)}
+.category:nth-child(3n){background:linear-gradient(145deg,#fffdf8 0%,#f5f1ff 100%)}
+.category .symbol{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:14px;background:linear-gradient(140deg,#e1f3e8,#fff0d9)}
+.category:nth-child(3n+2) .symbol{background:linear-gradient(140deg,#ffe6d8,#fff0d9)}
+.category:nth-child(3n) .symbol{background:linear-gradient(140deg,#e9e4ff,#dff3e9)}
+.chip[aria-pressed="true"],.chip.active{background:linear-gradient(100deg,#1d5946,#37845f);border-color:#37845f;color:#fff}
+.section-head h2{color:#204d3d}
+footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
+@media(max-width:760px){.navlinks .signup-action{padding:8px 10px;border-radius:999px}}
+@media(prefers-reduced-motion:reduce){.navlinks .signup-action{transition:none}}
+</style>
+
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
