@@ -47,10 +47,7 @@ function showTravelerDashboard(session){
   const email=session?.user?.email||"";
   document.getElementById("dashboardGreeting").textContent="Signed in"+(email?" as "+email:"")+". Your traveler account is ready.";
   document.getElementById("savedStayCount").textContent="…";
-  (async()=>{try{
-    const {count,error}=await client.from("staylatin_favorites").select("business_id",{count:"exact",head:true}).eq("user_id",session.user.id);
-    if(error)throw error;document.getElementById("savedStayCount").textContent=String(count||0);
-  }catch(e){document.getElementById("savedStayCount").textContent="—";}})();
+  loadDashboardStays(session);
 }
 const dashResults=document.getElementById("dashboardStayResults");
 let dashListings=[],dashSaved=[];
