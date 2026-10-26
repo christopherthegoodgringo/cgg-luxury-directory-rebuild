@@ -85,7 +85,7 @@
 /* Traveler Lounge chat layout */
 #travelerLounge .lounge-messages .status{display:block}
 #travelerLounge .lounge-toolbar .minor-action{font-size:12px}
-#travelerLounge #chatNotificationStatus{flex:1 1 220px}
+
 #travelerLounge #chatNotice.status{display:block}
 #travelerLounge #chatNotice.error{color:#a43d2e;background:#f8e9e5}
 #travelerLounge #chatNotice.success{color:#245448;background:#e8f2e8}
@@ -152,8 +152,6 @@
   <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
     <span id="chatUnreadBadge" hidden style="background:#e8d2a2;color:var(--forest);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800"></span>
     <button id="refreshChat" type="button" class="minor-action" style="width:auto;margin:0">Refresh messages ↻</button>
-    <button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin:0">Enable chat notifications</button>
-    <span id="chatNotificationStatus" style="font-size:11px;color:var(--muted)"></span>
   </div>
   <div id="chatMessages" class="lounge-messages" role="log" aria-live="polite" aria-relevant="additions" style="height:min(45vh,420px);min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#f6f7f1;border:1px solid #dce8dd;border-radius:10px">
     <div class="status show">Connecting to the Traveler Lounge…</div>
@@ -352,14 +350,12 @@ async function toggleDashboardFavorite(id,button){
  }catch(e){button.disabled=false;const note=document.createElement("div");note.className="status error";note.textContent="Could not update this favorite. Please refresh and try again.";dashResults.prepend(note)}
 }
 let chatSubscription=null;let chatRefreshTimer=null;let currentTravelerSession=null;let chatBusy=false;
-const chatMessages=document.getElementById("chatMessages"),chatNotice=document.getElementById("chatNotice"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatMessage"),sendChat=document.getElementById("sendChat"),chatUnreadBadge=document.getElementById("chatUnreadBadge"),chatNotificationsToggle=document.getElementById("chatNotificationsToggle"),chatNotificationStatus=document.getElementById("chatNotificationStatus");
+const chatMessages=document.getElementById("chatMessages"),chatNotice=document.getElementById("chatNotice"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatMessage"),sendChat=document.getElementById("sendChat"),chatUnreadBadge=document.getElementById("chatUnreadBadge");
 let chatKnownLatestId=null,chatUnreadCount=0,chatInitialLoad=true;
 function chatUnreadKey(){return "staylatin-chat-unread-"+(currentTravelerSession&&currentTravelerSession.user?currentTravelerSession.user.id:"guest")}
 function renderChatUnread(){if(!chatUnreadBadge)return;chatUnreadBadge.hidden=chatUnreadCount<1;chatUnreadBadge.textContent=chatUnreadCount?chatUnreadCount+" new":""}
 function resetChatUnread(){chatUnreadCount=0;try{localStorage.setItem(chatUnreadKey(),"0")}catch(e){}renderChatUnread()}
-function updateChatNotificationLabel(){if(!chatNotificationStatus||!chatNotificationsToggle)return;if(!("Notification"in window)){chatNotificationStatus.textContent="Browser notifications are not supported here.";chatNotificationsToggle.hidden=true;return}if(Notification.permission==="granted"){chatNotificationStatus.textContent="Browser notifications are enabled on this device.";chatNotificationsToggle.textContent="Notifications enabled";chatNotificationsToggle.disabled=true}else if(Notification.permission==="denied"){chatNotificationStatus.textContent="Notifications are blocked by your browser settings.";chatNotificationsToggle.textContent="Notifications blocked";chatNotificationsToggle.disabled=true}else{chatNotificationStatus.textContent="Optional browser alerts while this browser is open.";chatNotificationsToggle.textContent="Enable chat notifications";chatNotificationsToggle.disabled=false}}
-chatNotificationsToggle?.addEventListener("click",async()=>{if(!("Notification"in window))return;try{const permission=await Notification.requestPermission();updateChatNotificationLabel();if(permission==="granted")chatNotificationStatus.textContent="Notifications enabled on this device while this browser is available."}catch(e){chatNotificationStatus.textContent="Could not enable browser notifications."}});
-updateChatNotificationLabel();
+
 
 function setChatNotice(message,kind=""){if(!chatNotice)return;chatNotice.className="status show"+(kind?" "+kind:"");chatNotice.textContent=message;}
 async function loadTravelerChat(){
@@ -382,7 +378,7 @@ async function loadTravelerChat(){
     chatUnreadCount+=fresh.length;
     try{localStorage.setItem(chatUnreadKey(),String(chatUnreadCount))}catch(e){}
     renderChatUnread();
-    if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("New StayLatin chat message",{body:"A traveler posted in the Traveler Lounge."});
+    
    }
    chatKnownLatestId=latest.id;
   }
