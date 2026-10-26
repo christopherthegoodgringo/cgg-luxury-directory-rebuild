@@ -259,7 +259,7 @@ async function reviewLiveItem(kind,id,status){
   await api(action,{id,status,review_notes:"Reviewed in CGG Admin Studio"});
   if(kind==="Claim")liveData.claims=liveData.claims.map(x=>x.id===id?{...x,status}:x);
   else liveData.submissions=liveData.submissions.map(x=>x.id===id?{...x,status}:x);
-  renderLiveReviews();updateLiveOverview();toast(kind+" marked "+status+".");
+  renderLiveReviews();renderContentSubmissions();renderModerationQueues();updateLiveOverview();toast(kind+" marked "+status+".");
  }catch(err){toast("Review failed: "+err.message)}
 }
 function renderModerationQueues(){
