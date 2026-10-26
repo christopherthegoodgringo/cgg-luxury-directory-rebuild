@@ -12,12 +12,45 @@
 @media(max-width:850px){.navlinks{display:none}.searchbox{grid-template-columns:1fr 1fr;width:calc(100% - 28px);gap:0}.field:nth-child(2){border-right:0}.field:nth-child(3){border-top:1px solid var(--line)}.searchbox .btn{margin:8px}.listing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-panel{min-height:400px}.story{gap:28px}.business-cta{align-items:flex-start;flex-direction:column}}
 @media(max-width:560px){.wrap{width:min(100% - 28px,1160px)}.topbar .wrap{font-size:10px}.topbar .top-extra{display:none}.nav{height:70px}.brand{font-size:25px}.navright .btn-quiet{display:none}.hero{padding:12px 0 34px}.hero-panel{min-height:410px;padding:34px 23px;background-position:58% center}.hero h1{font-size:46px}.hero p{font-size:15px}.searchbox{grid-template-columns:1fr;margin-top:14px;width:100%;padding:8px}.field{border-right:0;border-bottom:1px solid var(--line);padding:10px 12px}.field:nth-child(3){border-top:0}.searchbox .btn{min-height:45px}.section{padding:35px 0}.section-head{align-items:flex-start;flex-direction:column;gap:10px}.category-grid,.listing-grid{grid-template-columns:1fr}.category{min-height:145px}.photo{height:220px}.story{grid-template-columns:1fr;gap:25px}.story-image{min-height:270px;order:2}.benefits{gap:12px}.business-cta{padding:28px 23px}.copyright{flex-direction:column}}
 .nav{gap:18px}.navlinks{display:flex;align-items:center;gap:16px;flex-wrap:nowrap;white-space:nowrap;font-size:12px}.navlinks a{font-weight:600}.navright{min-width:0;flex:0 0 auto}#language{white-space:nowrap}@media(max-width:1200px){.nav{height:auto;min-height:82px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px}.navlinks{order:2;width:100%;flex-wrap:wrap;white-space:normal;gap:10px 16px}.navright{margin-left:auto;order:1}}@media(max-width:560px){.navlinks{font-size:11px;gap:8px 12px}.navright{margin-left:auto}}</style>
+
+<style id="signup-action-nav-style">
+.navlinks .signup-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 13px;
+  border-radius: 999px;
+  color: #fff !important;
+  background: linear-gradient(135deg, #167b68, #239b86);
+  border: 1px solid rgba(255,255,255,.22);
+  text-decoration: none !important;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  box-shadow: 0 3px 9px rgba(13,72,61,.16);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  white-space: nowrap;
+}
+.navlinks .signup-action:hover, .navlinks .signup-action:focus-visible {
+  color: #fff !important;
+  background: linear-gradient(135deg, #b9852f, #d9ad55);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(13,72,61,.2);
+  outline: none;
+}
+.navlinks .signup-action:focus-visible { outline: 2px solid #d9ad55; outline-offset: 3px; }
+.navlinks { margin-left: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .navlinks .signup-action { transition: none; }
+}
+</style>
+
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="wrap nav">
 <a class="brand" href="#top" aria-label="StayLatin home"><span class="brandmark">✳</span>StayLatin</a>
-<nav class="navlinks" aria-label="Main navigation"><a href="traveler-signup.html">Traveler signup</a><a href="business-signup.html">Business signup</a><a href="agent-signup.html">Agent signup</a><a href="admin-signup.html">Admin signup</a></nav>
+<nav class="navlinks" aria-label="Main navigation"><a class="signup-action" href="traveler-signup.html">Traveler signup</a><a class="signup-action" href="business-signup.html">Business signup</a><a class="signup-action" href="agent-signup.html">Agent signup</a><a class="signup-action" href="admin-signup.html">Admin signup</a></nav>
 <div class="navright"><button class="btn btn-quiet" id="language" type="button">ES / EN</button></div>
 </header>
 <main id="top">
