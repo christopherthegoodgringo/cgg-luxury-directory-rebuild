@@ -107,30 +107,13 @@ body.auth-locked .layout,body.auth-locked .modal-backdrop,body.auth-locked .toas
 })();
 </script>
 <script>
-const members=[
-{id:1,name:"Maria Fernanda",email:"maria.fernanda@example.com",status:"Active",joined:"2026-10-25",last:"12 min ago",plan:"Free",role:"Traveler",notes:""},
-{id:2,name:"Daniel Reyes",email:"daniel.reyes@example.com",status:"Active",joined:"2026-10-22",last:"Yesterday",plan:"Free",role:"Traveler",notes:""},
-{id:3,name:"Sofia Martínez",email:"sofia.martinez@example.com",status:"Pending",joined:"2026-10-24",last:"Never",plan:"Free",role:"Traveler",notes:"Awaiting email confirmation"},
-{id:4,name:"Andrés Gómez",email:"andres.gomez@example.com",status:"Suspended",joined:"2026-10-12",last:"Oct 19",plan:"Free",role:"Traveler",notes:"Sample restricted account"}];
-let editingId=null;
-function initials(n){return n.split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()}
-function tag(s){return '<span class="tag '+s.toLowerCase()+'">'+s+'</span>'}
-function row(m,all=false){return '<tr><td><div class="member"><div class="member-avatar">'+initials(m.name)+'</div><div><div class="member-name">'+esc(m.name)+'</div><div class="member-email">'+esc(m.email)+'</div></div></div></td><td>'+tag(m.status)+'</td><td>'+esc(m.joined||"—")+'</td>'+(all?'<td>'+esc(m.last||"—")+'</td>':'')+'<td>'+tag(m.plan.toLowerCase()==="free"?"Free":m.plan)+'</td><td><button class="row-actions" onclick="editMember('+m.id+')">Review ↗</button></td></tr>'}
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function filtered(search,status,plan){return members.filter(m=>(!search||(m.name+" "+m.email).toLowerCase().includes(search.toLowerCase()))&&(status==="all"||m.status===status)&&(plan==="all"||m.plan===plan))}
-function renderRows(){const a=filtered(document.getElementById("memberSearch").value,document.getElementById("memberStatus").value,"all");document.getElementById("memberRows").innerHTML=a.map(m=>row(m)).join("")||'<tr><td colspan="5">No sample members match your filters.</td></tr>';document.getElementById("memberCount").textContent="Showing "+a.length+" of "+members.length+" sample records"}
-function renderAllMembers(){const search=document.getElementById("allSearch"),status=document.getElementById("allStatus"),plan=document.getElementById("allPlan"),rows=document.getElementById("allMemberRows"),count=document.getElementById("allMemberCount");if(!search||!status||!plan||!rows||!count)return;const a=filtered(search.value,status.value,plan.value);rows.innerHTML=a.map(m=>row(m,true)).join("")||'<tr><td colspan="6">No sample members match your filters.</td></tr>';count.textContent="Showing "+a.length+" sample records"}
-function openMember(id=null){editingId=id;const m=members.find(x=>x.id===id);document.getElementById("modalTitle").textContent=m?"Edit member":"Add member (preview)";document.getElementById("fullName").value=m?.name||"";document.getElementById("email").value=m?.email||"";document.getElementById("status").value=m?.status||"Pending";document.getElementById("plan").value=m?.plan||"Free";document.getElementById("joined").value=m?.joined||new Date().toISOString().slice(0,10);document.getElementById("role").value=m?.role||"Traveler";document.getElementById("notes").value=m?.notes||"";document.getElementById("memberModal").classList.add("open")}
-function editMember(id){openMember(id)}
-function closeMember(){document.getElementById("memberModal").classList.remove("open")}
-document.getElementById("memberForm").addEventListener("submit",e=>{e.preventDefault();const d={name:document.getElementById("fullName").value.trim(),email:document.getElementById("email").value.trim(),status:document.getElementById("status").value,plan:document.getElementById("plan").value,joined:document.getElementById("joined").value,role:document.getElementById("role").value,notes:document.getElementById("notes").value};if(editingId){Object.assign(members.find(x=>x.id===editingId),d)}else{d.id=Math.max(0,...members.map(m=>m.id))+1;d.last="Never";members.unshift(d)}renderRows();renderAllMembers();closeMember();toast("Preview updated only. No live account records were changed.")});
-document.getElementById("memberSearch").addEventListener("input",renderRows);document.getElementById("memberStatus").addEventListener("change",renderRows);
-function go(name){document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id==="section-"+name));document.querySelectorAll("[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));document.getElementById("crumb").textContent=({overview:"Dashboard",members:"Members",listings:"Directory Listings",analytics:"Analytics & Reports",moderation:"Reviews & Moderation",messages:"Messages & Reports",membership:"Membership & Plans",content:"Content & Corrections",audit:"Audit Log",settings:"Settings & Access"})[name]||name;window.scrollTo({top:0,behavior:"smooth"});if(name==="members")renderSubscribers()}
+function go(name){document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id==="section-"+name));document.querySelectorAll("[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));document.getElementById("crumb").textContent=({overview:"Dashboard",members:"Members",listings:"Directory Listings",analytics:"Website Analytics",moderation:"Reviews & Moderation",messages:"Messages & Reports",membership:"Membership & Plans",content:"Content & Corrections",audit:"Audit Log",settings:"Settings & Access"})[name]||name;window.scrollTo({top:0,behavior:"smooth"});if(name==="members")renderSubscribers()}
 document.querySelectorAll("[data-section]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.section)));
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove("show"),3600)}
 function drawChart(id,n){const svg=document.getElementById(id);if(!svg)return;const months=["Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"].slice(12-n);const a=[18,25,22,36,40,53,49,68,74,86,98,116].slice(12-n);const b=[12,17,15,24,28,31,37,40,47,51,59,64].slice(12-n);const W=650,H=245,L=38,R=14,T=16,B=32,CW=W-L-R,CH=H-T-B;let out="";[0,30,60,90,120].forEach(v=>{const y=T+CH-(v/120)*CH;out+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#edf0e9"/><text x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#98a198">'+v+'</text>'});months.forEach((m,i)=>{const x=L+i*CW/(n-1);out+='<text x="'+x+'" y="'+(H-9)+'" text-anchor="middle" font-size="10" fill="#98a198">'+m+'</text>'});const pts=a.map((v,i)=>(L+i*CW/(n-1))+","+(T+CH-v/120*CH));const pts2=b.map((v,i)=>(L+i*CW/(n-1))+","+(T+CH-v/120*CH));out+='<polygon points="'+L+','+(T+CH)+' '+pts.join(" ")+' '+(W-R)+','+(T+CH)+'" fill="#1c5b43" opacity=".08"/><polyline points="'+pts.join(" ")+'" fill="none" stroke="#1c5b43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><polyline points="'+pts2.join(" ")+'" fill="none" stroke="#d6bd78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>';a.forEach((v,i)=>{const x=L+i*CW/(n-1),y=T+CH-v/120*CH;out+='<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#1c5b43" stroke="#fff" stroke-width="1.5"/>'});svg.innerHTML=out}
-document.getElementById("growthPeriod").addEventListener("change",e=>drawChart("growthChart",Number(e.target.value)));
-document.getElementById("memberModal").addEventListener("click",e=>{if(e.target.id==="memberModal")closeMember()});
+
+
 
 // Live-only administrator workspace: no demo toggle or sample-data mode.
 let liveDataReady=false;
@@ -173,7 +156,7 @@ async function unlockAdmin(session){
   document.body.classList.remove("auth-locked");
   addAdminSessionControls(user.email);
   updateLiveOverview();
-  renderLiveListings();renderLiveReviews();
+  renderLiveListings();renderLiveReviews();renderWebsiteAnalytics();
   document.getElementById("liveListingCaption").textContent=liveData.listings.length+" live listings loaded from Supabase";
   authMessage("");
  }catch(err){
