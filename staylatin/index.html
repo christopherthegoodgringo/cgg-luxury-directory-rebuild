@@ -57,6 +57,20 @@
 @media(prefers-reduced-motion:reduce){.staylatin-booking{transition:none}}
 </style>
 
+
+<style id="uniform-card-spacing">
+/* Keep benefit panels, their gold rule, and the booking area aligned across all cards. */
+.stay-body{display:flex;flex-direction:column;flex:1;min-width:0}
+.tier-benefits{height:156px;min-height:156px;max-height:156px;flex:0 0 156px;display:flex;flex-direction:column;justify-content:center;gap:7px;margin:0 0 16px;padding:12px 12px 12px 14px;border-left:3px solid var(--gold);overflow:hidden}
+.tier-benefits li{margin:0;padding-left:15px;font-size:11px;line-height:1.3}
+.tier-benefits li:last-child{margin-bottom:0}
+.card-foot{min-height:35px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center}
+.booking-buttons{display:grid;grid-template-columns:1fr;gap:8px;margin-top:0}
+.staylatin-booking{min-height:42px}
+.booking-note{min-height:15px;line-height:1.3}
+@media(max-width:560px){.tier-benefits{height:148px;min-height:148px;max-height:148px;flex-basis:148px}}
+</style>
+
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
