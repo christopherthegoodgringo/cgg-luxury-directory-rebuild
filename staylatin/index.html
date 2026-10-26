@@ -354,16 +354,18 @@ const yearElement=document.getElementById("year");
 if(yearElement)yearElement.textContent=new Date().getFullYear();
 // Always start the homepage with the first eight listings in the directory's fixed tier/name order.
 function ensureInitialListings(){
- if(!grid.querySelector(".stay-card")){
-  activeType="all";showAllListings=false;
-  document.getElementById("destination").value="";
-  document.getElementById("style").value="all";
-  document.getElementById("vibe").value="all";
-  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));
-  render();
- }
+ // Reapply the default, unfiltered state every time the homepage is opened or refreshed.
+ activeType="all";showAllListings=false;
+ const destinationInput=document.getElementById("destination");
+ const styleSelect=document.getElementById("style");
+ const vibeSelect=document.getElementById("vibe");
+ if(destinationInput)destinationInput.value="";
+ if(styleSelect)styleSelect.value="all";
+ if(vibeSelect)vibeSelect.value="all";
+ document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));
+ render();
 }
-render();
+ensureInitialListings();
 window.addEventListener("pageshow",ensureInitialListings);
 document.addEventListener("DOMContentLoaded",ensureInitialListings,{once:true});
 </script>
