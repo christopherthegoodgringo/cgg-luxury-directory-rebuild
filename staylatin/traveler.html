@@ -48,6 +48,10 @@
 @media(max-width:560px){.wrap{width:calc(100% - 28px)}.topbar{height:38px}.topbar .wrap{font-size:10px}.topbar .top-extra{display:none}.nav{height:auto;min-height:70px}.brand{font-size:25px}.navlinks{font-size:11px;gap:8px}.navlinks .signup-action{padding:8px 10px}.navright .btn-quiet{display:none}.copyright{flex-direction:column}}
 
 
+/* Ensure free traveler benefits remain visible after login */
+#travelerDashboard .member-benefits{display:block!important;visibility:visible!important;opacity:1!important;height:auto!important;overflow:visible!important}
+#travelerDashboard .member-benefits article{min-width:0}
+@media(max-width:520px){#travelerDashboard .member-benefits>div[style*="grid-template-columns"]{grid-template-columns:1fr!important}}
 /* Restore the simple traveler sign-in layout while keeping account logic intact */
 .traveler-content{display:grid;grid-template-columns:1fr;gap:20px;max-width:820px;margin:0 auto;padding:34px 0 28px}
 .traveler-intro{background:transparent!important;color:var(--ink)!important;border-radius:0!important;padding:0!important;overflow:visible!important}
@@ -118,7 +122,7 @@ function showTravelerDashboard(session){
   document.querySelector(".traveler-intro").hidden=true;
   document.getElementById("traveler-memberships").hidden=true;
   document.querySelector(".traveler-content").style.paddingTop="24px";
-  signin.closest(".tabs").hidden=true;form.hidden=true;document.getElementById("privacyNote").hidden=true;document.getElementById("travelerDashboard").hidden=false;
+  signin.closest(".tabs").hidden=true;form.hidden=true;document.getElementById("privacyNote").hidden=true;document.getElementById("travelerDashboard").hidden=false;const freeBenefits=document.querySelector("#travelerDashboard .member-benefits");if(freeBenefits){freeBenefits.hidden=false;freeBenefits.style.display="block";freeBenefits.style.visibility="visible";}
   resetPassword.hidden=true;resendConfirmation.hidden=true;signout.hidden=true;
   document.getElementById("dashboardGreeting").textContent="Welcome back. Where will you go next?";
   document.getElementById("savedStayCount").textContent="…";
