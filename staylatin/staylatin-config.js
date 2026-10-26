@@ -1,8 +1,6 @@
-/* StayLatin uses its own Supabase project. Do not copy CGG credentials here.
-   After creating a dedicated StayLatin Supabase project, add its project URL and
-   publishable/anon key below. These browser-side keys are intended to be public;
-   never put a service-role key or payment secret in this file. */
+/* StayLatin's dedicated Supabase project. Browser-safe publishable key only.
+   Never put a service-role key, PayPal secret, or webhook secret in this file. */
 window.STAYLATIN_SUPABASE_CONFIG = {
-  url: "",
-  anonKey: ""
+  url: "https://lrfyoundimxakuhwuood.supabase.co",
+  anonKey: "sb_publishable_Hj8XqxsWKvN4-tCqryJQOw_spa_h3vg"
 };
