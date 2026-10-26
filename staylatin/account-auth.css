@@ -34,3 +34,7 @@ input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
 .auth-choice .choice-primary{color:#fff;background:linear-gradient(135deg,#174c3c,#2f805d);border-color:#2f805d;box-shadow:0 5px 14px #24544820}
 .auth-choice .choice-secondary{color:#245448;background:#fff;border-color:#d7e3d6}
 @media(max-width:520px){.auth-choice{grid-template-columns:1fr}.auth-choice a{min-height:80px}}
+
+/* Simple inline account guidance — text links, not buttons */
+.account-instruction{margin:18px 0 20px;font-size:13px;line-height:1.6;color:var(--muted)}
+.account-instruction a{font-weight:800;text-decoration:underline;text-underline-offset:3px}
