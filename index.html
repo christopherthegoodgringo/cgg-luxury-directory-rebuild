@@ -117,6 +117,29 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
 @media(prefers-reduced-motion:reduce){.review-display{transition:none}}
 @media(max-width:600px){.dashboard-grid{grid-template-columns:1fr}#dashboardDialog .modal-content{padding:15px}.dashboard-row{align-items:flex-start}.dashboard-row img{width:48px;height:48px}}
 
+
+/* Separate portal entry points: travelers and business owners */
+.portal-choice{padding:34px 0 38px;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.portal-choice-head{text-align:center;max-width:700px;margin:0 auto 22px}
+.portal-choice-head h2{font:400 clamp(27px,4vw,36px)/1.15 Georgia,serif;color:var(--green);margin:8px 0}
+.portal-choice-head p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}
+.portal-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.portal-choice-card{border:1px solid var(--line);border-radius:12px;padding:23px;background:var(--cream);display:flex;flex-direction:column;min-width:0}
+.portal-choice-card.business{background:var(--green);border-color:var(--gold);color:#fff}
+.portal-choice-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:800;color:#8b7745}
+.portal-choice-card.business .portal-choice-label{color:#e5c875}
+.portal-choice-card h3{font:400 26px/1.2 Georgia,serif;margin:9px 0;color:var(--green)}
+.portal-choice-card.business h3{color:#fff}
+.portal-choice-card p{font-size:13px;line-height:1.65;color:var(--muted);margin:0 0 17px}
+.portal-choice-card.business p{color:#d6e0d9}
+.portal-choice-list{display:grid;gap:7px;margin:0 0 20px;padding:0;list-style:none;font-size:12px;line-height:1.5;color:#435249}
+.portal-choice-card.business .portal-choice-list{color:#e3e9e4}
+.portal-choice-list li:before{content:'✓';font-weight:800;color:#9a7b35;margin-right:8px}
+.portal-choice-card.business .portal-choice-list li:before{color:#e5c875}
+.portal-choice-card .btn{align-self:flex-start;margin-top:auto;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.portal-choice-card.business .btn{background:var(--gold);color:#17251d}
+@media(max-width:650px){.portal-choice-grid{grid-template-columns:1fr}.portal-choice-card{padding:19px}}
+
 @media(max-width:850px){.filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-grid .search-field{grid-column:1/-1}.filter-grid .btn{width:100%}.cards{gap:15px}.photo{height:190px}}
 @media(max-width:600px){.wrap{width:min(100% - 26px,1180px)}.nav{min-height:70px}.brand-name{font-size:17px}.nav-note{display:none}.hero{padding:47px 0 43px}.hero h1{font-size:43px}.section-head{align-items:start;flex-direction:column;gap:7px}.filter-grid{grid-template-columns:1fr 1fr}.filter-grid .search-field{grid-column:1/-1}.cards{grid-template-columns:1fr}.photo{height:225px}.description{min-height:0}.footer-inner{align-items:flex-start;flex-direction:column}.card-body{padding:18px}.section-head h2{font-size:28px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
@@ -187,6 +210,16 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--green)
  </nav>
  <div class="results-line"><span id="resultCount" aria-live="polite"><strong>2</strong> places</span><span>Selected with care</span></div>
  <section class="cards" id="cards" aria-label="Directory listings"></section>
+
+ <section class="portal-choice" aria-labelledby="portalChoiceTitle">
+  <div class="wrap">
+   <div class="portal-choice-head"><span class="eyebrow">Choose your space</span><h2 id="portalChoiceTitle">Two kinds of membership. Two separate portals.</h2><p>Travelers use CGG to plan trips and save places. Business owners use a separate space for their property and listing needs. Choose the path that matches you.</p></div>
+   <div class="portal-choice-grid">
+    <article class="portal-choice-card traveler"><span class="portal-choice-label">For travelers</span><h3>Travel Member Portal</h3><p>Your personal travel space for discovering Colombia and keeping your plans together.</p><ul class="portal-choice-list"><li>Save favorite hotels and hostels</li><li>Plan trips, itineraries and reminders</li><li>Use traveler guides, reviews and companion tools</li></ul><a class="btn btn-gold" href="#travelerTools">Enter Travel Member Portal ↓</a></article>
+    <article class="portal-choice-card business"><span class="portal-choice-label">For businesses</span><h3>Business Owner Portal</h3><p>A separate entry point for owners and authorized representatives managing a business listing on CGG.</p><ul class="portal-choice-list"><li>Business listing and profile requests</li><li>Property details, photos and corrections</li><li>Owner-specific tools kept separate from traveler features</li></ul><a class="btn" href="./business-owners.html">Enter Business Owner Portal ↗</a></article>
+   </div>
+  </div>
+ </section>
 
  <section class="traveler-tools" id="travelerTools" aria-labelledby="toolsTitle">
   <div class="tools-heading"><div class="eyebrow">Beyond the directory</div><h2 id="toolsTitle">Your CGG travel companion</h2><p class="tools-help">Plan privately, keep your travel memories, explore local guidance and compare booking options. Create an account to sync your favorites and traveler features across devices.</p><div class="account-actions companion-account-actions" id="signedInAccountActions" hidden><button class="btn btn-gold account-open" id="accountButton" type="button">My Account</button><span class="account-status" id="companionAccountStatus" style="color:var(--muted)"></span></div></div>
