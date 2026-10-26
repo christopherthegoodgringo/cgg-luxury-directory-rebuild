@@ -43,6 +43,7 @@ async function authAction(kind){
  session=res.data.session;await refresh();status('Account ready.');
 }
 async function selectTravelerPlan(code){
+ if(code!=='traveler-free'){status('Traveler membership is free. No paid traveler plans are available.',true);return;}
  if(!session){status('Please sign in or create a traveler account first.',true);return;}
  status('Preparing your membership…');
  const {data,error}=await client.functions.invoke('create-traveler-subscription',{body:{plan_code:code}});
@@ -82,12 +83,11 @@ if(cfg?.url&&cfg?.publishableKey){
 <div class="row"><label class="field"><span>Email address</span><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="field"><span>Password</span><input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></label></div>
 <button class="btn" id="sign-in" type="button">Sign in</button> <button class="btn gold" id="sign-up" type="button">Create account</button>
 </section>
-<section id="account" class="panel hidden"><div class="row" style="align-items:center"><div><h2>Your account</h2><p class="section-copy" id="user-email"></p></div><div style="text-align:right"><button class="btn" id="sign-out" type="button">Sign out</button></div></div><p class="section-copy">Select a traveler plan below, or choose a business listing you own to manage its paid placement.</p></section>
+<section id="account" class="panel hidden"><div class="row" style="align-items:center"><div><h2>Your account</h2><p class="section-copy" id="user-email"></p></div><div style="text-align:right"><button class="btn" id="sign-out" type="button">Sign out</button></div></div><p class="section-copy">Activate your free traveler membership below, or choose a business listing you own to manage its paid placement.</p></section>
 <section>
-<h2 class="section-title">For travelers</h2><p class="section-copy">Build your trip at your own pace, with an optional paid membership for additional community and planning features.</p>
+<h2 class="section-title">For travelers</h2><p class="section-copy">Create a free traveler account to explore stays, save favorites, and manage your traveler profile. Traveler memberships are always free.</p>
 <div class="cards">
 <article class="card"><span class="tag">Start exploring</span><h3>Free Traveler</h3><div class="price">$0</div><p>For travelers who want to discover stays and keep their favorites together.</p><ul><li>Explore the directory</li><li>Save favorite stays</li><li>Manage your traveler profile</li></ul><button class="btn" onclick="selectTravelerPlan('traveler-free')">Choose free</button></article>
-<article class="card featured"><span class="tag">For curious travelers</span><h3>Traveler Plus</h3><div class="price">$2.99 <small>/ month</small></div><p>More ways to connect with the traveler community and organize your plans.</p><ul><li>Everything in Free Traveler</li><li>Enhanced traveler community features</li><li>Expanded trip-planning tools</li><li>Recurring monthly billing via PayPal</li></ul><button class="btn gold" onclick="selectTravelerPlan('traveler-plus-monthly')">Continue with PayPal</button></article>
 </div>
 </section>
 <section>
