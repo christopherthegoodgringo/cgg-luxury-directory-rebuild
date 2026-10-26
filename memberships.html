@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#183b30"><title>Memberships | Colombia Uncovered</title>
+<style>
+:root{--forest:#183b30;--deep:#10271f;--gold:#c9a76a;--cream:#f7f5ef;--paper:#fffefa;--ink:#202b25;--muted:#68746d;--line:#e3e2d9}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}.wrap{width:min(1100px,calc(100% - 34px));margin:auto}header{background:var(--deep);color:#fff;border-bottom:2px solid var(--gold)}.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font:23px Georgia,serif;text-decoration:none}.brand small{display:block;font:9px system-ui;letter-spacing:.19em;text-transform:uppercase;color:#c8d1c9}.nav a:last-child{font-size:12px;text-decoration:none;border:1px solid #ffffff55;padding:9px 13px}.hero{text-align:center;padding:62px 0 34px}.eyebrow{color:#92733e;text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.22em}.hero h1{font:400 clamp(37px,6vw,58px)/1.08 Georgia,serif;margin:14px 0}.hero p{max-width:680px;margin:auto;color:var(--muted);font-size:14px}.section-title{font:400 32px Georgia,serif;margin:0 0 7px}.section-copy{color:var(--muted);font-size:13px;margin:0 0 23px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:52px}.card{background:var(--paper);border:1px solid var(--line);padding:25px;display:flex;flex-direction:column;min-height:310px}.card.featured{border-color:var(--gold);box-shadow:0 10px 30px #1d30230d}.tag{font-size:9px;text-transform:uppercase;letter-spacing:.17em;color:#92733e;font-weight:800}.card h3{font:400 26px Georgia,serif;margin:12px 0 4px}.price{font:400 34px Georgia,serif;margin:4px 0 10px}.price small{font:12px system-ui;color:var(--muted)}.card p,.card li{font-size:12px;color:var(--muted)}.card ul{padding-left:18px;margin:8px 0 20px}.btn{border:0;background:var(--forest);color:#fff;padding:13px 16px;font:750 11px system-ui;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;margin-top:auto}.btn.gold{background:var(--gold);color:#1b2b21}.btn:disabled{opacity:.5;cursor:not-allowed}.note{background:#eaece4;padding:15px 18px;font-size:12px;color:#526056;margin:18px 0 40px}.panel{background:var(--paper);border:1px solid var(--line);padding:24px;margin-bottom:45px}.panel h2{font:400 27px Georgia,serif;margin:0 0 6px}.field{display:block;margin:12px 0}.field span{display:block;font-size:11px;font-weight:700;margin-bottom:5px}.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);background:white;font:13px system-ui}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.status{font-size:12px;margin:12px 0;color:var(--forest);min-height:20px}.hidden{display:none!important}footer{background:var(--deep);color:#b8c5ba;padding:24px 0;font-size:10px;margin-top:40px}.foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+@media(max-width:760px){.cards{grid-template-columns:1fr}.card{min-height:unset}.row{grid-template-columns:1fr}.hero{padding-top:44px}.nav{height:68px}.brand{font-size:18px}}
+</style>
+<script src="./supabase-config.js"></script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+const cfg=window.CGG_SUPABASE_CONFIG;
+let client=null, session=null, listings=[];
+const $=id=>document.getElementById(id);
+const status=(msg,error=false)=>{ $('status').textContent=msg; $('status').style.color=error?'#a33':'var(--forest)'; };
+const showAuth=()=>{$('auth').classList.remove('hidden');$('account').classList.add('hidden');};
+const showAccount=()=>{$('auth').classList.add('hidden');$('account').classList.remove('hidden');$('user-email').textContent=session?.user?.email||'';};
+async function loadOwnedListings(){
+ const {data:owners,error}=await client.from('directory_listing_owners').select('listing_id').eq('user_id',session.user.id);
+ if(error){listings=[];return;}
+ const ids=(owners||[]).map(x=>x.listing_id);
+ if(!ids.length){listings=[];return;}
+ const {data}=await client.from('directory_listings').select('id,name,listing_tier,status').in('id',ids).neq('status','archived');
+ listings=data||[];
+ const select=$('business-listing');select.innerHTML='<option value="">Choose a business listing</option>'+listings.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.name)+' — '+escapeHtml(x.listing_tier||'free')+'</option>').join('');
+ $('business-section').classList.toggle('hidden',!listings.length);
+ $('no-business').classList.toggle('hidden',!!listings.length);
+}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function refresh(){
+ const {data}=await client.auth.getSession();session=data.session;
+ if(session){showAccount();await loadOwnedListings();}else showAuth();
+}
+async function authAction(kind){
+ const email=$('email').value.trim(),password=$('password').value;
+ if(!email||!password){status('Enter your email and password.',true);return;}
+ status(kind==='signup'?'Creating your account…':'Signing in…');
+ const res=kind==='signup'?await client.auth.signUp({email,password}):await client.auth.signInWithPassword({email,password});
+ if(res.error){status(res.error.message,true);return;}
+ if(kind==='signup'&&!res.data.session){status('Check your email to confirm your account, then return here to sign in.');return;}
+ session=res.data.session;await refresh();status('Account ready.');
+}
+async function selectTravelerPlan(code){
+ if(!session){status('Please sign in or create a traveler account first.',true);return;}
+ status('Preparing your membership…');
+ const {data,error}=await client.functions.invoke('create-traveler-subscription',{body:{plan_code:code}});
+ if(error){let message=error.message||'Could not start membership.';try{const d=await error.context?.json?.();if(d?.error)message=d.error;}catch{}status(message,true);return;}
+ if(data?.approval_url){status('Opening PayPal Sandbox for approval…');window.location.assign(data.approval_url);return;}
+ status(data?.status==='active'?'Your free traveler membership is active.':'Membership saved.');
+}
+async function selectBusinessPlan(tier){
+ if(!session){status('Please sign in first.',true);return;}
+ const listingId=$('business-listing').value;
+ if(!listingId){status('Choose a business listing first.',true);return;}
+ if(tier==='free'){status('Free listing remains available at no charge. Ask the listing administrator to assign or confirm the free tier.');return;}
+ status('Preparing PayPal Sandbox checkout…');
+ const {data,error}=await client.functions.invoke('create-paypal-subscription',{body:{listing_id:listingId,plan_tier:tier}});
+ if(error){let message=error.message||'Could not start business subscription.';try{const d=await error.context?.json?.();if(d?.error)message=d.error;}catch{}status(message,true);return;}
+ if(data?.approval_url){window.location.assign(data.approval_url);return;}
+ status('PayPal did not return an approval link.',true);
+}
+window.authAction=authAction;window.selectTravelerPlan=selectTravelerPlan;window.selectBusinessPlan=selectBusinessPlan;
+if(cfg?.url&&cfg?.publishableKey){
+ client=createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ client.auth.onAuthStateChange((_event,s)=>{session=s;queueMicrotask(()=>refresh())});
+ $('sign-in').addEventListener('click',()=>authAction('signin'));
+ $('sign-up').addEventListener('click',()=>authAction('signup'));
+ $('sign-out').addEventListener('click',async()=>{await client.auth.signOut();session=null;showAuth();status('Signed out.')});
+ refresh();
+}else{status('Supabase public configuration is missing.',true);}
+</script>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="./index.html">Colombia Uncovered<small>Independent boutique stays</small></a><a href="./index.html">Back to home ↗</a></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">Memberships</div><h1>Find your place in<br>Colombia Uncovered.</h1><p>Choose the membership that fits you. Traveler accounts and business-owner subscriptions are managed separately. All recurring checkout is currently in PayPal Sandbox; no live charges are enabled.</p></section>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<section id="auth" class="panel">
+<h2>Sign in or create your account</h2><p class="section-copy">Use one account for your traveler membership. Business subscriptions require an account verified as an owner of the selected listing.</p>
+<div class="row"><label class="field"><span>Email address</span><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="field"><span>Password</span><input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></label></div>
+<button class="btn" id="sign-in" type="button">Sign in</button> <button class="btn gold" id="sign-up" type="button">Create account</button>
+</section>
+<section id="account" class="panel hidden"><div class="row" style="align-items:center"><div><h2>Your account</h2><p class="section-copy" id="user-email"></p></div><div style="text-align:right"><button class="btn" id="sign-out" type="button">Sign out</button></div></div><p class="section-copy">Select a traveler plan below, or choose a business listing you own to manage its paid placement.</p></section>
+<section>
+<h2 class="section-title">For travelers</h2><p class="section-copy">Build your trip at your own pace, with an optional paid membership for additional community and planning features.</p>
+<div class="cards">
+<article class="card"><span class="tag">Start exploring</span><h3>Free Traveler</h3><div class="price">$0</div><p>For travelers who want to discover stays and keep their favorites together.</p><ul><li>Explore the directory</li><li>Save favorite stays</li><li>Manage your traveler profile</li></ul><button class="btn" onclick="selectTravelerPlan('traveler-free')">Choose free</button></article>
+<article class="card featured"><span class="tag">For curious travelers</span><h3>Traveler Plus</h3><div class="price">$2.99 <small>/ month</small></div><p>More ways to connect with the traveler community and organize your plans.</p><ul><li>Everything in Free Traveler</li><li>Enhanced traveler community features</li><li>Expanded trip-planning tools</li><li>Recurring monthly billing via PayPal</li></ul><button class="btn gold" onclick="selectTravelerPlan('traveler-plus-monthly')">Continue with PayPal</button></article>
+</div>
+</section>
+<section>
+<h2 class="section-title">For independent hoteliers</h2><p class="section-copy">Business memberships are separate from traveler accounts. A paid upgrade is available only for a listing your signed-in account is authorized to manage.</p>
+<div id="business-section" class="panel hidden"><label class="field"><span>Your business listing</span><select id="business-listing"><option value="">Loading your listings…</option></select></label>
+<div class="cards" style="margin:20px 0 0">
+<article class="card"><span class="tag">Essential presence</span><h3>Basic Listing</h3><div class="price">$0</div><p>A basic directory presence for your independent property.</p><ul><li>Basic business listing</li><li>Manage contact details</li></ul><button class="btn" onclick="selectBusinessPlan('free')">Free plan information</button></article>
+<article class="card"><span class="tag">Greater visibility</span><h3>Featured</h3><div class="price">$14.99 <small>/ month</small></div><p>Enhanced presentation and featured placement.</p><ul><li>Enhanced listing presentation</li><li>Featured placement</li><li>Recurring monthly billing</li></ul><button class="btn" onclick="selectBusinessPlan('featured')">Continue with PayPal</button></article>
+<article class="card featured"><span class="tag">Premium presence</span><h3>Premium</h3><div class="price">$29.99 <small>/ month</small></div><p>Premium placement for properties ready to stand out.</p><ul><li>Premium placement</li><li>Enhanced listing presentation</li><li>Recurring monthly billing</li></ul><button class="btn gold" onclick="selectBusinessPlan('premium')">Continue with PayPal</button></article>
+</div></div>
+<div id="no-business" class="note">No business listings are linked to this account yet. Business owners must complete the owner-verification process before upgrading a listing. Traveler membership remains available independently.</div>
+</section>
+<div class="note">Payment safety: recurring subscriptions remain in PayPal Sandbox until the Sandbox plans, webhook events, and end-to-end membership status updates have been verified. Never share PayPal or Supabase secret keys in this page.</div>
+</main>
+<footer><div class="wrap foot"><span>Colombia Uncovered · Independent boutique stays</span><span>Membership billing · Sandbox only until verified</span></div></footer>
+</body></html>
