@@ -217,6 +217,10 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .photo-actions .photo-act{pointer-events:auto;position:relative;top:auto;right:auto;left:auto;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.96);border-radius:50%;color:#fff!important;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(19,35,54,.3);background:linear-gradient(135deg,#1a5c45 0%,#2f8f6b 100%);animation:stayBtnFade 2.2s ease-in-out infinite;transition:transform .18s ease,filter .18s ease;font-size:14px;padding:0;flex:0 0 auto}
 .photo-actions .photo-act.heart{font-size:17px;text-shadow:0 1px 2px rgba(10,40,30,.35)}
 .photo-actions .photo-act.share{font-size:15px}
+.photo-actions .photo-act.map{font-size:13px}
+.photo-actions .photo-act.price{font-size:15px}
+.photo-actions .photo-act.notify{font-size:13px}
+.card-actions.price-highlight{outline:2px solid #2f8f6b;outline-offset:4px;border-radius:10px;transition:outline-color .2s ease}
 .photo-actions .photo-act.is-on,.photo-actions .photo-act.saved{background:linear-gradient(135deg,#0f4a36 0%,#1f7a58 100%);box-shadow:0 0 0 2px rgba(255,255,255,.35),0 4px 12px rgba(19,35,54,.28)}
 .photo-actions .photo-act:hover{transform:translateY(-2px) scale(1.06);filter:brightness(1.08);animation-play-state:paused}
 .stay-card .heart,.stay-card .share{/* legacy selectors kept for older markup */}
@@ -561,15 +565,11 @@ function render(){
     const st=(window.StayLatinListingActions&&StayLatinListingActions.stateFor(s.id))||{favorite:saved.includes(s.id),trip:false,compare:false,been:false,map:false,alert:false};
   const acts=''
    +'<div class="photo-actions" role="toolbar" aria-label="Listing actions">'
-   +'<button class="photo-act heart '+(st.favorite?'saved is-on':'')+'" type="button" aria-label="Favorite '+esc(s.name)+'" data-save="'+s.id+'" title="Favorite">'+(st.favorite?'♥':'♡')+'</button>'
+   +'<button class="photo-act heart '+(st.favorite?'saved is-on':'')+'" type="button" aria-label="Favorite '+esc(s.name)+'" data-save="'+s.id+'" title="Heart">'+(st.favorite?'♥':'♡')+'</button>'
    +'<button class="photo-act share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'" title="Share">↗</button>'
-   +'<button class="photo-act '+(st.trip?'is-on':'')+'" type="button" aria-label="Save '+esc(s.name)+' to a trip board" data-act="trip" data-id="'+s.id+'" title="Save trip">✈</button>'
-   +'<button class="photo-act '+(st.compare?'is-on':'')+'" type="button" aria-label="Compare '+esc(s.name)+'" data-act="compare" data-id="'+s.id+'" title="Compare">⧉</button>'
-   +'<button class="photo-act '+(st.been?'is-on':'')+'" type="button" aria-label="Mark '+esc(s.name)+' as been here" data-act="been" data-id="'+s.id+'" title="Been here">✓</button>'
-   +'<button class="photo-act '+(st.map?'is-on':'')+'" type="button" aria-label="Pin '+esc(s.name)+' on map shortlist" data-act="map" data-id="'+s.id+'" title="Map pin">📌</button>'
-   +'<button class="photo-act" type="button" aria-label="Show similar stays to '+esc(s.name)+'" data-act="similar" data-id="'+s.id+'" title="Similar stays">≈</button>'
-   +'<button class="photo-act '+(st.alert?'is-on':'')+'" type="button" aria-label="Alert me about '+esc(s.name)+'" data-act="alert" data-id="'+s.id+'" title="Alert me">🔔</button>'
-   +'<button class="photo-act" type="button" aria-label="Invite a friend to '+esc(s.name)+'" data-act="invite" data-id="'+s.id+'" title="Invite a friend">✉</button>'
+   +'<button class="photo-act map" type="button" aria-label="Map '+esc(s.name)+'" data-act="map" data-id="'+s.id+'" title="Map">🗺️</button>'
+   +'<button class="photo-act price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price">$</button>'
+   +'<button class="photo-act notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify">🔔</button>'
    +'</div>';
   return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
@@ -602,39 +602,25 @@ function render(){
  }));
  grid.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",async e=>{
   e.preventDefault();e.stopPropagation();
-  const act=b.dataset.act,item=stays.find(x=>x.id===Number(b.dataset.id));if(!item||!window.StayLatinListingActions)return;
-  const A=StayLatinListingActions;
-  if(act==="trip"){
-    const board=window.prompt("Save to trip board (name):","My trip");
-    if(board===null)return;
-    await A.saveToTrip(item,board||"My trip");
-    render();return;
-  }
-  if(act==="compare"){
-    const res=await A.toggleCompare(item);
-    render();
-    if(res&&!res.full)openCompareModal();
+  const act=b.dataset.act,item=stays.find(x=>x.id===Number(b.dataset.id));if(!item)return;
+  const A=window.StayLatinListingActions;
+  if(act==="map"){
+    const q=encodeURIComponent([item.name,item.city].filter(Boolean).join(", "));
+    window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank","noopener,noreferrer");
+    if(A&&A.toast)A.toast("Opening map for "+item.name+".");
     return;
   }
-  if(act==="been"){await A.toggleBeen(item);render();return;}
-  if(act==="map"){await A.toggleMapPin(item);render();return;}
-  if(act==="alert"){await A.toggleAlert(item);render();return;}
-  if(act==="similar"){
-    const cityKey=(item.city||"").split(",")[0].trim().toLowerCase();
-    const dest=document.getElementById("destination");
-    if(dest)dest.value=cityKey;
-    showAllListings=true;activeType="all";
-    document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));
-    const style=document.getElementById("style");if(style)style.value=item.type||"all";
-    render();
-    document.getElementById("stays")?.scrollIntoView({behavior:"smooth"});
-    A.toast("Showing similar stays in "+(item.city.split(",")[0]||"this city")+(item.type?" · "+item.type:"")+".");
+  if(act==="price"){
+    const card=b.closest(".stay-card");
+    const actions=card&&card.querySelector(".card-actions");
+    if(actions){actions.scrollIntoView({behavior:"smooth",block:"nearest"});actions.classList.add("price-highlight");setTimeout(()=>actions.classList.remove("price-highlight"),1800);}
+    if(A&&A.toast)A.toast("Current rates: check the booking buttons on this card.");
+    else window.alert("Current rates: check the booking buttons on this card.");
     return;
   }
-  if(act==="invite"){
-    const inv=await A.inviteFriend(item);
-    openInviteModal(inv);
-    return;
+  if(act==="notify"){
+    if(!A){window.alert("Sign in later to save notify preferences. For now, alerts stay on this device once listing actions load.");return;}
+    await A.toggleAlert(item);render();return;
   }
  }));
 
