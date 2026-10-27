@@ -13,4 +13,28 @@ input,button,select{max-width:100%;box-sizing:border-box}
 @media(max-width:420px){body{padding:10px}.panel{padding:22px 18px}h1{font-size:27px}}
 </style></head>
 <body><main class="wrap"><section class="panel" data-account-role="traveler" data-account-mode="signin" data-destination="traveler.html#dashboard"><div class="kicker">Traveler access</div><h1>Welcome back</h1><p>Save favorite stays and organize your next Latin America trip.</p><p class="account-instruction">New to StayLatin? <a href="traveler-signup.html">Create a free traveler account</a>.</p><form id="authForm"><label for="email">EMAIL ADDRESS</label><input id="email" type="email" name="email" autocomplete="email" required placeholder="you@example.com"><label for="password">PASSWORD</label><input id="password" type="password" name="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"><button class="primary" id="submit" type="submit">Sign in to my traveler account</button></form><button type="button" id="resetPassword" class="minor">Email me a password-reset link</button><div class="status" id="status" role="status" hidden></div></section></main><script>var y=document.getElementById("year");if(y)y.textContent=new Date().getFullYear();</script><script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="account-auth.js"></script>
+<script id="staylatin-inline-account-switch">
+(function(){
+ document.querySelectorAll(".account-instruction a").forEach(function(link){
+  link.removeAttribute("target");
+  link.addEventListener("click",function(event){
+   event.preventDefault();
+   var destination=new URL(link.getAttribute("href"),window.location.href);
+   try{
+    if(window.parent!==window){
+     var parentFrame=window.parent.document.getElementById("staylatin-account-frame");
+     var parentOverlay=window.parent.document.getElementById("staylatin-account-overlay");
+     if(parentFrame&&parentOverlay){
+      parentFrame.src=destination.href;
+      parentOverlay.hidden=false;
+      parentOverlay.setAttribute("aria-hidden","false");
+      return;
+     }
+    }
+   }catch(e){}
+   window.location.assign(destination.href);
+  });
+ });
+})();
+</script>
 </body></html>
