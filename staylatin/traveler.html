@@ -360,7 +360,32 @@ body [role="button"][aria-disabled="true"] {
 const avatarInput=document.getElementById("travelerAvatarInput"),avatarPreview=document.getElementById("travelerAvatarPreview"),avatarPlaceholder=document.getElementById("travelerAvatarPlaceholder"),avatarStatus=document.getElementById("travelerAvatarStatus"),avatarHint=document.getElementById("travelerAvatarHint"),avatarOverlay=document.getElementById("travelerAvatarOverlay");
 function avatarStorageKey(){return "staylatin-avatar-"+(activeTripUserId||"guest")}
 async function loadTravelerAvatar(){try{const db=introClient();let saved=null;if(db&&activeTripUserId){const {data:profile,error}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",activeTripUserId).maybeSingle();if(error)throw error;if(profile?.avatar_path){const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(profile.avatar_path,3600);if(signedError)throw signedError;if(signed?.signedUrl)saved=signed.signedUrl;}}if(!saved){try{saved=localStorage.getItem(avatarStorageKey())}catch(e){}}if(saved){avatarPreview.src=saved;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";avatarStatus.textContent=""}else{avatarPreview.removeAttribute("src");avatarPreview.style.display="none";avatarPlaceholder.style.display="grid";avatarHint.textContent="Hover over the photo to add or update it.";avatarOverlay.textContent="Add photo";avatarStatus.textContent=""}}catch(e){avatarStatus.textContent="Could not load your saved profile photo from StayLatin. "+(e.message||"Please refresh and try again.");}}
-avatarInput.addEventListener("change",()=>{const file=avatarInput.files&&avatarInput.files[0];if(!file)return;if(!["image/png","image/jpeg","image/webp","image/gif"].includes(file.type)){avatarStatus.textContent="Please choose a JPG, PNG, WEBP or GIF image.";avatarInput.value="";return}if(file.size>2*1024*1024){avatarStatus.textContent="That image is over 2 MB. Choose a smaller photo.";avatarInput.value="";return}const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem(avatarStorageKey(),String(reader.result));loadTravelerAvatar()}catch(e){avatarStatus.textContent="Could not save this photo. Try a smaller image.";}};reader.onerror=()=>{avatarStatus.textContent="Could not read that image. Please try another.";};reader.readAsDataURL(file)});
+avatarInput.addEventListener("change",async()=>{
+ const file=avatarInput.files&&avatarInput.files[0];if(!file)return;
+ if(!["image/png","image/jpeg","image/webp","image/gif"].includes(file.type)){avatarStatus.textContent="Please choose a JPG, PNG, WEBP or GIF image.";avatarInput.value="";return}
+ if(file.size>2*1024*1024){avatarStatus.textContent="That image is over 2 MB. Choose a smaller photo.";avatarInput.value="";return}
+ const db=introClient();
+ if(!db||!activeTripUserId){avatarStatus.textContent="Please sign in again before saving your profile photo.";return}
+ avatarInput.disabled=true;avatarStatus.textContent="Saving your photo to your StayLatin account…";
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError)throw userError;
+  if(!user||user.id!==activeTripUserId)throw new Error("Your sign-in session expired. Sign in again and retry.");
+  const objectPath=user.id+"/avatar";
+  const {error:uploadError}=await db.storage.from("staylatin-traveler-avatars").upload(objectPath,file,{cacheControl:"3600",upsert:true,contentType:file.type});
+  if(uploadError)throw uploadError;
+  const {data:existing,error:profileError}=await db.from("staylatin_traveler_chat_profiles").select("display_name,share_name,share_photo,share_photo_in_directory").eq("user_id",user.id).maybeSingle();
+  if(profileError)throw profileError;
+  const {error:saveError}=await db.from("staylatin_traveler_chat_profiles").upsert({user_id:user.id,display_name:existing?.display_name||"",share_name:!!existing?.share_name,share_photo:!!existing?.share_photo,share_photo_in_directory:!!existing?.share_photo_in_directory,avatar_path:objectPath,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+  if(saveError)throw saveError;
+  try{localStorage.setItem(avatarStorageKey(),URL.createObjectURL(file));}catch(_){}
+  const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(objectPath,3600);
+  if(signedError)throw signedError;
+  avatarPreview.src=signed.signedUrl;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";
+  avatarStatus.textContent="Profile photo saved to your StayLatin account.";
+ }catch(e){avatarStatus.textContent="Photo could not be saved: "+(e.message||"Please try again.");}
+ finally{avatarInput.disabled=false;avatarInput.value=""}
+});
 let mode="signin";let client=null;const resetPassword=document.getElementById("resetPassword"),resendConfirmation=document.getElementById("resendConfirmation"),signout=document.getElementById("signout");const signin=document.getElementById("signinTab"),signup=document.getElementById("signupTab"),title=document.getElementById("formTitle"),sub=document.getElementById("formSub"),nameField=document.getElementById("nameField"),password=document.getElementById("password"),submit=document.getElementById("submit"),statusBox=document.getElementById("status"),form=document.getElementById("authForm");
 function setMode(next){mode=next;document.getElementById("travelerDashboard").hidden=true;document.getElementById("privacyNote").hidden=false;signin.closest(".tabs").hidden=false;form.hidden=false;signin.classList.toggle("active",mode==="signin");signup.classList.toggle("active",mode==="signup");nameField.hidden=mode==="signin";document.getElementById("name").required=mode==="signup";title.textContent=mode==="signin"?"Welcome back.":"Start your journey.";sub.textContent=mode==="signin"?"Sign in to your StayLatin traveler account.":"Create a free traveler account.";submit.textContent=mode==="signin"?"Sign in":"Create free account";password.autocomplete=mode==="signin"?"current-password":"new-password";statusBox.className="status";statusBox.textContent=window.STAYLATIN_SUPABASE_CONFIG&&window.STAYLATIN_SUPABASE_CONFIG.url&&window.STAYLATIN_SUPABASE_CONFIG.anonKey?"StayLatin authentication is configured.":"Account registration is not connected yet. StayLatin is using its own backend setup, separate from the existing CGG database."}
 let activeTripUserId=null;
