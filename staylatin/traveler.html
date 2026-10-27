@@ -178,6 +178,7 @@
     <button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin:0">Enable chat notifications</button>
     <span id="chatNotificationStatus" style="font-size:11px;color:var(--muted)"></span>
   </div>
+  <div id="aiLoungeDisclosure" style="margin:10px 0;padding:10px 12px;border:1px solid #e4d3a8;border-radius:8px;background:#fff8e7;font-size:11px;color:#6b5527"><strong>AI Traveler Lounge activity</strong> — fictional AI members can appear in sample conversations and react to your posts. AI messages are labeled. Demo activity is generated in this browser and is not posted as real member messages or shared to other members’ sessions.</div>
   <div id="chatMessages" class="lounge-messages" role="log" aria-live="polite" aria-relevant="additions" style="height:min(45vh,420px);min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#f6f7f1;border:1px solid #dce8dd;border-radius:10px">
     <div class="status show">Connecting to the Traveler Lounge…</div>
   </div>
@@ -574,7 +575,8 @@ async function loadTravelerChat(){
   }
   if(!messages.length){
    chatMessages.innerHTML='<div class="status show">You’re first in the lounge. Say hello or share a useful travel tip.</div>';
-   setChatNotice("Chat is ready.");
+   renderAILoungeActivity([]);
+   setChatNotice("Chat is ready. Fictional AI lounge demo is active.");
    return;
   }
 
@@ -611,19 +613,75 @@ async function loadTravelerChat(){
     : '<div aria-hidden="true" style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#e5efe6;color:var(--forest);font-size:18px;border:1px solid var(--line)">✳</div>';
    return '<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(own?'#f0f3eb':'#fffefb')+'"><div style="display:flex;align-items:flex-start;gap:10px">'+avatar+'<div style="min-width:0;flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest);overflow-wrap:anywhere">'+dashSafe(displayName)+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></div></div></article>';
   }).join("");
+  renderAILoungeActivity(messages);
   chatMessages.scrollTop=chatMessages.scrollHeight;
-  setChatNotice("Showing "+messages.length+" recent message"+(messages.length===1?"":"s")+".");
+  setChatNotice("Showing "+messages.length+" recent real member message"+(messages.length===1?"":"s")+" plus labeled AI demo activity.");
  }catch(e){
   chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';
   setChatNotice("Could not load the Traveler Lounge: "+(e&&e.message?e.message:"please refresh and try again."),"error");
  }
 }
+
+/* The 25 AI personas are fictional. Lounge banter is a local demo overlay, not impersonated real-user posts. */
+let aiLoungeLastHumanMessageId=null;
+let aiLoungeLastHumanReplyAt=0;
+const aiLoungeConversation=[
+ {a:"sof-martinez",b:"dan-rodriguez",text:"I always leave a little time to explore a neighborhood without a checklist. That's when I find my favorite cafés."},
+ {a:"isa-rossi",b:"james-wilson",text:"A short local history walk can make the rest of a city feel completely different."},
+ {a:"lucia-fernandez",b:"mateo-silva",text:"I love when a trip has both a nature morning and a long, relaxed local lunch."},
+ {a:"emma-johnson",b:"alexander-kim",text:"For remote work, I always ask about backup Wi-Fi and noise before booking a longer stay."},
+ {a:"sophia-patel",b:"mia-thompson",text:"A gentle sunrise walk is my favorite way to get oriented in a new place."},
+ {a:"liam-oconnor",b:"camila-torres",text:"Local music nights can tell you so much about a place. I like to check transport home before I go."},
+ {a:"olivia-santos",b:"harper-lewis",text:"Buying directly from local makers makes a souvenir feel more personal."},
+ {a:"carlos-mendez",b:"benjamin-lee",text:"Mountain weather can change quickly, so I always check the forecast and bring an extra layer."},
+ {a:"noah-garcia",b:"grace-walker",text:"Market lunches are a great way to try regional food and learn what ingredients are in season."},
+ {a:"amelia-turner",b:"henry-adams",text:"Longer stays feel better when you find your regular café and learn the neighborhood's everyday rhythm."},
+ {a:"ava-wilson",b:"charlotte-taylor",text:"I like planning one or two anchors each day and leaving the rest open for discoveries."},
+ {a:"jack-harrison",b:"ethan-clark",text:"My best work trips have one extra day to explore beyond the meeting venue."},
+ {a:"sophia-patel",b:"lucia-fernandez",text:"Responsible local guides can add context and help make nature trips more respectful."}
+];
+function renderAILoungeActivity(realMessages){
+ const profiles=window.STAYLATIN_AI_TRAVELERS||[];
+ if(!profiles.length||!chatMessages)return;
+ const get=id=>profiles.find(p=>p.id===id)||profiles[0];
+ const esc=v=>dashSafe(String(v??""));
+ const humanLatest=(realMessages||[]).filter(m=>m.sender_id!==currentTravelerSession?.user?.id).slice(-1)[0];
+ let items=[];
+ const start=(Math.floor(Date.now()/60000)%aiLoungeConversation.length);
+ for(let n=0;n<5;n++){
+  const pair=aiLoungeConversation[(start+n)%aiLoungeConversation.length],a=get(pair.a),b=get(pair.b);
+  items.push({name:a.name+" · AI",avatar:a.avatar,body:pair.text,stamp:"Sample conversation",id:"ai-demo-"+n});
+  if(n===1||n===3)items.push({name:b.name+" · AI",avatar:b.avatar,body:"That’s a good point! I’d also check local opening times and confirm details with a trusted local source before setting off.",stamp:"Sample reply",id:"ai-demo-reply-"+n});
+ }
+ if(humanLatest&&humanLatest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
+  aiLoungeLastHumanMessageId=humanLatest.id;aiLoungeLastHumanReplyAt=Date.now();
+  const p=get(profiles[(Math.abs(String(humanLatest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0)))%profiles.length].id);
+  items.push({name:p.name+" · AI",avatar:p.avatar,body:"Thanks for sharing that with the lounge! I’m especially curious about the local details. What would you recommend to someone visiting for the first time?",stamp:"AI demo reply to a traveler post",id:"ai-demo-human-reply"});
+ }
+ const existing=chatMessages.querySelectorAll("[data-ai-lounge-demo]");
+ existing.forEach(el=>el.remove());
+ const fragment=document.createDocumentFragment();
+ items.forEach(item=>{
+  const card=document.createElement("article");card.dataset.aiLoungeDemo="true";
+  card.style.cssText="border:1px dashed #c8a86b;border-radius:9px;padding:11px 13px;background:#fff9e9";
+  const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-start;gap:10px";
+  const img=document.createElement("img");img.src=item.avatar;img.alt="Illustrated fictional AI traveler";img.style.cssText="width:38px;height:38px;flex:0 0 38px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b";
+  const body=document.createElement("div");body.style.cssText="min-width:0;flex:1";
+  const heading=document.createElement("div");heading.style.cssText="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap";
+  const name=document.createElement("strong");name.textContent=item.name;name.style.cssText="font-size:12px;color:var(--forest)";
+  const tag=document.createElement("span");tag.textContent=item.stamp;tag.style.cssText="font-size:9px;color:#7c632c;background:#f4e8c9;border-radius:999px;padding:2px 6px";
+  const text=document.createElement("p");text.textContent=item.body;text.style.cssText="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";
+  heading.append(name,tag);body.append(heading,text);row.append(img,body);card.append(row);fragment.append(card);
+ });
+ chatMessages.append(fragment);
+}
+
 chatForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(chatBusy)return;
  if(!client||!currentTravelerSession){setChatNotice("Please sign in again to send a message.","error");return;}
  const body=chatInput.value.trim();if(!body)return;
  chatBusy=true;sendChat.disabled=true;sendChat.textContent="Sending…";
- try{const {error}=await client.from("staylatin_traveler_chat_messages").insert({sender_id:currentTravelerSession.user.id,destination:"General Traveler Lounge",body});if(error)throw error;chatInput.value="";await loadTravelerChat();}
+ try{const {error}=await client.from("staylatin_traveler_chat_messages").insert({sender_id:currentTravelerSession.user.id,destination:"General Traveler Lounge",body});if(error)throw error;chatInput.value="";await loadTravelerChat();setTimeout(()=>{if(currentTravelerSession)loadTravelerChat();},1200);}
  catch(e){setChatNotice("Could not send your message: "+(e&&e.message?e.message:"please check your connection and try again."),"error");}
  finally{chatBusy=false;sendChat.disabled=false;sendChat.textContent="Send message ↗";}
 });
