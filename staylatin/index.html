@@ -333,10 +333,11 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-owner-claim{margin-top:6px!important;padding:9px 10px!important}
 </style>
 <style id="staylatin-owner-claim-btn">
-.stay-owner-claim{display:block;width:100%;margin-top:10px;box-sizing:border-box;text-align:center;text-decoration:none;border:0;border-radius:8px;padding:11px 12px;background:var(--forest,#173f35);color:#fffdf8;font-size:12px;font-weight:800;line-height:1.35;letter-spacing:.01em;cursor:pointer;transition:.18s ease}
-.stay-owner-claim:hover{background:var(--forest2,#1f4d41);transform:translateY(-1px);color:#fff}
+.stay-owner-claim{display:block;width:100%;margin-top:10px;box-sizing:border-box;text-align:center;text-decoration:none;border:1px solid #1b6c55;border-radius:8px;padding:11px 12px;background:linear-gradient(135deg,#164d3e,#1f7c61);color:#fff!important;font-size:12px;font-weight:800;line-height:1.35;letter-spacing:.01em;cursor:pointer;box-shadow:0 4px 12px #163d2c18;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;animation:stayBtnFade 2.2s ease-in-out infinite!important}
+.stay-owner-claim:hover,.stay-owner-claim:focus-visible{background:linear-gradient(135deg,#b78632,#d8ad57);color:#17372d!important;transform:translateY(-2px);box-shadow:0 7px 16px #163d2c24;animation-play-state:paused!important;opacity:1!important;filter:none!important;outline:none}
 .stay-owner-claim:focus-visible{outline:2px solid #ffd54a;outline-offset:2px}
 @media(max-width:560px){.stay-owner-claim{padding:12px 10px;font-size:11.5px}}
+@media(prefers-reduced-motion:reduce){.stay-owner-claim{animation:none!important;opacity:1!important}}
 </style>
 <style id="staylatin-review-stars-yellow">
 .stay-stars .star.on,.stay-review-stars{color:#ffd54a!important}
