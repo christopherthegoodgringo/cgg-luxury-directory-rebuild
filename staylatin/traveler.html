@@ -258,17 +258,10 @@ body [role="button"][aria-disabled="true"] {
 <section class="traveler-intro"><div class="kicker">Your next adventure starts here</div><h1>Find a stay worth remembering.</h1><p>Save your favorites. Plan your next escape. Explore Latin America your way.</p><div class="traveler-benefits"><div class="traveler-benefit"><span class="tick">✓</span><div><b>Your travel, all together</b><span>Keep favorite stays close at hand.</span></div></div></div></section>
 <section class="traveler-auth"><div class="kicker" style="color:var(--terra)">Traveler account</div><h2 id="formTitle">Welcome back.</h2><p class="desc" id="formSub">Sign in to your StayLatin traveler account.</p><div class="tabs" role="tablist" hidden><button class="tab active" id="signinTab" type="button">Sign in</button><button class="tab" id="signupTab" type="button">Create account</button></div>
 <form id="authForm"><div class="field" id="nameField" hidden><label for="name">YOUR NAME</label><input id="name" name="name" autocomplete="name" placeholder="Your name"></div><div class="field"><label for="email">EMAIL ADDRESS</label><input id="email" type="email" name="email" autocomplete="email" required placeholder="you@example.com"></div><div class="field"><label for="password">PASSWORD</label><input id="password" type="password" name="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></div><button class="btn primary submit" id="submit" type="submit">Sign in</button><button class="minor-action" id="resetPassword" type="button">Email me a password-reset link</button><button class="minor-action" id="resendConfirmation" type="button" hidden>Resend confirmation email</button><button class="minor-action" id="signout" type="button" hidden>Sign out</button></form><form id="passwordRecoveryForm" hidden style="margin:16px 0;padding:18px;border:1px solid #c8a86b;border-radius:10px;background:#fffdf8"><h3 style="font:500 22px Georgia,serif;color:var(--forest);margin:0 0 8px">Create a new password</h3><p style="font-size:13px;color:var(--muted);margin:0 0 14px">Choose a new password for your StayLatin account.</p><div class="field"><label for="recoveryNewPassword">NEW PASSWORD</label><input id="recoveryNewPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"></div><div class="field"><label for="recoveryConfirmPassword">CONFIRM NEW PASSWORD</label><input id="recoveryConfirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter it again"></div><button class="btn primary submit" id="saveNewPassword" type="submit">Save new password</button></form><div class="status" id="status" role="status">StayLatin uses its own dedicated account service, separate from the existing CGG database.</div><p class="disclaimer" id="privacyNote">Your account details are sent to StayLatin's dedicated authentication service only. Never share your password with anyone.</p></section>
-<section id="travelerDashboard" class="traveler-dashboard" hidden aria-live="polite"><div class="dashboard-topline"><div><div class="kicker" style="color:var(--terra)">Your StayLatin space</div><h2>Your travel dashboard</h2><p id="dashboardGreeting">Your travel space is ready.</p><p id="dashboardAccountEmailLine" style="margin:8px 0 0;font-size:13px;color:var(--muted);overflow-wrap:anywhere"><strong style="color:var(--forest)">Account email:</strong> <span id="dashboardAccountEmailValue">Not loaded</span></p></div><div class="account-actions"><button id="deleteTravelerAccount" type="button" class="minor-action danger-action">Delete account</button></div></div><section id="travelerListingActions" aria-labelledby="travelerListingActionsTitle" style="margin:16px 0 24px;border:2px solid #b9d3c2;border-radius:14px;padding:18px;background:#fffdf8">
-  <div class="kicker" style="color:var(--terra)">Your saved card actions</div>
-  <h3 id="travelerListingActionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Your stays &amp; activity</h3>
-  <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Use the five actions on a hotel card and find them here: favorites, shares, map shortlist, price checks, and listing alerts. Sign in to sync your activity to your StayLatin account.</p>
-  <div id="listingActionTabs" role="tablist" aria-label="Saved hotel card actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px">
-    <button type="button" data-listing-tab="favorites" class="active" role="tab" aria-selected="true" style="border:1px solid #b9d3c2;border-radius:999px;background:#173f35;color:#fff;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">♥ Favorites</button>
-    <button type="button" data-listing-tab="invites" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">↗ Shared stays</button>
-    <button type="button" data-listing-tab="map" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">⌖ Map shortlist</button>
-    <button type="button" data-listing-tab="prices" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">$ Price checks</button>
-    <button type="button" data-listing-tab="alerts" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">♧ Alerts</button>
-  </div>
+<section id="travelerDashboard" class="traveler-dashboard" hidden aria-live="polite"><div class="dashboard-topline"><div><div class="kicker" style="color:var(--terra)">Your StayLatin space</div><h2>Your travel dashboard</h2><p id="dashboardGreeting">Your travel space is ready.</p><p id="dashboardAccountEmailLine" style="margin:8px 0 0;font-size:13px;color:var(--muted);overflow-wrap:anywhere"><strong style="color:var(--forest)">Account email:</strong> <span id="dashboardAccountEmailValue">Not loaded</span></p></div><div class="account-actions"><button id="deleteTravelerAccount" type="button" class="minor-action danger-action">Delete account</button></div></div><section id="travelerListingActions" aria-labelledby="travelerListingActionsTitle" style="margin:16px 0 24px;border:1px solid #b9d3c2;border-radius:14px;padding:18px;background:#fffdf8">
+  <div class="kicker" style="color:var(--terra)">Your saved stays</div>
+  <h3 id="travelerListingActionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">♥ Your Favorites</h3>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Only listings you heart on StayLatin appear here, with available Expedia and Trip.com booking links.</p>
   <p id="listingActionsStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
   <div id="travelerListingActionsPanel" style="display:grid;gap:10px"></div>
 </section>
@@ -1077,84 +1070,52 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
 (function(){
   const A=window.StayLatinListingActions;
   if(!A)return;
-  let activeListingTab="favorites";
   const panel=document.getElementById("travelerListingActionsPanel");
   const statusEl=document.getElementById("listingActionsStatus");
   function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
-  function card(item,extra){
-    return '<article style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:10px;padding:12px;background:#fff"><div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+esc(item.tier||item.type||"Stay")+'</div><h4 style="font:500 19px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4><div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+(extra||"")+(item.website?'<div style="margin-top:6px"><a href="'+esc(item.website)+'" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--forest);font-weight:700">Open website ↗</a></div>':'')+'</div><a class="minor-action" href="index.html#stay-'+esc(item.id)+'" style="width:auto;margin:0">View on homepage</a></article>';
+  function affiliateLink(item,network){
+    const saved=network==="expedia"?(item.expedia||item.expediaUrl):(item.trip||item.tripUrl);
+    if(saved){
+      try{
+        const u=new URL(saved);
+        if(network==="expedia"&&/(^|\\.)expedia\\.com$/i.test(u.hostname.replace(/^www\\./,""))){
+          u.searchParams.set("affcid","US.DIRECT.PHG.1101l441706.1100l68075");
+          u.searchParams.set("my_ad","AFF.US.DIRECT.PHG.1101l441706.1100l68075");
+        }else if(network==="trip"&&/(^|\\.)trip\\.com$/i.test(u.hostname.replace(/^www\\./,""))){
+          u.searchParams.set("Allianceid","11136945");u.searchParams.set("SID","334407578");u.searchParams.set("trip_sub3","D20681383");
+        }
+        return u.toString();
+      }catch(_){}
+    }
+    const q=encodeURIComponent([item.name,item.city,item.country].filter(Boolean).join(" "));
+    if(network==="expedia")return "https://www.expedia.com/Hotel-Search?"+new URLSearchParams({destination:[item.name,item.city,item.country].filter(Boolean).join(" "),affcid:"US.DIRECT.PHG.1101l441706.1100l68075",my_ad:"AFF.US.DIRECT.PHG.1101l441706.1100l68075"}).toString();
+    return "https://www.trip.com/hotels/list?"+new URLSearchParams({city:item.city||"",keyword:item.name||"",Allianceid:"11136945",SID:"334407578",trip_sub3:"D20681383"}).toString();
   }
-  function empty(msg){return '<div class="status">'+esc(msg)+'</div>';}
-  window.renderTravelerListingActions=function(){
+  function card(item){
+    const expedia=affiliateLink(item,"expedia");
+    const trip=affiliateLink(item,"trip");
+    return '<article style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:12px;padding:14px;background:#fff">'+
+      (item.image?'<img src="'+esc(item.image)+'" alt="" loading="lazy" style="width:104px;height:100px;object-fit:cover;border-radius:8px;flex:0 0 104px">':'')+
+      '<div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">♥ SAVED FAVORITE</div>'+
+      '<h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4>'+
+      '<div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+
+      '<a href="'+esc(expedia)+'" target="_blank" rel="noopener noreferrer sponsored" style="display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#173f35;color:#fff;padding:9px 13px;font-size:12px;font-weight:800">Book on Expedia ↗</a>'+
+      '<a href="'+esc(trip)+'" target="_blank" rel="noopener noreferrer sponsored" style="display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#d9ad55;color:#173f35;padding:9px 13px;font-size:12px;font-weight:800">Book on Trip.com ↗</a>'+
+      '</div></div></article>';
+  }
+  function render(){
     if(!panel)return;
-    if(activeListingTab==="favorites"){
-      const ids=A.getFavorites();
-      const details=A.getFavoriteDetails?A.getFavoriteDetails():[];
-      const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
-      panel.innerHTML=ids.length?ids.map(id=>card(byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"})).join(""):empty("No hearted stays yet. Tap ♥ on a homepage listing.");
-      if(statusEl)statusEl.textContent=ids.length+" favorite"+(ids.length===1?"":"s")+" saved.";
-      return;
-    }
-    if(activeListingTab==="trips"){
-      const trips=A.getTrips();const boards=Object.keys(trips);
-      if(!boards.length){panel.innerHTML=empty("No trip boards yet. Tap ✈ on a listing and name a board.");if(statusEl)statusEl.textContent="";return;}
-      panel.innerHTML=boards.map(board=>{
-        const rows=trips[board]||[];
-        return '<div style="border:1px solid #dce8dd;border-radius:10px;padding:12px;background:#fff"><h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 8px">'+esc(board)+' <span style="font-size:12px;color:var(--muted);font-weight:600">('+rows.length+')</span></h4>'+(rows.length?rows.map(r=>card(r)).join(""):empty("Empty board"))+'</div>';
-      }).join("");
-      if(statusEl)statusEl.textContent=boards.length+" trip board"+(boards.length===1?"":"s")+".";
-      return;
-    }
-    if(activeListingTab==="compare"){
-      const rows=A.getCompare();
-      panel.innerHTML=rows.length?('<p style="font-size:12px;color:var(--muted);margin:0 0 8px">Up to 3 stays · '+rows.length+'/3</p>'+rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px"><b>Type:</b> '+esc(r.type||"—")+' · <b>Vibe:</b> '+esc(r.vibe||"—")+'</div>')).join("")):empty("No compare pins yet. Tap ⧉ on up to 3 listings.");
-      if(statusEl)statusEl.textContent=rows.length?"Compare pins ready.":"";
-      return;
-    }
-    if(activeListingTab==="been"){
-      const rows=A.getBeen();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,r.visited_at?'<div style="font-size:12px;margin-top:6px">Visited: '+esc(r.visited_at)+'</div>':'')).join(""):empty("No Been here marks yet. Tap ✓ after you visit a stay.");
-      if(statusEl)statusEl.textContent=rows.length?rows.length+" stay"+(rows.length===1?"":"s")+" in your journal marks.":"";
-      return;
-    }
-    if(activeListingTab==="map"){
-      const rows=A.getMapPins();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Map shortlist · city/country pin</div>')).join(""):empty("No map shortlist yet. Tap ⌖ on a hotel card to save it and open its map.");
-      if(statusEl)statusEl.textContent=rows.length?rows.length+" map pin"+(rows.length===1?"":"s")+".":"";
-      return;
-    }
-    if(activeListingTab==="alerts"){
-      const rows=A.getAlerts();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Watching for listing updates</div>')).join(""):empty("No alerts yet. Tap 🔔 to watch a listing.");
-      if(statusEl)statusEl.textContent=rows.length?rows.length+" alert"+(rows.length===1?"":"s")+".":"";
-      return;
-    }
-    if(activeListingTab==="prices"){
-      const rows=A.getPriceChecks?A.getPriceChecks():[];
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px"><b>Rate shown:</b> '+esc(r.rate_estimate||"Check dates")+(r.checked_at?' · Checked '+esc(new Date(r.checked_at).toLocaleString()):'')+'</div>')).join(""):empty("No price checks yet. Tap $ on a hotel card to save its current rate-check reminder here.");
-      if(statusEl)statusEl.textContent=rows.length?rows.length+" saved price check"+(rows.length===1?"":"s")+".":"";
-      return;
-    }
-    if(activeListingTab==="invites"){
-      const rows=A.getInvites();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">'+(r.invited_at?("Invited "+esc(new Date(r.invited_at).toLocaleString())):"Invite ready")+(r.link?' · <a href="'+esc(r.link)+'">Open link</a>':'')+'</div>')).join(""):empty("No shared stays yet. Tap ↗ on a hotel card to share its listing.");
-      if(statusEl)statusEl.textContent=rows.length?"Recent invite actions.":"";
-    }
-  };
-  document.getElementById("listingActionTabs")?.addEventListener("click",e=>{
-    const btn=e.target.closest("[data-listing-tab]");if(!btn)return;
-    activeListingTab=btn.dataset.listingTab;
-    document.querySelectorAll("#listingActionTabs [data-listing-tab]").forEach(b=>{
-      const active=b===btn;b.classList.toggle("active",active);b.setAttribute("aria-selected",active?"true":"false");
-      b.style.background=active?"#173f35":"#f3f7f1";b.style.color=active?"#fff":"#173f35";
-    });
-    renderTravelerListingActions();
-  });
-  window.loadTravelerListingActions=async function(){
-    try{await A.syncOnSignIn();}catch(_){}
-    renderTravelerListingActions();
-  };
-  renderTravelerListingActions();
+    const ids=A.getFavorites();
+    const details=A.getFavoriteDetails?A.getFavoriteDetails():[];
+    const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
+    const rows=ids.map(id=>byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"});
+    panel.innerHTML=rows.length?rows.map(card).join(""):'<div class="status show">No favorites yet. Tap ♥ on any StayLatin listing and it will appear here.</div>';
+    if(statusEl)statusEl.textContent=rows.length+ " favorite"+(rows.length===1?"":"s")+" saved.";
+  }
+  window.renderTravelerListingActions=render;
+  window.loadTravelerListingActions=async function(){try{await A.syncOnSignIn();}catch(_){}render();};
+  render();
 })();
 </script>
 
