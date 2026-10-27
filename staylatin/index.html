@@ -573,6 +573,32 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
  margin-top:7px!important;
 }
 </style>
+<style id="staylatin-single-line-card-titles">
+/* Keep every property name on one line and scale the title down for narrower cards. */
+.listing-grid .stay-card .stay-body h3{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  font-size:clamp(10px,1.18vw,17px)!important;
+  line-height:1.2!important;
+  letter-spacing:-.045em!important;
+  margin:0 0 8px!important;
+}
+@media(min-width:1440px){
+  .listing-grid .stay-card .stay-body h3{font-size:17px!important}
+}
+@media(max-width:560px){
+  .listing-grid .stay-card .stay-body h3{
+    font-size:clamp(9px,2.8vw,12px)!important;
+    letter-spacing:-.055em!important;
+    margin-bottom:7px!important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
