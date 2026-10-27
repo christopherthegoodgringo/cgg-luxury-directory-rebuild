@@ -25,7 +25,21 @@
   const oldTitle=document.getElementById("travelerListingActionsTitle");
   if(oldTitle){const title=document.createElement("h4");title.id=oldTitle.id;title.textContent="6. Your Favorites";oldTitle.replaceWith(title);}
   grid.insertBefore(favorites,journal);
+  favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>7. Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
  }
+ const inviteForm=document.getElementById("travelerInviteForm");
+ if(inviteForm)inviteForm.addEventListener("submit",function(event){
+  event.preventDefault();
+  const name=document.getElementById("inviteFriendName").value.trim();
+  const email=document.getElementById("inviteFriendEmail").value.trim();
+  const personal=document.getElementById("inviteFriendMessage").value.trim();
+  if(!name||!email){document.getElementById("travelerInviteStatus").textContent="Enter your friend's name and a valid email address.";return;}
+  const subject="Join me on StayLatin";
+  const portalUrl="https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler.html";
+  const body="Hi "+name+",\\n\\n"+(personal?personal+"\\n\\n":"")+"I wanted to share StayLatin with you — a travel portal for discovering stays and keeping your travel plans together.\\n\\nJoin or sign in here: "+portalUrl+"\\n\\nHope to see you there!\\n\\nSent by a friend using StayLatin.";
+  document.getElementById("travelerInviteStatus").textContent="Opening your email app. Review the invitation and press Send there.";
+  window.location.href="mailto:"+encodeURIComponent(email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+ });
  /* Every toolkit section starts collapsed on each portal visit and can be opened independently. */
  const collapseStyle=document.createElement("style");
  collapseStyle.textContent=".tool-card>h4,.journal-card>h3{display:flex;align-items:center;justify-content:space-between;gap:12px}.tool-collapse-toggle{flex:0 0 auto;border:1px solid #cfe0d7;border-radius:999px;background:#edf5ec;color:#173f35;padding:7px 11px;font:700 11px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap}.tool-collapse-toggle:hover{background:#dcecdf}.tool-card-body,.journal-card-body{min-width:0}.tool-card.is-collapsed .tool-card-body,.journal-card.is-collapsed .journal-card-body{display:none}.tool-card.is-collapsed,.journal-card.is-collapsed{min-height:0}.tool-card.is-collapsed{height:auto}.tool-card.is-collapsed>h4{margin-bottom:0}.journal-card.is-collapsed>h3{margin-bottom:0}@media(prefers-reduced-motion:no-preference){.tool-collapse-toggle{transition:background .2s ease}}";
