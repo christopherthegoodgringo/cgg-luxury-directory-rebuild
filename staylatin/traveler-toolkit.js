@@ -83,7 +83,7 @@ function renderCurrencySelectors(){
 }
 async function loadRates(){
  const cached=(()=>{try{return JSON.parse(localStorage.getItem("staylatin-fx-cache")||"null")}catch(_){return null}})();
- if(cached&&cached.at>Date.now()-6*60*60*1000){rates=cached.rates;rateDate=cached.date;renderCurrencySelectors();renderCurrency();return;}
+ if(cached&&cached.at>Date.now()-6*60*60*1000){rates=cached.rates;rateDate=cached.date;renderCurrencySelectors();renderCurrency();status("currencyStatus","Using recently saved rates ("+rateDate+"). Rates are indicative; your bank may use a different rate.");return;}
  if(rateLoading)return;rateLoading=true;status("currencyStatus","Loading current exchange rates…");
  try{const response=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});if(!response.ok)throw new Error("Rates are temporarily unavailable.");const data=await response.json();if(data.result!=="success"||!data.rates)throw new Error("Rates are temporarily unavailable.");rates=data.rates;rateDate=data.time_last_update_utc||"latest update";try{localStorage.setItem("staylatin-fx-cache",JSON.stringify({at:Date.now(),rates,date:rateDate}));}catch(_){}renderCurrencySelectors();renderCurrency();status("currencyStatus","Exchange rates updated: "+rateDate+". Rates are indicative; your bank may use a different rate.");}
  catch(_){if(cached){rates=cached.rates;rateDate=cached.date;renderCurrencySelectors();renderCurrency();status("currencyStatus","Using the last saved rates ("+rateDate+"). Connect to the internet to refresh.",true);}else status("currencyStatus","Live rates could not load. Please try again when connected.",true);}
