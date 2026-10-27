@@ -116,7 +116,7 @@ function bindForms(){
  $("refreshRates").addEventListener("click",async()=>{try{localStorage.removeItem("staylatin-fx-cache")}catch(_){}await loadRates();});
 }
 function init(){
- bindForms();loadAll().then(()=>{loadRates().then(()=>renderBudget());const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
+ bindForms();loadAll().then(()=>{loadRates();const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
  bindJournal();
  const dash=$("travelerDashboard");
  if(dash&&typeof MutationObserver!=="undefined"){new MutationObserver(()=>{if(!dash.hidden){loadAll();loadJournal();}}).observe(dash,{attributes:true,attributeFilter:["hidden"]});}
