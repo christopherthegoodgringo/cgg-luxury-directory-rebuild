@@ -213,13 +213,16 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .photo{height:205px!important;min-height:205px!important;flex:0 0 205px!important;overflow:hidden;position:relative;background-color:#c5d0c4;background-size:cover;background-position:center}
 .photo .property-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
 .photo .pill{z-index:2}
-.photo-actions{position:absolute;top:10px;right:10px;z-index:7;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-end;justify-content:flex-start;gap:6px;max-height:calc(100% - 24px);pointer-events:none}
-.photo-actions .photo-act{pointer-events:auto;position:relative;top:auto;right:auto;left:auto;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.96);border-radius:50%;color:#fff!important;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(19,35,54,.3);background:linear-gradient(135deg,#1a5c45 0%,#2f8f6b 100%);animation:stayBtnFade 2.2s ease-in-out infinite;transition:transform .18s ease,filter .18s ease;font-size:14px;padding:0;flex:0 0 auto}
-.photo-actions .photo-act.heart{font-size:17px;text-shadow:0 1px 2px rgba(10,40,30,.35)}
-.photo-actions .photo-act.share{font-size:15px}
-.photo-actions .photo-act.map{font-size:13px}
-.photo-actions .photo-act.price{font-size:15px}
-.photo-actions .photo-act.notify{font-size:13px}
+.photo-actions{position:absolute;top:10px;right:10px;left:auto;bottom:auto;z-index:30!important;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:6px;max-width:calc(100% - 20px);max-height:none;pointer-events:none}
+.photo-actions .photo-act{pointer-events:auto;position:relative;top:auto;right:auto;left:auto;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.96);border-radius:50%;color:#fff!important;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(19,35,54,.35);background:linear-gradient(135deg,#1a5c45 0%,#2f8f6b 100%)!important;animation:none!important;opacity:1!important;transition:transform .18s ease,filter .18s ease;font-size:16px;padding:0;flex:0 0 auto}
+.photo-actions .photo-act span{display:block;line-height:1;color:#fff!important;text-shadow:0 1px 2px rgba(10,40,30,.45)}
+.photo-actions .photo-act.heart{font-size:18px}
+.photo-actions .photo-act.heart span{color:#fff!important}
+.photo-actions .photo-act.heart.saved span,.photo-actions .photo-act.heart.is-on span{color:#ffd6e0!important}
+.photo-actions .photo-act.share{font-size:16px}
+.photo-actions .photo-act.map{font-size:15px}
+.photo-actions .photo-act.price{font-size:16px}
+.photo-actions .photo-act.notify{font-size:14px}
 .card-actions.price-highlight{outline:2px solid #2f8f6b;outline-offset:4px;border-radius:10px;transition:outline-color .2s ease}
 .photo-actions .photo-act.is-on,.photo-actions .photo-act.saved{background:linear-gradient(135deg,#0f4a36 0%,#1f7a58 100%);box-shadow:0 0 0 2px rgba(255,255,255,.35),0 4px 12px rgba(19,35,54,.28)}
 .photo-actions .photo-act:hover{transform:translateY(-2px) scale(1.06);filter:brightness(1.08);animation-play-state:paused}
@@ -259,7 +262,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .photo-slides{position:absolute;inset:0;z-index:1}
 .photo-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.1s ease;z-index:1;pointer-events:none}
 .photo-slide.is-active{opacity:1;z-index:2}
-.photo .pill,.photo .heart,.photo .share,.photo-actions{position:absolute;z-index:6!important}
+.photo .pill{position:absolute;z-index:8!important}.photo .heart,.photo .share,.photo-actions{position:absolute;z-index:30!important}
 .photo-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:5px;z-index:6;pointer-events:none}
 .photo-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 1px 3px rgba(0,0,0,.35)}
 .photo-dot.is-active{background:#fff;transform:scale(1.15)}
@@ -565,11 +568,11 @@ function render(){
     const st=(window.StayLatinListingActions&&StayLatinListingActions.stateFor(s.id))||{favorite:saved.includes(s.id),trip:false,compare:false,been:false,map:false,alert:false};
   const acts=''
    +'<div class="photo-actions" role="toolbar" aria-label="Listing actions">'
-   +'<button class="photo-act heart '+(st.favorite?'saved is-on':'')+'" type="button" aria-label="Favorite '+esc(s.name)+'" data-save="'+s.id+'" title="Heart">'+(st.favorite?'♥':'♡')+'</button>'
-   +'<button class="photo-act share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'" title="Share">↗</button>'
-   +'<button class="photo-act map" type="button" aria-label="Map '+esc(s.name)+'" data-act="map" data-id="'+s.id+'" title="Map">🗺️</button>'
-   +'<button class="photo-act price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price">$</button>'
-   +'<button class="photo-act notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify">🔔</button>'
+   +'<button class="photo-act heart '+(st.favorite?'saved is-on':'')+'" type="button" aria-label="Favorite '+esc(s.name)+'" data-save="'+s.id+'" title="Heart"><span aria-hidden="true">&#9829;</span></button>'
+   +'<button class="photo-act share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'" title="Share"><span aria-hidden="true">&#8599;</span></button>'
+   +'<button class="photo-act map" type="button" aria-label="Map '+esc(s.name)+'" data-act="map" data-id="'+s.id+'" title="Map"><span aria-hidden="true">&#9873;</span></button>'
+   +'<button class="photo-act price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price"><span aria-hidden="true">$</span></button>'
+   +'<button class="photo-act notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify"><span aria-hidden="true">&#128276;</span></button>'
    +'</div>';
   return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
@@ -590,7 +593,7 @@ function render(){
   const shareUrl=new URL(window.location.href);shareUrl.hash="stay-"+item.id;
   const link=shareUrl.toString();
   const shareText=item.name+" — "+item.city+" | StayLatin";
-  const markCopied=()=>{b.textContent="✓";b.setAttribute("aria-label","Link copied");setTimeout(()=>{b.textContent="↗";b.setAttribute("aria-label","Share "+item.name);},1600);};
+  const markCopied=()=>{b.innerHTML="<span aria-hidden=\"true\">&#10003;</span>";b.setAttribute("aria-label","Link copied");setTimeout(()=>{b.innerHTML="<span aria-hidden=\"true\">&#8599;</span>";b.setAttribute("aria-label","Share "+item.name);},1600);};
   if(navigator.share){try{await navigator.share({title:item.name+" | StayLatin",text:shareText,url:link});markCopied();return;}catch(err){if(err&&err.name==="AbortError")return;}}
   try{
     if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(shareText+"\n"+link);markCopied();return;}
