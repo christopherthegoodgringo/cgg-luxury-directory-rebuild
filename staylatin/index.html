@@ -1172,12 +1172,12 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   var previousOverflow="";
   window.addEventListener("message",function(event){
     if(event.origin!==window.location.origin||!event.data)return;
-    if(event.data.type==="staylatin-login-success"){closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"){window.location.replace(fallback.href);}}catch(e){}}return;}
+    if(event.data.type==="staylatin-login-success"){closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&(fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"||fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/admin-travel-members.html")){window.location.replace(fallback.href);}}catch(e){}}return;}
     if(event.data.type==="staylatin-account-content-changed"){window.setTimeout(fitAccountDialog,30);return;}
     if(event.data.type!=="staylatin-account-switch")return;
     try{
       var target=new URL(event.data.url,window.location.href);
-      if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/traveler-(signin|signup)\.html$/.test(target.pathname))return;
+      if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-(signin|signup)\.html$/.test(target.pathname))return;
       if(frame){frame.src=target.href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");}
     }catch(e){}
   });
