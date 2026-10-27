@@ -183,8 +183,8 @@ function init(){
  bindForms();bindDocumentVault();loadDocumentVault();loadAll().then(()=>{loadRates();const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
  bindJournal();
  const dash=$("travelerDashboard");
- if(dash&&typeof MutationObserver!=="undefined"){new MutationObserver(()=>{if(!dash.hidden){loadAll();loadJournal();}}).observe(dash,{attributes:true,attributeFilter:["hidden"]});}
- setTimeout(()=>{if(dash&&!dash.hidden){loadAll();loadJournal();}},400);
+ if(dash&&typeof MutationObserver!=="undefined"){new MutationObserver(()=>{if(!dash.hidden){loadAll();loadJournal();loadDocumentVault();}}).observe(dash,{attributes:true,attributeFilter:["hidden"]});}
+ setTimeout(()=>{if(dash&&!dash.hidden){loadAll();loadJournal();loadDocumentVault();}},400);
 }
 function bindJournal(){
  const form=$("travelerJournalForm"),list=$("travelerJournalEntries");if(!form||!list)return;
