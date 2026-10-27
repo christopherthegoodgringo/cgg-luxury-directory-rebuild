@@ -657,17 +657,18 @@ function renderAILoungeActivity(realMessages){
  if(newest&&newest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
   const body=String(newest.body||"");
   const lower=body.toLowerCase();
+  const messageWords=lower.split(/[^a-z0-9]+/).filter(Boolean);
   const mentioned=profiles.find(p=>{
-   const first=String(p.name||"").trim().split(/\\s+/)[0].toLowerCase();
-   return first.length>1&&new RegExp("(^|[^a-z])"+first.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"([^a-z]|$)","i").test(body);
+   const first=String(p.name||"").trim().split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g,"");
+   return first.length>1&&messageWords.includes(first);
   });
   const seed=Math.abs(String(newest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0));
   const p=(mentioned&&activeProfiles.find(x=>x.id===mentioned.id))||getActive(profiles[seed%profiles.length].id);
   aiLoungeLastHumanMessageId=newest.id;aiLoungeLastHumanReplyAt=Date.now();
   let reply;
   if(mentioned) reply="Hey, you called my name! 😊 I’m here. What would you like to chat about?";
-  else if(/\\b(hello|hi|hey|good morning|good evening)\\b/.test(lower)) reply="Hi there! 👋 Glad you joined us. Where are you traveling, and what are you hoping to discover?";
-  else if(/\\b(where|recommend|recommendation|hotel|hostel|stay|place|visit|destination)\\b/.test(lower)) reply="Thanks for bringing that up! I’d compare location, recent traveler reviews, and current details. Which city or country are you considering?";
+  else if(messageWords.some(w=>["hello","hi","hey"].includes(w))||lower.includes("good morning")||lower.includes("good evening")) reply="Hi there! 👋 Glad you joined us. Where are you traveling, and what are you hoping to discover?";
+  else if(messageWords.some(w=>["where","recommend","recommendation","hotel","hostel","stay","place","visit","destination"].includes(w))) reply="Thanks for bringing that up! I’d compare location, recent traveler reviews, and current details. Which city or country are you considering?";
   else if(body.includes("?")) reply="That’s a good question! Let’s think it through together. Which country or city are you asking about?";
   else reply="Thanks for sharing that with the lounge! 😊 What else would you tell a traveler who’s planning a similar trip?";
   items.push({name:p.name+" · AI",avatar:p.avatar,body:reply,stamp:mentioned?"AI persona responding to name":"Fictional AI reply to traveler"});
