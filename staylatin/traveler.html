@@ -467,10 +467,11 @@ privateMessageForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(privateBusy)return;
  const db=introClient(),body=privateMessageInput.value.trim();
  if(!db||!activeTripUserId||!activePrivateRecipient){setPrivateNotice("Choose a member before sending a private message.",true);return}
+ if(activeTripUserId===activePrivateRecipient){setPrivateNotice("You cannot send a private message to your own account. Choose another traveler.",true);return}
  if(!body)return;
  privateBusy=true;privateMessageSend.disabled=true;privateMessageSend.textContent="Sending…";
  try{const {error}=await db.from("staylatin_traveler_private_messages").insert({sender_id:activeTripUserId,recipient_id:activePrivateRecipient,body});if(error)throw error;privateMessageInput.value="";await loadPrivateConversation();setPrivateNotice("Private message sent.");}
- catch(e){setPrivateNotice("Could not send your private message. Please try again.",true)}
+ catch(e){const detail=String(e&&e.message||"").trim();setPrivateNotice("Could not send your private message"+(detail?": "+detail:"")+".",true)}
  finally{privateBusy=false;privateMessageSend.disabled=false;privateMessageSend.textContent="Send privately ↗"}
 });
 document.getElementById("refreshPrivateInbox")?.addEventListener("click",async()=>{await loadPrivateInbox();if(activePrivateRecipient)await loadPrivateConversation()});
