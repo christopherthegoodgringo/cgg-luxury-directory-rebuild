@@ -115,6 +115,13 @@ body.password-recovery-mode #status.error{background:#f9e9e5;color:#8b392a}
 body.password-recovery-mode #privacyNote{display:none!important}
 @media(max-width:520px){body.password-recovery-mode .traveler-content{width:calc(100% - 24px);padding:20px 0 42px}body.password-recovery-mode .traveler-auth{border-radius:19px!important;padding:27px 22px!important}}
 .danger-action{background:#fff2ef!important;border:1px solid #d98a7a!important;color:#9f3325!important;font-weight:800}.danger-action:hover{background:#fbe2dc!important}.account-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.account-actions .minor-action{width:auto;margin:0}@media(max-width:560px){#travelerJournalForm,#travelerSavedPlaceForm{grid-template-columns:minmax(0,1fr)!important}#travelerJournalForm>label,#travelerSavedPlaceForm>label{grid-column:1!important}#travelerJournalForm>div,#travelerSavedPlaceForm>div{grid-column:1!important}}
+
+body.portal-direct .traveler-intro,
+body.portal-direct .traveler-auth,
+body.portal-direct #privacyNote{display:none!important}
+body.portal-direct #travelerDashboard{display:block!important}
+body.portal-direct .traveler-content{grid-template-columns:1fr}
+
 </style><style id="staylatin-donation-glow-style">
 #travelerDonationCta.staylatin-donation-glow{animation:staylatinGreenFade 12s ease-in-out infinite;transition:box-shadow 1s ease}
 #travelerDonationCta.staylatin-donation-glow::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(190,255,195,.38),transparent 42%),radial-gradient(ellipse at 85% 80%,rgba(0,70,45,.36),transparent 46%);opacity:.8;animation:staylatinGreenGlow 8s ease-in-out infinite alternate}
@@ -124,6 +131,19 @@ body.password-recovery-mode #privacyNote{display:none!important}
 @media(prefers-reduced-motion:reduce){#travelerDonationCta.staylatin-donation-glow,#travelerDonationCta.staylatin-donation-glow::before{animation:none}}
 </style>
 <link rel="stylesheet" href="shared-chrome.css">
+<script>
+(function(){
+ try{
+  var open=sessionStorage.getItem("staylatin-open-traveler-portal")==="1";
+  var hash=(location.hash||"").replace(/^#/,"");
+  if(open||hash==="dashboard"||hash==="portal"){
+   document.documentElement.classList.add("portal-direct");
+   document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("portal-direct");var d=document.getElementById("travelerDashboard");if(d)d.hidden=false;});
+  }
+ }catch(e){}
+})();
+</script>
+
 </head><body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html#top" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><div class="sl-lang-wrap"><button type="button" class="sl-language" id="language" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">EN ▾</button><ul class="sl-lang-menu" id="languageMenu" role="listbox" hidden><li role="option" data-lang="en" tabindex="-1">English</li><li role="option" data-lang="es" tabindex="-1">Español</li><li role="option" data-lang="pt" tabindex="-1">Português</li></ul></div></div></header>
@@ -710,10 +730,15 @@ document.getElementById("travelerChangePasswordForm")?.addEventListener("submit"
 });
 function setTravelerSignedIn(user){
  activeTripUserId=user.id;
+ try{sessionStorage.removeItem("staylatin-open-traveler-portal");}catch(e){}
+ document.documentElement.classList.add("portal-direct");
+ document.body.classList.add("portal-direct");
  document.querySelector(".traveler-intro")?.setAttribute("hidden","");
  document.querySelector(".traveler-auth")?.setAttribute("hidden","");
  document.getElementById("privacyNote")?.setAttribute("hidden","");
  document.getElementById("travelerDashboard").hidden=false;
+ if(location.hash==="#dashboard"||location.hash==="#portal"){try{history.replaceState({},document.title,location.pathname+location.search);}catch(e){}}
+ requestAnimationFrame(()=>{window.scrollTo({top:0,behavior:"instant"});});
  document.getElementById("travelerAccountEmail").value=user.email||"";
  document.getElementById("dashboardGreeting").textContent="Welcome"+(user.user_metadata?.full_name?" back, "+user.user_metadata.full_name:" back")+". Your travel space is ready.";
  form.hidden=true;
@@ -733,6 +758,9 @@ function setTravelerSignedIn(user){
 }
 function setTravelerSignedOut(){
  activeTripUserId=null;
+ try{sessionStorage.removeItem("staylatin-open-traveler-portal");}catch(e){}
+ document.documentElement.classList.remove("portal-direct");
+ document.body.classList.remove("portal-direct");
  document.querySelector(".traveler-intro")?.removeAttribute("hidden");
  document.querySelector(".traveler-auth")?.removeAttribute("hidden");
  document.getElementById("travelerDashboard").hidden=true;
