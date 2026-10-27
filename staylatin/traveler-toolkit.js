@@ -14,19 +14,20 @@ const defaults={
  emergency_card:{name:"",contact:"",relationship:"",phone:"",localNumber:"",insuranceContact:"",embassy:"",stayAddress:"",notes:""}
 };
 const state={};let cloudReady=false;let currentKey="";
-function userKey(){return (window.activeTripUserId||"guest");}
+function getUserId(){try{return typeof activeTripUserId!=="undefined"?activeTripUserId:null;}catch(_){return null;}}
+function userKey(){return getUserId()||"guest";}
 function localKey(){return "staylatin-traveler-toolkit:"+userKey();}
 function status(id,msg,error=false){const el=$(id);if(el){el.textContent=msg;el.style.color=error?"#a43d2e":"var(--muted)";}}
 function clone(v){return JSON.parse(JSON.stringify(v));}
 function readLocal(){try{return JSON.parse(localStorage.getItem(localKey())||"{}")||{};}catch(_){return {};}}
 function writeLocal(){try{localStorage.setItem(localKey(),JSON.stringify(state));}catch(_){}}
-async function db(){try{return typeof window.introClient==="function"?window.introClient():null;}catch(_){return null;}}
+async function db(){try{return typeof introClient==="function"?introClient():null;}catch(_){return null;}}
 async function loadAll(){
  const local=readLocal();keys.forEach(k=>state[k]=Object.assign(clone(defaults[k]),local[k]||{}));
  const client=await db();
- if(client&&window.activeTripUserId){
+ if(client&&getUserId()){
   try{
-   const {data,error}=await client.from("staylatin_traveler_tools").select("tool_key,payload").eq("user_id",window.activeTripUserId);
+   const {data,error}=await client.from("staylatin_traveler_tools").select("tool_key,payload").eq("user_id",getUserId());
    if(!error){(data||[]).forEach(r=>{if(keys.includes(r.tool_key)&&r.payload&&typeof r.payload==="object")state[r.tool_key]=Object.assign(clone(defaults[r.tool_key]),r.payload);});cloudReady=true;writeLocal();}
   }catch(_){}
  }
@@ -36,13 +37,13 @@ let saveTimers={};
 async function save(k){
  writeLocal();
  const client=await db();
- if(client&&window.activeTripUserId){
+ if(client&&getUserId()){
   try{
-   const {error}=await client.from("staylatin_traveler_tools").upsert({user_id:window.activeTripUserId,tool_key:k,payload:state[k],updated_at:new Date().toISOString()},{onConflict:"user_id,tool_key"});
+   const {error}=await client.from("staylatin_traveler_tools").upsert({user_id:getUserId(),tool_key:k,payload:state[k],updated_at:new Date().toISOString()},{onConflict:"user_id,tool_key"});
    if(!error){cloudReady=true;status("toolkitStatus","Saved securely to your StayLatin account.");return;}
   }catch(_){}
  }
- status("toolkitStatus",window.activeTripUserId?"Saved on this device for this signed-in account. Cloud sync is waiting for the toolkit storage table.":"Saved on this device. Sign in to keep your tools with your traveler account.");
+ status("toolkitStatus",getUserId()?"Saved on this device for this signed-in account. Account sync is awaiting toolkit storage setup.":"Saved on this device. Sign in to keep your tools separated by traveler account.");
 }
 function renderAll(){renderTrip();renderBudget();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderTrip(){
@@ -54,11 +55,12 @@ function renderTrip(){
 function renderBudget(){
  const s=state.budget_tracker;$("budgetLimit").value=s.budget??"";$("budgetCurrency").value=s.currency||"USD";
  const box=$("budgetExpenseList");if(!box)return;
- const planned=s.expenses.reduce((a,e)=>a+(Number(e.planned)||0),0),actual=s.expenses.reduce((a,e)=>a+(Number(e.actual)||0),0);
+ const planned=s.expenses.reduce((a,e)=>a+convertAmount(Number(e.planned)||0,e.currency,s.currency),0),actual=s.expenses.reduce((a,e)=>a+convertAmount(Number(e.actual)||0,e.currency,s.currency),0);
  $("budgetPlannedTotal").textContent=money(planned,s.currency);$("budgetActualTotal").textContent=money(actual,s.currency);
  const budget=Number(s.budget)||0;$("budgetRemaining").textContent=money(budget-actual,s.currency);
  box.innerHTML=s.expenses.length?s.expenses.map((e,i)=>'<article class="tool-item"><div><b>'+escapeHtml(e.title)+'</b><p>'+escapeHtml(e.category)+' · '+escapeHtml(e.currency)+' · Planned '+escapeHtml(e.planned)+' / Actual '+escapeHtml(e.actual)+'</p></div><button type="button" class="tool-small danger" data-expense-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">No expenses yet. Planned and actual totals will appear here.</p>';
 }
+function convertAmount(n,from,to){if(!rates||!rates[from]||!rates[to])return from===to?n:0;return n/rates[from]*rates[to];}
 function money(n,c){try{return new Intl.NumberFormat(undefined,{style:"currency",currency:c||"USD",maximumFractionDigits:2}).format(Number(n)||0)}catch(_){return (Number(n)||0).toFixed(2)+" "+c;}}
 function renderChecklist(key,boxId,statusId){
  const s=state[key],box=$(boxId);if(!box)return;
@@ -114,7 +116,34 @@ function bindForms(){
  $("refreshRates").addEventListener("click",async()=>{try{localStorage.removeItem("staylatin-fx-cache")}catch(_){}await loadRates();});
 }
 function init(){
- bindForms();loadAll().then(()=>{loadRates();const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
+ bindForms();loadAll().then(()=>{loadRates().then(()=>renderBudget());const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
+ bindJournal();
+ const dash=$("travelerDashboard");
+ if(dash&&typeof MutationObserver!=="undefined"){new MutationObserver(()=>{if(!dash.hidden){loadAll();loadJournal();}}).observe(dash,{attributes:true,attributeFilter:["hidden"]});}
+ setTimeout(()=>{if(dash&&!dash.hidden){loadAll();loadJournal();}},400);
+}
+function bindJournal(){
+ const form=$("travelerJournalForm"),list=$("travelerJournalEntries");if(!form||!list)return;
+ form.addEventListener("submit",async e=>{
+  e.preventDefault();const id=getUserId(),client=await db();if(!id||!client){status("journalStatus","Please sign in to save your journal.",true);return;}
+  const button=$("journalSaveButton"),entryId=$("journalEntryId").value;
+  const row={user_id:id,title:$("journalTitle").value.trim(),destination:$("journalDestination").value.trim(),entry_date:$("journalDate").value||null,body:$("journalBody").value.trim(),visibility:$("journalVisibility").value,updated_at:new Date().toISOString()};
+  if(!row.title||!row.body){status("journalStatus","Add a title and memory before saving.",true);return;}
+  button.disabled=true;status("journalStatus","Saving journal entry…");
+  try{const result=entryId?await client.from("staylatin_traveler_journal_entries").update(row).eq("id",entryId).eq("user_id",id):await client.from("staylatin_traveler_journal_entries").insert(row);if(result.error)throw result.error;form.reset();$("journalEntryId").value="";$("journalSaveButton").textContent="Save journal entry";$("journalCancelEdit").hidden=true;status("journalStatus","Journal entry saved to your StayLatin account.");await loadJournal();}
+  catch(err){status("journalStatus","Could not save entry: "+(err.message||"Please try again."),true);}finally{button.disabled=false;}
+ });
+ $("journalCancelEdit").addEventListener("click",()=>{form.reset();$("journalEntryId").value="";$("journalSaveButton").textContent="Save journal entry";$("journalCancelEdit").hidden=true;});
+ list.addEventListener("click",async e=>{const edit=e.target.closest("[data-journal-edit]"),del=e.target.closest("[data-journal-delete]");if(!edit&&!del)return;const id=getUserId(),client=await db();if(!id||!client)return;
+  if(edit){const {data,error}=await client.from("staylatin_traveler_journal_entries").select("id,title,destination,entry_date,body,visibility").eq("id",edit.dataset.journalEdit).eq("user_id",id).maybeSingle();if(error||!data){status("journalStatus","Could not open that entry.",true);return;}$("journalEntryId").value=data.id;$("journalTitle").value=data.title;$("journalDestination").value=data.destination||"";$("journalDate").value=data.entry_date||"";$("journalBody").value=data.body||"";$("journalVisibility").value=data.visibility;$("journalSaveButton").textContent="Update journal entry";$("journalCancelEdit").hidden=false;$("journalTitle").focus();return;}
+  if(!confirm("Delete this journal entry permanently?"))return;const {error}=await client.from("staylatin_traveler_journal_entries").delete().eq("id",del.dataset.journalDelete).eq("user_id",id);if(error){status("journalStatus","Could not delete entry.",true);return;}await loadJournal();
+ });
+}
+async function loadJournal(){
+ const list=$("travelerJournalEntries"),id=getUserId(),client=await db();if(!list)return;if(!id||!client){list.innerHTML='<p class="tool-empty">Sign in to save and view journal entries.</p>';return;}
+ list.innerHTML='<p class="tool-empty">Loading journal entries…</p>';
+ try{const {data,error}=await client.from("staylatin_traveler_journal_entries").select("id,title,destination,entry_date,body,visibility").eq("user_id",id).order("updated_at",{ascending:false}).limit(100);if(error)throw error;const rows=data||[];list.innerHTML=rows.length?rows.map(r=>'<article class="tool-item"><div><b>'+escapeHtml(r.title)+'</b><p>'+(r.entry_date?escapeHtml(r.entry_date)+' · ':'')+escapeHtml(r.destination||'')+' · '+(r.visibility==="shared"?"Shared entry":"Private entry")+'</p><p>'+escapeHtml(r.body||"")+'</p></div><div class="tool-actions"><button type="button" class="tool-small" data-journal-edit="'+r.id+'">Edit</button><button type="button" class="tool-small danger" data-journal-delete="'+r.id+'">Delete</button></div></article>').join(""):'<p class="tool-empty">Your journal is ready. Add your first memory above.</p>';status("journalStatus",rows.length+" journal entr"+(rows.length===1?"y":"ies")+" saved to your account.");}
+ catch(_){list.innerHTML='<p class="tool-empty">Journal could not load. Refresh and try again.</p>';status("journalStatus","Journal could not load.",true);}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
