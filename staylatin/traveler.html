@@ -685,8 +685,18 @@ function renderAILoungeActivity(realMessages){
   const para=document.createElement("p");para.textContent=item.body;para.style.cssText="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";
   heading.append(name,tag);bodyEl.append(heading,para);row.append(img,bodyEl);card.append(row);return card;
  });
- // Keep every AI item above real posts; real posts remain newest-first below.
- cards.reverse().forEach(card=>chatMessages.prepend(card));
+ // Mix real traveler posts and AI personas in one feed, newest activity at the top.
+ const realCards=Array.from(chatMessages.children).filter(el=>!el.matches("[data-ai-lounge-demo]")&&!el.classList.contains("status"));
+ const realTop=realCards[0]||null;
+ const mixed=[];
+ // Interleave so real members are visible among the personas rather than in a separate block.
+ const count=Math.max(realCards.length,cards.length);
+ for(let i=0;i<count;i++){
+  if(i<cards.length)mixed.push(cards[i]);
+  if(i<realCards.length)mixed.push(realCards[i]);
+ }
+ mixed.forEach(card=>chatMessages.append(card));
+ chatMessages.scrollTop=0;
 }
 
 chatForm?.addEventListener("submit",async e=>{
