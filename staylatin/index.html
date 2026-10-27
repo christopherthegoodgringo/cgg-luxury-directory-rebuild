@@ -315,6 +315,12 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-review-text{margin:0;font-size:12px;line-height:1.25;color:#45534a;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;min-height:0}
 @media(max-width:560px){.stay-review{padding:6px 9px}}
 </style>
+<style id="staylatin-owner-claim-btn">
+.stay-owner-claim{display:block;width:100%;margin-top:10px;box-sizing:border-box;text-align:center;text-decoration:none;border:0;border-radius:8px;padding:11px 12px;background:var(--forest,#173f35);color:#fffdf8;font-size:12px;font-weight:800;line-height:1.35;letter-spacing:.01em;cursor:pointer;transition:.18s ease}
+.stay-owner-claim:hover{background:var(--forest2,#1f4d41);transform:translateY(-1px);color:#fff}
+.stay-owner-claim:focus-visible{outline:2px solid #ffd54a;outline-offset:2px}
+@media(max-width:560px){.stay-owner-claim{padding:12px 10px;font-size:11.5px}}
+</style>
 <style id="staylatin-review-stars-yellow">
 .stay-stars .star.on,.stay-review-stars{color:#ffd54a!important}
 .stay-stars .star.off,.stay-review-stars .empty-star{color:#c5d0c4!important}
@@ -604,6 +610,10 @@ function render(){
   const reviewer=s.reviewer||"Traveler";
   const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=rating?' on':' off')+'" aria-hidden="true">★</span>').join("");
   const reviewBlock='<div class="stay-review"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+rating+' out of 5 stars">'+stars+'</div><div class="stay-reviewer">'+esc(reviewer)+'</div></div><p class="stay-review-text">'+esc(reviewText)+'</p></div>';
+  const ownerMail='christopher@christopherthegoodgringo.com';
+  const ownerSubject=encodeURIComponent('StayLatin listing info — '+s.name);
+  const ownerBody=encodeURIComponent('Hi Christopher,\n\nThis is my business / I represent "'+s.name+'" ('+s.city+').\nI\'d like more information about StayLatin listings.\n\nThanks,');
+  const ownerClaim='<a class="stay-owner-claim" href="mailto:'+ownerMail+'?subject='+ownerSubject+'&body='+ownerBody+'" aria-label="Is this your business? Email StayLatin about '+esc(s.name)+'">Is this your business? Click here for more info on listings</a>';
   const gallery=(Array.isArray(s.images)&&s.images.length?s.images:[s.image,s.imageFallback].concat(s.imageFallbacks||[])).filter(Boolean).filter((u,i,a)=>a.indexOf(u)===i).slice(0,5);
   while(gallery.length<5){gallery.push("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80");}
   const photoSrc=gallery[0]||'';
@@ -619,7 +629,7 @@ function render(){
    +'<button class="photo-act sl-act-price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price"><span aria-hidden="true">$</span></button>'
    +'<button class="photo-act sl-act-notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify"><span aria-hidden="true">🔔</span></button>'
    +'</div>';
-  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
+  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div>'+ownerClaim+'</div></article>';
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
  const viewBtn=document.getElementById("viewMoreBtn");
