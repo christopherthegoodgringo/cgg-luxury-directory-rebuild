@@ -1186,15 +1186,20 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
     }catch(e){}
   });
   window.openStayLatinAccount=function(url){
-    if(!overlay||!frame)return;
-    var target=new URL(url,window.location.href);
-    if(target.origin!==window.location.origin)return;
-    frame.src=target.href;
+    if(!overlay||!frame)return false;
+    var target;
+    try{target=new URL(url,window.location.href);}catch(e){return false;}
+    if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-(?:signin|signup)\.html$/.test(target.pathname))return false;
+    // Keep the existing homepage loaded underneath; account pages belong only in this iframe.
+    var dialog=document.getElementById("staylatin-account-dialog");
+    if(dialog){dialog.classList.remove("portal-view");dialog.style.height="";}
+    previousOverflow=document.body.style.overflow;
     overlay.hidden=false;
     overlay.setAttribute("aria-hidden","false");
-    previousOverflow=document.body.style.overflow;
     document.body.style.overflow="hidden";
-    close.focus();
+    frame.src=target.href;
+    close&&close.focus();
+    return false;
   };
   function fitAccountDialog(){
     try{
