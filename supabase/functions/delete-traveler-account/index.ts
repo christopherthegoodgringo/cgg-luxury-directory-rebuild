@@ -19,7 +19,8 @@ Deno.serve(async (req: Request) => {
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const token = (req.headers.get("Authorization") || "").replace(/^Bearer\\s+/i, "").trim();
+  const authHeader = req.headers.get("Authorization") || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : authHeader.trim();
   if (!url || !anonKey || !serviceKey) return respond(500, { error: "Account deletion is not configured on the server." });
   if (!token) return respond(401, { error: "Sign in again before deleting an account." });
 
