@@ -122,3 +122,23 @@ input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
  .panel.action-result .status{animation:staylatinResultIn .24s ease-out both}
 }
 @keyframes staylatinResultIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+
+/* Let confirmation panels shrink to their actual message instead of keeping a tall empty box. */
+.panel.action-result{
+  min-height:0!important;
+  height:auto!important;
+  padding:16px!important;
+  justify-content:center;
+  align-self:center;
+}
+.panel.action-result .status{
+  box-sizing:border-box;
+  width:100%;
+  min-height:0!important;
+  padding:clamp(12px,3vw,20px)!important;
+  line-height:1.4;
+}
+.panel.action-result:before{flex:0 0 6px;height:6px;margin-bottom:14px}
+body:has(.panel.action-result){padding-top:12px!important;padding-bottom:12px!important}
+main.wrap:has(.panel.action-result){width:min(440px,100%);margin:auto}
