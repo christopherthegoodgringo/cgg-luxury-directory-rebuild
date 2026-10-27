@@ -524,6 +524,31 @@ function refreshSavedFromStore(){
 refreshSavedFromStore();
 const grid=document.getElementById("listingGrid");
 function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+const STAYLATIN_AFFILIATES={
+  expedia:{
+    sampleShort:"https://expedia.com/affiliate/yaJwQRJ",
+    shop:"https://www.expedia.com/shop/christopher-the-good-gringo",
+    params:{
+      affcid:"US.DIRECT.PHG.1101l441706.1100l68075",
+      my_ad:"AFF.US.DIRECT.PHG.1101l441706.1100l68075"
+    }
+  },
+  trip:null
+};
+function withAffiliate(url,network){
+  if(!url)return url;
+  const cfg=STAYLATIN_AFFILIATES[network];
+  if(!cfg||!cfg.params)return url;
+  try{
+    const u=new URL(url,location.href);
+    const host=u.hostname.replace(/^www\./,"");
+    if(network==="expedia" && !/(^|\.)expedia\.com$/i.test(host))return url;
+    if(network==="trip" && !/(^|\.)trip\.com$/i.test(host))return url;
+    Object.keys(cfg.params).forEach(k=>{u.searchParams.set(k,cfg.params[k]);});
+    return u.toString();
+  }catch(e){return url;}
+}
+
 function tierBenefits(tier){return ""}
 function handleStayImageError(img){
  const photo=img.closest?img.closest(".photo"):img.parentElement;
@@ -588,8 +613,8 @@ function render(){
   const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
   // Keep the requested order consistent on every card: Airbnb, Trip.com, Expedia, direct website.
   if(s.airbnb)links.push(link(s.airbnb,"Book Airbnb","airbnb-booking"));
-  if(s.trip)links.push(link(s.trip,"Book Trip.com","trip-booking"));
-  if(s.expedia)links.push(link(s.expedia,"Book Expedia"));
+  if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
+  if(s.expedia)links.push(link(withAffiliate(s.expedia,"expedia"),"Book Expedia"));
   // Always place Hostelworld immediately before the direct property website button when both exist.
   if(s.hostelworld)links.push(link(s.hostelworld,"Book Hostelworld","hostelworld-booking"));
   if(s.website)links.push(link(s.website,s.bookingLabel==="View hostel listing"?"Book direct":(s.bookingLabel||"Book direct")));
