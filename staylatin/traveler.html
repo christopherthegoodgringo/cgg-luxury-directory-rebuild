@@ -387,9 +387,9 @@ async function loadTravelerIntroductionDirectory(){
  }).join("");
  box.innerHTML=ownCard+otherCards+aiCards;
  const memberSearch=document.getElementById("travelerMemberSearch"),memberSearchStatus=document.getElementById("travelerMemberSearchStatus"),loadMoreWrap=document.getElementById("travelerMemberLoadMoreWrap"),loadMoreButton=document.getElementById("travelerMemberLoadMore"),pageStatus=document.getElementById("travelerMemberPageStatus");
- let memberPageSize=10;
+ let memberPageSize=12;
  const updateMemberDirectoryVisibility=()=>{const term=(memberSearch?.value||"").trim().toLowerCase();const cards=[...box.querySelectorAll(":scope > article[data-member-card]")];const matches=cards.filter(card=>!term||card.textContent.toLowerCase().includes(term));cards.forEach(card=>{card.hidden=true});matches.slice(0,memberPageSize).forEach(card=>{card.hidden=false});if(memberSearchStatus)memberSearchStatus.textContent=term?(matches.length+" matching traveler"+(matches.length===1?"":"s")):"Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length+" travelers";if(loadMoreWrap)loadMoreWrap.style.display=matches.length>memberPageSize?"block":"none";if(pageStatus)pageStatus.textContent="Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length;};
- if(memberSearch&&!memberSearch.dataset.bound){memberSearch.dataset.bound="1";memberSearch.addEventListener("input",()=>{memberPageSize=10;updateMemberDirectoryVisibility()});}
+ if(memberSearch&&!memberSearch.dataset.bound){memberSearch.dataset.bound="1";memberSearch.addEventListener("input",()=>{memberPageSize=12;updateMemberDirectoryVisibility()});}
  if(loadMoreButton&&!loadMoreButton.dataset.bound){loadMoreButton.dataset.bound="1";loadMoreButton.addEventListener("click",()=>{memberPageSize+=10;updateMemberDirectoryVisibility()});}
  updateMemberDirectoryVisibility();
  document.getElementById("editOwnMemberProfile")?.addEventListener("click",()=>document.getElementById("travelerIntroForm")?.scrollIntoView({behavior:"smooth",block:"start"}));
