@@ -149,6 +149,21 @@ body.password-recovery-mode #privacyNote{display:none!important}
 <label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
 <div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
 </form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
+</section><section id="travelerJournal" aria-labelledby="travelerJournalTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+  <div class="kicker" style="color:var(--terra)">Your journeys · Your memories</div>
+  <h3 id="travelerJournalTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">My Travel Journal</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Save trip memories, useful notes, and destination ideas. Entries are private by default. You choose if an entry can be shared with signed-in StayLatin travelers.</p>
+  <form id="travelerJournalForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:15px;border:1px solid #e4dfd2;border-radius:10px;background:#fff">
+    <input id="journalEntryId" type="hidden">
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">ENTRY TITLE<input id="journalTitle" maxlength="120" required placeholder="A perfect weekend in Santa Marta" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">DESTINATION<input id="journalDestination" maxlength="120" placeholder="City or region" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">TRIP DATE<input id="journalDate" type="date" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">SHARING<select id="journalVisibility" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"><option value="private">Private — only me</option><option value="shared">Share with signed-in travelers</option></select></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">YOUR NOTES<textarea id="journalBody" maxlength="10000" rows="4" placeholder="Places to remember, what worked well, tips for next time…" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;grid-column:1/-1"><button id="journalSaveButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save journal entry</button><button id="journalCancelEdit" type="button" class="minor-action" hidden>Cancel edit</button></div>
+  </form>
+  <p id="journalStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p>
+  <div id="travelerJournalEntries" style="display:grid;gap:10px"><div class="status">Your journal entries will appear here.</div></div>
 </section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
@@ -280,7 +295,37 @@ async function saveTravelerChatProfile(db,userId){
  if(saveError)throw saveError;
  setChatPrivacyStatus(!shareName&&!sharePhoto&&!sharePhotoDirectory?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":sharePhoto?"Your profile photo will appear beside your chat messages.":sharePhotoDirectory?"Your profile photo is shared in the member directory only.":"Your photo privacy settings were saved.");
 }
-async function loadTravelerIntroduction(){
+async const journalForm=document.getElementById("travelerJournalForm"),journalEntries=document.getElementById("travelerJournalEntries"),journalStatus=document.getElementById("journalStatus");
+function setJournalStatus(message,isError=false){if(!journalStatus)return;journalStatus.textContent=message;journalStatus.style.color=isError?"#9b392c":"var(--muted)";}
+function resetJournalForm(){journalForm?.reset();document.getElementById("journalEntryId").value="";document.getElementById("journalSaveButton").textContent="Save journal entry";document.getElementById("journalCancelEdit").hidden=true;}
+async function loadTravelerJournal(){
+ const db=introClient();if(!journalEntries)return;
+ if(!db||!activeTripUserId){journalEntries.innerHTML='<div class="status">Sign in to view your travel journal.</div>';return;}
+ journalEntries.innerHTML='<div class="status">Loading your journal…</div>';
+ const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,user_id,title,destination,entry_date,body,visibility,created_at,updated_at").order("updated_at",{ascending:false}).limit(100);
+ if(error){journalEntries.innerHTML='<div class="status error">Your journal could not load. Please refresh and try again.</div>';return;}
+ const rows=data||[];
+ if(!rows.length){journalEntries.innerHTML='<div class="status">Your journal is ready. Add your first travel memory above.</div>';return;}
+ journalEntries.innerHTML=rows.map(row=>'<article style="border:1px solid #e4dfd2;border-radius:10px;padding:14px;background:#fff"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0;flex:1"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap"><span style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+(row.visibility==="shared"?"Shared entry":"Private entry")+'</span>'+(row.entry_date?'<span style="font-size:11px;color:var(--muted)">'+introEscape(row.entry_date)+'</span>':'')+'</div><h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:5px 0">'+introEscape(row.title)+'</h4>'+(row.destination?'<div style="font-size:12px;color:var(--muted);margin-bottom:7px">⌖ '+introEscape(row.destination)+'</div>':'')+'<div style="font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(row.body||"No notes added yet.")+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="minor-action" data-journal-edit="'+row.id+'" style="width:auto;margin:0">Edit</button><button type="button" class="minor-action danger-action" data-journal-delete="'+row.id+'" style="width:auto;margin:0">Delete</button></div></div></article>').join("");
+}
+journalForm?.addEventListener("submit",async event=>{
+ event.preventDefault();const db=introClient(),userId=activeTripUserId;if(!db||!userId){setJournalStatus("Please sign in again to save your journal.",true);return;}
+ const button=document.getElementById("journalSaveButton"),id=document.getElementById("journalEntryId").value;
+ const row={user_id:userId,title:document.getElementById("journalTitle").value.trim(),destination:document.getElementById("journalDestination").value.trim(),entry_date:document.getElementById("journalDate").value||null,body:document.getElementById("journalBody").value.trim(),visibility:document.getElementById("journalVisibility").value,updated_at:new Date().toISOString()};
+ if(!row.title){setJournalStatus("Add a title for this entry.",true);return;}button.disabled=true;setJournalStatus("Saving your journal entry…");
+ try{let result;if(id)result=await db.from("staylatin_traveler_journal_entries").update(row).eq("id",id).eq("user_id",userId);else result=await db.from("staylatin_traveler_journal_entries").insert(row);if(result.error)throw result.error;resetJournalForm();setJournalStatus("Journal entry saved.");await loadTravelerJournal();}
+ catch(error){setJournalStatus("Could not save your entry: "+(error?.message||"Please try again."),true);}
+ finally{button.disabled=false;}
+});
+document.getElementById("journalCancelEdit")?.addEventListener("click",()=>{resetJournalForm();setJournalStatus("Edit cancelled.");});
+journalEntries?.addEventListener("click",async event=>{
+ const edit=event.target.closest("[data-journal-edit]"),del=event.target.closest("[data-journal-delete]");if(!edit&&!del)return;
+ const db=introClient(),userId=activeTripUserId;if(!db||!userId)return;
+ if(edit){const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,title,destination,entry_date,body,visibility").eq("id",edit.dataset.journalEdit).eq("user_id",userId).maybeSingle();if(error||!data){setJournalStatus("Could not open that entry for editing.",true);return;}document.getElementById("journalEntryId").value=data.id;document.getElementById("journalTitle").value=data.title;document.getElementById("journalDestination").value=data.destination||"";document.getElementById("journalDate").value=data.entry_date||"";document.getElementById("journalBody").value=data.body||"";document.getElementById("journalVisibility").value=data.visibility;document.getElementById("journalSaveButton").textContent="Update journal entry";document.getElementById("journalCancelEdit").hidden=false;document.getElementById("journalTitle").focus();setJournalStatus("Editing your entry.");return;}
+ if(!confirm("Delete this journal entry permanently? This cannot be undone."))return;
+ const {error}=await db.from("staylatin_traveler_journal_entries").delete().eq("id",del.dataset.journalDelete).eq("user_id",userId);if(error){setJournalStatus("Could not delete the entry. Please try again.",true);return;}setJournalStatus("Journal entry deleted.");await loadTravelerJournal();
+});
+function loadTravelerIntroduction(){
  const db=introClient(),userId=activeTripUserId;
  if(!db||!userId)return;
  setIntroStatus("Loading your introduction…");
