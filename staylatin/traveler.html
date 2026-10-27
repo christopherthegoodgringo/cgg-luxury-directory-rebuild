@@ -138,6 +138,11 @@ body.password-recovery-mode #privacyNote{display:none!important}
 <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Your sign-in email is shown below. Change your password here while signed in. Your existing password is never displayed.</p>
 <label for="travelerAccountEmail" style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">ACCOUNT EMAIL</label>
 <input id="travelerAccountEmail" type="email" readonly aria-readonly="true" style="width:100%;max-width:520px;padding:11px;border:1px solid #dce3dc;border-radius:8px;background:#f5f7f3;color:var(--forest);margin-bottom:18px">
+<form id="travelerChangeEmailForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px;margin:0 0 18px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW EMAIL ADDRESS<input id="travelerNewEmail" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerEmailCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end;grid-column:1/-1"><button id="travelerChangeEmailButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Change email</button></div>
+</form><p id="travelerEmailStatus" aria-live="polite" style="font-size:12px;margin:-8px 0 18px;color:var(--muted)">We'll send a confirmation email if required by your account security settings.</p>
 <form id="travelerChangePasswordForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
 <label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
 <label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW PASSWORD<input id="travelerNewPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
@@ -545,7 +550,29 @@ function setTravelerStatus(message,kind=""){
  statusBox.className="status show"+(kind?" "+kind:"");
  statusBox.textContent=message;
 }
-async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangePasswordForm")?.addEventListener("submit",async e=>{
+async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangeEmailForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,button=document.getElementById("travelerChangeEmailButton"),status=document.getElementById("travelerEmailStatus");
+ const email=document.getElementById("travelerNewEmail").value.trim().toLowerCase(),password=document.getElementById("travelerEmailCurrentPassword").value;
+ const db=introClient();
+ if(!db||!activeTripUserId){status.textContent="Please sign in again before changing your email.";return;}
+ const {data:{user},error:userError}=await db.auth.getUser();
+ if(userError||!user?.email){status.textContent="Could not verify your signed-in account. Please sign in again.";return;}
+ if(email===user.email.toLowerCase()){status.textContent="That is already your current email address.";return;}
+ button.disabled=true;status.textContent="Verifying your password and requesting the email change…";
+ try{
+  const {error:verifyError}=await db.auth.signInWithPassword({email:user.email,password});
+  if(verifyError)throw new Error("Your current password could not be verified. Please check it and try again.");
+  const {data,error}=await db.auth.updateUser({email});
+  if(error)throw error;
+  const pending=data?.user?.new_email||email;
+  status.textContent="Email change requested for "+pending+". Check your inbox (and spam folder) for confirmation links. Your sign-in email may not change until confirmation is complete.";
+  document.getElementById("travelerEmailCurrentPassword").value="";
+  document.getElementById("travelerNewEmail").value="";
+ }catch(err){status.textContent=err.message||"Could not request the email change. Please try again."}
+ finally{button.disabled=false;}
+});
+document.getElementById("travelerChangePasswordForm")?.addEventListener("submit",async e=>{
  e.preventDefault();
  const status=document.getElementById("travelerPasswordStatus"),button=document.getElementById("travelerChangePasswordButton");
  const current=document.getElementById("travelerCurrentPassword").value,next=document.getElementById("travelerNewPassword").value,confirmNext=document.getElementById("travelerConfirmNewPassword").value;
