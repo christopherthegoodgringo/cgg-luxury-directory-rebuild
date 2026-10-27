@@ -79,7 +79,13 @@ let rates=null,rateDate="",rateLoading=false;
 const currencyNames={USD:"US Dollar",EUR:"Euro",COP:"Colombian Peso",MXN:"Mexican Peso",BRL:"Brazilian Real",ARS:"Argentine Peso",CLP:"Chilean Peso",PEN:"Peruvian Sol",GBP:"British Pound",CAD:"Canadian Dollar",AUD:"Australian Dollar",NZD:"New Zealand Dollar",JPY:"Japanese Yen",CNY:"Chinese Yuan",INR:"Indian Rupee",CHF:"Swiss Franc",KRW:"South Korean Won",CRC:"Costa Rican Colón",DOP:"Dominican Peso",GTQ:"Guatemalan Quetzal",HNL:"Honduran Lempira",NIO:"Nicaraguan Córdoba",PAB:"Panamanian Balboa",UYU:"Uruguayan Peso",BOB:"Bolivian Boliviano",PYG:"Paraguayan Guaraní",VES:"Venezuelan Bolívar",PEN:"Peruvian Sol"};
 function renderCurrencySelectors(){
  const list=Object.keys(rates||{}).sort();if(!list.length)return;
- ["currencyFrom","currencyTo"].forEach((id,idx)=>{const el=$(id),old=el.value|| (idx===0?state.currency_preferences.from:state.currency_preferences.to)|| (idx===0?"USD":"COP");el.innerHTML=list.map(c=>'<option value="'+c+'">'+c+' — '+escapeHtml(currencyNames[c]||c)+'</option>').join("");el.value=list.includes(old)?old:(idx===0?"USD":"COP");});
+ const options=list.map(c=>'<option value="'+c+'">'+c+' — '+escapeHtml(currencyNames[c]||c)+'</option>').join("");
+ [["currencyFrom",state.currency_preferences.from||"USD"],["currencyTo",state.currency_preferences.to||"COP"],["budgetCurrency",state.budget_tracker.currency||"USD"],["expenseCurrency","USD"]].forEach(([id,fallback])=>{
+  const el=$(id);if(!el)return;
+  const old=el.value||fallback;
+  el.innerHTML=options;
+  el.value=list.includes(old)?old:(list.includes(fallback)?fallback:list[0]);
+ });
 }
 async function loadRates(){
  const cached=(()=>{try{return JSON.parse(localStorage.getItem("staylatin-fx-cache")||"null")}catch(_){return null}})();
