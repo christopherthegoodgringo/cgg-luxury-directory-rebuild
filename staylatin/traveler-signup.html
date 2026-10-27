@@ -15,8 +15,8 @@ input,button,select{max-width:100%;box-sizing:border-box}
 <body><main class="wrap"><section class="panel" data-account-role="traveler" data-account-mode="signup" data-destination="traveler.html"><div class="kicker">Traveler access</div><h1>Create your account</h1><p>Save favorite stays and organize your next Latin America trip.</p><p class="account-instruction">Already have a StayLatin account? <a href="traveler-signin.html" target="_self" onclick="event.preventDefault();event.stopPropagation();if(event.stopImmediatePropagation)event.stopImmediatePropagation();try{var d=new URL(this.getAttribute('href'),window.location.href);var p=window.parent;var f=p!==window?p.document.getElementById('staylatin-account-frame'):null;var o=p!==window?p.document.getElementById('staylatin-account-overlay'):null;if(f&&o){f.src=d.href;o.hidden=false;o.setAttribute('aria-hidden','false');return false;}}catch(e){}window.location.href=this.href;return false;">Sign in here</a>.</p><form id="authForm"><label for="name">YOUR NAME</label><input id="name" name="name" autocomplete="name" required maxlength="100" placeholder="Your name"><label for="email">EMAIL ADDRESS</label><input id="email" type="email" name="email" autocomplete="email" required placeholder="you@example.com"><label for="password">PASSWORD</label><input id="password" type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"><button class="primary" id="submit" type="submit">Create Traveler Account & Send Verification Link</button></form><div class="status" id="status" role="status" hidden></div></section></main><script>var y=document.getElementById("year");if(y)y.textContent=new Date().getFullYear();</script><script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="account-auth.js"></script>
 <script id="staylatin-inline-account-switch">
 (function(){
- function handleAccountSwitch(event){
-  var link=event.target.closest(".account-instruction a");
+ document.addEventListener("click",function(event){
+  var link=event.target.closest&&event.target.closest(".account-instruction a");
   if(!link)return;
   event.preventDefault();
   event.stopPropagation();
@@ -24,20 +24,12 @@ input,button,select{max-width:100%;box-sizing:border-box}
   var destination=new URL(link.getAttribute("href"),window.location.href);
   try{
    if(window.parent!==window){
-    var parentDoc=window.parent.document;
-    var parentFrame=parentDoc.getElementById("staylatin-account-frame");
-    var parentOverlay=parentDoc.getElementById("staylatin-account-overlay");
-    if(parentFrame&&parentOverlay){
-     parentFrame.src=destination.href;
-     parentOverlay.hidden=false;
-     parentOverlay.setAttribute("aria-hidden","false");
-     return;
-    }
+    window.parent.postMessage({type:"staylatin-account-switch",url:destination.href},window.location.origin);
+    return;
    }
   }catch(e){}
-  window.location.href=destination.href;
- }
- document.addEventListener("click",handleAccountSwitch,true);
+  window.location.replace(destination.href);
+ },true);
 })();
 </script>
 </body></html>
