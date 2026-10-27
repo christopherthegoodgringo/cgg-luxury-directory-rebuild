@@ -485,6 +485,45 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 }
 </style>
 
+<style id="staylatin-premium-rainbow-star-sparkles">
+/* Premium badge only: jewel-tone spinning star with small twinkling stars bursting outward. */
+.stay-card.tier-premium .tier-star{
+ position:relative;isolation:isolate;overflow:visible;
+ background:conic-gradient(from 0deg,#ff4d9d,#ffb52e,#fff05a,#49e6a5,#39d5ff,#a77bff,#ff4d9d)!important;
+ -webkit-background-clip:text!important;background-clip:text!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ filter:drop-shadow(0 0 4px rgba(255,226,115,.85)) drop-shadow(0 0 3px rgba(214,105,255,.65))!important;
+}
+.stay-card.tier-premium .tier-star::before,
+.stay-card.tier-premium .tier-star::after{
+ position:absolute;z-index:2;display:block;pointer-events:none;
+ font-family:Georgia,serif;font-weight:900;line-height:1;
+ -webkit-text-fill-color:initial;color:#ffe66d;
+ text-shadow:0 0 4px rgba(255,255,255,.95),0 0 7px currentColor;
+}
+.stay-card.tier-premium .tier-star::before{
+ content:"✦";font-size:9px;left:-5px;top:-5px;
+ animation:premiumSparkBurstA 1.35s ease-in-out infinite;
+}
+.stay-card.tier-premium .tier-star::after{
+ content:"✧";font-size:8px;right:-6px;bottom:-5px;color:#ff75d8;
+ animation:premiumSparkBurstB 1.65s ease-in-out infinite .25s;
+}
+@keyframes premiumSparkBurstA{
+ 0%,100%{opacity:0;transform:translate(1px,2px) scale(.35) rotate(0deg)}
+ 35%{opacity:1}
+ 65%{opacity:.95;transform:translate(-5px,-6px) scale(1.05) rotate(70deg)}
+}
+@keyframes premiumSparkBurstB{
+ 0%,100%{opacity:0;transform:translate(-1px,-1px) scale(.3) rotate(0deg)}
+ 35%{opacity:1}
+ 70%{opacity:1;transform:translate(6px,5px) scale(1.15) rotate(-75deg)}
+}
+@media(prefers-reduced-motion:reduce){
+ .stay-card.tier-premium .tier-star{animation:none!important}
+ .stay-card.tier-premium .tier-star::before,.stay-card.tier-premium .tier-star::after{animation:none!important;opacity:.85}
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
