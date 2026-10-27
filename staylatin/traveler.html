@@ -555,7 +555,7 @@ async function loadTravelerChat(){
   const {data,error}=await client.from("staylatin_traveler_chat_messages").select("id,sender_id,destination,body,created_at").eq("destination","General Traveler Lounge").eq("moderation_status","visible").order("created_at",{ascending:false}).limit(60);
   if(error)throw error;
   const messages=(data||[]);
-  const latest=messages.length?messages[messages.length-1]:null;
+  const latest=messages.length?messages[0]:null;
   if(chatInitialLoad){
    chatKnownLatestId=latest?latest.id:null;
    try{chatUnreadCount=Number(localStorage.getItem(chatUnreadKey())||0)}catch(e){chatUnreadCount=0}
@@ -646,34 +646,47 @@ function renderAILoungeActivity(realMessages){
  if(!profiles.length||!chatMessages)return;
  aiLoungeLatestRealMessages=Array.isArray(realMessages)?realMessages:[];
  const get=id=>profiles.find(p=>p.id===id)||profiles[0];
- const humanLatest=aiLoungeLatestRealMessages.filter(m=>m.sender_id!==currentTravelerSession?.user?.id).slice(-1)[0];
+ // The database query is newest-first, so answer the newest real post.
+ const newest=aiLoungeLatestRealMessages[0]||null;
  const items=[];
  const offset=Math.floor(Date.now()/12000)%aiLoungeConversation.length;
+ if(newest&&newest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
+  const body=String(newest.body||"");
+  const lower=body.toLowerCase();
+  const mentioned=profiles.find(p=>{
+   const first=String(p.name||"").trim().split(/\\s+/)[0].toLowerCase();
+   return first.length>1&&new RegExp("(^|[^a-z])"+first.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"([^a-z]|$)","i").test(body);
+  });
+  const seed=Math.abs(String(newest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0));
+  const p=mentioned||get(profiles[seed%profiles.length].id);
+  aiLoungeLastHumanMessageId=newest.id;aiLoungeLastHumanReplyAt=Date.now();
+  let reply;
+  if(mentioned) reply="Hey, you called my name! 😊 I’m here. What would you like to chat about?";
+  else if(/\\b(hello|hi|hey|good morning|good evening)\\b/.test(lower)) reply="Hi there! 👋 Glad you joined us. Where are you traveling, and what are you hoping to discover?";
+  else if(/\\b(where|recommend|recommendation|hotel|hostel|stay|place|visit|destination)\\b/.test(lower)) reply="Thanks for bringing that up! I’d compare location, recent traveler reviews, and current details. Which city or country are you considering?";
+  else if(body.includes("?")) reply="That’s a good question! Let’s think it through together. Which country or city are you asking about?";
+  else reply="Thanks for sharing that with the lounge! 😊 What else would you tell a traveler who’s planning a similar trip?";
+  items.push({name:p.name+" · AI",avatar:p.avatar,body:reply,stamp:mentioned?"AI persona responding to name":"Fictional AI reply to traveler"});
+ }
  for(let n=0;n<5;n++){
   const pair=aiLoungeConversation[(offset+n)%aiLoungeConversation.length],a=get(pair.a),b=get(pair.b);
   items.push({name:a.name+" · AI",avatar:a.avatar,body:pair.text,stamp:"Fictional AI conversation"});
   if(n===1||n===3)items.push({name:b.name+" · AI",avatar:b.avatar,body:"That’s a good point! I’d also check local opening times and confirm details with a trusted local source before setting off.",stamp:"Fictional AI reply"});
  }
- if(humanLatest&&humanLatest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
-  aiLoungeLastHumanMessageId=humanLatest.id;aiLoungeLastHumanReplyAt=Date.now();
-  const p=get(profiles[Math.abs(String(humanLatest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0))%profiles.length].id);
-  items.push({name:p.name+" · AI",avatar:p.avatar,body:"Thanks for sharing that with the lounge! What would you recommend to someone visiting for the first time?",stamp:"Fictional AI reply to a traveler post"});
- }
  chatMessages.querySelectorAll("[data-ai-lounge-demo]").forEach(el=>el.remove());
- const realCards=Array.from(chatMessages.children).filter(el=>!el.matches("[data-ai-lounge-demo]")&&!el.classList.contains("status"));
  const cards=items.map(item=>{
   const card=document.createElement("article");card.dataset.aiLoungeDemo="true";card.style.cssText="border:1px dashed #c8a86b;border-radius:9px;padding:11px 13px;background:#fff9e9";
   const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-start;gap:10px";
   const img=document.createElement("img");img.src=item.avatar;img.alt="Illustrated fictional AI traveler";img.style.cssText="width:38px;height:38px;flex:0 0 38px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b";
-  const body=document.createElement("div");body.style.cssText="min-width:0;flex:1";
+  const bodyEl=document.createElement("div");bodyEl.style.cssText="min-width:0;flex:1";
   const heading=document.createElement("div");heading.style.cssText="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap";
   const name=document.createElement("strong");name.textContent=item.name;name.style.cssText="font-size:12px;color:var(--forest)";
   const tag=document.createElement("span");tag.textContent=item.stamp;tag.style.cssText="font-size:9px;color:#7c632c;background:#f4e8c9;border-radius:999px;padding:2px 6px";
-  const text=document.createElement("p");text.textContent=item.body;text.style.cssText="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";
-  heading.append(name,tag);body.append(heading,text);row.append(img,body);card.append(row);return card;
+  const para=document.createElement("p");para.textContent=item.body;para.style.cssText="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";
+  heading.append(name,tag);bodyEl.append(heading,para);row.append(img,bodyEl);card.append(row);return card;
  });
- if(!realCards.length){cards.forEach(card=>chatMessages.append(card));return;}
- cards.forEach((card,i)=>{const index=Math.min(realCards.length-1,Math.floor(((i+1)*realCards.length)/(cards.length+1)));const anchor=realCards[index];if(anchor&&anchor.parentNode)anchor.after(card);else chatMessages.append(card);});
+ // Keep every AI item above real posts; real posts remain newest-first below.
+ cards.reverse().forEach(card=>chatMessages.prepend(card));
 }
 
 chatForm?.addEventListener("submit",async e=>{
