@@ -554,7 +554,7 @@ async function loadTravelerChat(){
  try{
   const {data,error}=await client.from("staylatin_traveler_chat_messages").select("id,sender_id,destination,body,created_at").eq("destination","General Traveler Lounge").eq("moderation_status","visible").order("created_at",{ascending:false}).limit(60);
   if(error)throw error;
-  const messages=(data||[]).reverse();
+  const messages=(data||[]);
   const latest=messages.length?messages[messages.length-1]:null;
   if(chatInitialLoad){
    chatKnownLatestId=latest?latest.id:null;
@@ -613,7 +613,7 @@ async function loadTravelerChat(){
    return '<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(own?'#f0f3eb':'#fffefb')+'"><div style="display:flex;align-items:flex-start;gap:10px">'+avatar+'<div style="min-width:0;flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest);overflow-wrap:anywhere">'+dashSafe(displayName)+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></div></div></article>';
   }).join("");
   renderAILoungeActivity(messages);
-  chatMessages.scrollTop=chatMessages.scrollHeight;
+  chatMessages.scrollTop=0;
   setChatNotice("Showing "+messages.length+" recent real member message"+(messages.length===1?"":"s")+" plus labeled AI demo activity.");
  }catch(e){
   chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';
