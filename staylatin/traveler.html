@@ -156,7 +156,7 @@ body.portal-direct #travelerDashboard{display:block!important;width:100%!importa
 @keyframes staylatinPortalPanelIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
 </style>
 <style id="staylatin-uniform-green-buttons">
-/* Unified StayLatin traveler-portal button treatment */
+/* Colorful, polished StayLatin buttons inspired by the homepage palette */
 body button,
 body input[type="button"],
 body input[type="submit"],
@@ -166,13 +166,17 @@ body .btn,
 body .tab,
 body .minor-action,
 body .action-button {
-  background: linear-gradient(135deg, #176b4f, #23865f) !important;
+  background: linear-gradient(115deg, #0f3d32 0%, #167b68 36%, #239b86 68%, #b9852f 100%) !important;
+  background-size: 220% 220% !important;
   color: #ffffff !important;
-  border: 1px solid #2d966d !important;
-  border-radius: 8px !important;
-  box-shadow: 0 3px 10px rgba(15, 61, 50, .16);
-  transition: background .25s ease, opacity .25s ease, box-shadow .25s ease, transform .25s ease;
-  animation: stayLatinButtonFade 3.8s ease-in-out infinite;
+  border: 1px solid #d9b866 !important;
+  border-radius: 9px !important;
+  font-weight: 800 !important;
+  letter-spacing: .025em !important;
+  text-shadow: 0 1px 2px rgba(0, 30, 22, .35);
+  box-shadow: 0 4px 13px rgba(15, 61, 50, .22), inset 0 1px 0 rgba(255,255,255,.18);
+  transition: background-position .45s ease, opacity .35s ease, box-shadow .3s ease, transform .3s ease, filter .3s ease;
+  animation: stayLatinButtonGlow 4.2s ease-in-out infinite;
 }
 body button:hover,
 body input[type="button"]:hover,
@@ -183,11 +187,20 @@ body .btn:hover,
 body .tab:hover,
 body .minor-action:hover,
 body .action-button:hover {
-  background: linear-gradient(135deg, #23865f, #35a879) !important;
+  background-position: 100% 50% !important;
   opacity: 1 !important;
-  box-shadow: 0 5px 14px rgba(15, 61, 50, .24);
+  filter: saturate(1.18) brightness(1.08);
+  box-shadow: 0 6px 18px rgba(15, 61, 50, .3), 0 0 0 2px rgba(217, 184, 102, .2);
   transform: translateY(-1px);
   animation-play-state: paused;
+}
+body button:focus-visible,
+body input[type="button"]:focus-visible,
+body input[type="submit"]:focus-visible,
+body input[type="reset"]:focus-visible,
+body [role="button"]:focus-visible {
+  outline: 3px solid #d9b866 !important;
+  outline-offset: 3px;
 }
 body button:disabled,
 body input:disabled,
@@ -196,9 +209,9 @@ body [role="button"][aria-disabled="true"] {
   cursor: not-allowed !important;
   animation-play-state: paused;
 }
-@keyframes stayLatinButtonFade {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .78; }
+@keyframes stayLatinButtonGlow {
+  0%, 100% { opacity: 1; background-position: 0% 50%; filter: saturate(1); }
+  50% { opacity: .82; background-position: 65% 50%; filter: saturate(1.16) brightness(1.06); }
 }
 @media (prefers-reduced-motion: reduce) {
   body button, body input[type="button"], body input[type="submit"],
