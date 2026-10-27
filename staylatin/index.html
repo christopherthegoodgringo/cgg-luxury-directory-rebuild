@@ -1153,6 +1153,14 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   var frame=document.getElementById("staylatin-account-frame");
   var close=document.getElementById("staylatin-account-close");
   var previousOverflow="";
+  window.addEventListener("message",function(event){
+    if(event.origin!==window.location.origin||!event.data||event.data.type!=="staylatin-account-switch")return;
+    try{
+      var target=new URL(event.data.url,window.location.href);
+      if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/traveler-(signin|signup)\.html$/.test(target.pathname))return;
+      if(frame){frame.src=target.href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");}
+    }catch(e){}
+  });
   window.openStayLatinAccount=function(url){
     if(!overlay||!frame)return;
     var target=new URL(url,window.location.href);
