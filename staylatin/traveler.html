@@ -140,7 +140,7 @@
     </div>
     <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px"><strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:6px">Traveler Lounge privacy</strong><p style="font-size:11px;color:var(--muted);margin:0 0 8px">These choices are separate from your member-directory settings. Your name and photo stay hidden in chat unless you opt in below.</p><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatShareName" type="checkbox" style="margin-top:4px"><span>Show my display name beside my messages</span></label><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatSharePhoto" type="checkbox" style="margin-top:4px"><span>Show my profile photo beside my messages</span></label><p id="chatProfilePrivacyStatus" role="status" aria-live="polite" style="font-size:11px;color:var(--muted);margin:8px 0 0">Your name and photo are hidden from other travelers by default. Save your profile to apply any changes.</p></div><div style="grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="primary-action" style="width:auto;margin:0">Save profile &amp; privacy settings</button><span id="travelerIntroStatus" role="status" style="font-size:12px;color:var(--muted)">Your introduction is private until you choose to share it.</span></div>
   </form>
-  <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-top:24px"><div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members.</p></div><button id="refreshTravelerIntroductions" type="button" class="minor-action" style="width:auto;margin:0">Refresh directory</button></div>
+  <div style="margin-top:24px"><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members. The directory updates automatically when members join or change their profiles.</p></div>
   <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
 
   <section id="aiTravelerChatPanel" hidden style="margin-top:22px;border:1px solid #c8a86b;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
@@ -417,9 +417,16 @@ aiChatForm?.addEventListener("submit",async e=>{e.preventDefault();if(!activeAIT
 document.getElementById("closeAITravelerChat")?.addEventListener("click",()=>{aiChatPanel.hidden=true;activeAITraveler=null;});
 
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
-document.getElementById("refreshTravelerIntroductions").addEventListener("click",loadTravelerIntroductionDirectory);
+
 
  let activePrivateRecipient=null,activePrivateName="Traveler",privateBusy=false,privateRealtimeChannel=null;
+ let travelerDirectoryChannel=null;
+ function connectTravelerDirectoryRealtime(){
+  const db=introClient();if(!db||!activeTripUserId||travelerDirectoryChannel)return;
+  travelerDirectoryChannel=db.channel("staylatin-traveler-directory-"+activeTripUserId)
+   .on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_introduction_directory"},()=>{if(activeTripUserId)loadTravelerIntroductionDirectory()})
+   .subscribe();
+ }
 const privateInboxList=document.getElementById("privateInboxList"),privateConversation=document.getElementById("privateConversation"),privateMessages=document.getElementById("privateMessages"),privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageNotice=document.getElementById("privateMessageNotice"),privateMessageSend=document.getElementById("sendPrivateMessage");
 function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
 async function loadPrivateInbox(){
@@ -500,6 +507,7 @@ privateMessageForm?.addEventListener("submit",async e=>{
 
 function showTravelerDashboard(session){
   activeTripUserId=session&&session.user?session.user.id:null;
+  connectTravelerDirectoryRealtime();
   ensurePrivateMessageRealtime();
   loadTravelerAvatar();
   loadTravelerIntroduction();
