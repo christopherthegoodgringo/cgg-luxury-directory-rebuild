@@ -31,9 +31,12 @@ async function loadAll(){
   }catch(_){}
  }
  normalizeTrips();
- state.documents_checklist.items=defaults.documents_checklist.items.map(item=>{const old=(state.documents_checklist.items||[]).find(saved=>String(saved[0]).trim().toLowerCase()===item[0].trim().toLowerCase());return old||clone(item);}).concat((state.documents_checklist.items||[]).filter(saved=>!defaults.documents_checklist.items.some(item=>item[0].trim().toLowerCase()===String(saved[0]).trim().toLowerCase())));
+ const previousDocs=state.documents_checklist.items||[];
+ state.documents_checklist.items=defaults.documents_checklist.items.map(item=>previousDocs.find(saved=>String(saved[0]).trim().toLowerCase()===item[0].trim().toLowerCase())||clone(item)).concat(previousDocs.filter(saved=>!defaults.documents_checklist.items.some(item=>item[0].trim().toLowerCase()===String(saved[0]).trim().toLowerCase())));
+ const addedDocs=state.documents_checklist.items.length>previousDocs.length;
  writeLocal();
  renderAll();
+ if(addedDocs)await save("documents_checklist");
 }
 function newTripId(){return "trip-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);}
 function normalizeTrips(){const s=state.trip_planner;if(!Array.isArray(s.trips))s.trips=[];if(!s.trips.length&&(s.name||s.destination||s.start||s.end||(s.days||[]).length))s.trips.push({id:newTripId(),name:s.name||"My trip",destination:s.destination||"",start:s.start||"",end:s.end||"",days:s.days||[]});let t=s.trips.find(x=>x.id===s.activeTripId)||s.trips[0];if(t)loadTripRecord(t);else{s.activeTripId="";s.name="";s.destination="";s.start="";s.end="";s.days=[];}writeLocal();}
