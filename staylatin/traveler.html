@@ -544,6 +544,33 @@ async function loadPrivateConversation(silent=false){
   if(privateMessages)privateMessages.innerHTML='<div class="status error">Could not load this conversation. Please refresh and try again.</div>';
  }
 }
+const privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageSend=document.getElementById("sendPrivateMessage"),privateMessageNotice=document.getElementById("privateMessageNotice");
+function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
+privateMessageForm?.addEventListener("submit",async event=>{
+ event.preventDefault();
+ const body=(privateMessageInput?.value||"").trim(),db=introClient();
+ if(!body)return;
+ if(!db||!activeTripUserId){setPrivateNotice("Please sign in again before sending a private message.",true);return;}
+ if(!activePrivateRecipient){setPrivateNotice("Open a conversation before sending a message.",true);return;}
+ if(body.length>2000){setPrivateNotice("Messages must be 2,000 characters or fewer.",true);return;}
+ const scrollY=window.scrollY,conversationTop=privateConversation?.getBoundingClientRect().top;
+ if(privateMessageSend)privateMessageSend.disabled=true;
+ setPrivateNotice("Sending privately…");
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user)throw new Error("Your sign-in session expired. Please sign in again.");
+  const {error}=await db.from("staylatin_traveler_private_messages").insert({sender_id:user.id,recipient_id:activePrivateRecipient,body});
+  if(error)throw error;
+  privateMessageInput.value="";
+  await Promise.all([loadPrivateConversation(true),loadPrivateInbox()]);
+  setPrivateNotice("Message sent.");
+ }catch(err){setPrivateNotice("Message not sent: "+(err?.message||"Please try again."),true);}
+ finally{
+  if(privateMessageSend)privateMessageSend.disabled=false;
+  requestAnimationFrame(()=>{window.scrollTo({top:scrollY,behavior:"instant"});if(privateConversation&&Number.isFinite(conversationTop)){const delta=privateConversation.getBoundingClientRect().top-conversationTop;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:"instant"});}});
+ }
+});
+
 const loungeMessages=document.getElementById("chatMessages"),loungeForm=document.getElementById("chatForm"),loungeInput=document.getElementById("chatMessage"),loungeNotice=document.getElementById("chatNotice"),loungeSend=document.getElementById("sendChat"),loungeBadge=document.getElementById("chatUnreadBadge");
 let loungeChannel=null,loungeLoading=false;
 function setLoungeNotice(message,isError=false){if(!loungeNotice)return;loungeNotice.className="status show"+(isError?" error":"");loungeNotice.textContent=message;}
