@@ -38,3 +38,20 @@ input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
 /* Simple inline account guidance — text links, not buttons */
 .account-instruction{margin:18px 0 20px;font-size:13px;line-height:1.6;color:var(--muted)}
 .account-instruction a{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+/* Header Join / Sign in actions as compact green buttons */
+.sl-navlinks{gap:clamp(8px,1.2vw,12px)!important}
+.sl-navlinks a.sl-nav-home{font-size:13px;font-weight:800;color:#173f35;text-decoration:none;padding:8px 4px;white-space:nowrap}
+.sl-navlinks a.sl-nav-home:hover{color:#1f7a5c}
+.sl-navlinks a.sl-nav-btn,.sl-navlinks .sl-nav-btn{
+ display:inline-flex;align-items:center;justify-content:center;gap:4px;
+ padding:9px 12px;border-radius:999px;border:1px solid #0f3d32;
+ background:linear-gradient(135deg,#0f3d32,#1f7a5c);color:#fff!important;
+ font-size:11px;font-weight:850;letter-spacing:.01em;text-decoration:none;white-space:nowrap;
+ box-shadow:0 4px 12px rgba(15,61,50,.18);transition:transform .15s ease,filter .15s ease,background .15s ease
+}
+.sl-navlinks a.sl-nav-btn:hover{filter:brightness(1.08);transform:translateY(-1px);color:#fff!important}
+.sl-navlinks .sl-nav-btn.is-disabled,.sl-navlinks span.sl-nav-btn{
+ background:#d8eee4;color:#5a7268!important;border-color:#b7d9c8;box-shadow:none;cursor:not-allowed;pointer-events:none
+}
+@media(max-width:480px){.sl-navlinks a.sl-nav-btn{font-size:10px;padding:8px 10px}}
