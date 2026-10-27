@@ -545,7 +545,6 @@ async function loadPrivateConversation(silent=false){
  }
 }
 const privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageSend=document.getElementById("sendPrivateMessage"),privateMessageNotice=document.getElementById("privateMessageNotice");
-function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
 privateMessageForm?.addEventListener("submit",async event=>{
  event.preventDefault();
  const body=(privateMessageInput?.value||"").trim(),db=introClient();
@@ -553,7 +552,7 @@ privateMessageForm?.addEventListener("submit",async event=>{
  if(!db||!activeTripUserId){setPrivateNotice("Please sign in again before sending a private message.",true);return;}
  if(!activePrivateRecipient){setPrivateNotice("Open a conversation before sending a message.",true);return;}
  if(body.length>2000){setPrivateNotice("Messages must be 2,000 characters or fewer.",true);return;}
- const scrollY=window.scrollY,conversationTop=privateConversation?.getBoundingClientRect().top;
+ const scrollY=window.scrollY;
  if(privateMessageSend)privateMessageSend.disabled=true;
  setPrivateNotice("Sending privately…");
  try{
@@ -567,7 +566,7 @@ privateMessageForm?.addEventListener("submit",async event=>{
  }catch(err){setPrivateNotice("Message not sent: "+(err?.message||"Please try again."),true);}
  finally{
   if(privateMessageSend)privateMessageSend.disabled=false;
-  requestAnimationFrame(()=>{window.scrollTo({top:scrollY,behavior:"instant"});if(privateConversation&&Number.isFinite(conversationTop)){const delta=privateConversation.getBoundingClientRect().top-conversationTop;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:"instant"});}});
+  requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"auto"}));
  }
 });
 
