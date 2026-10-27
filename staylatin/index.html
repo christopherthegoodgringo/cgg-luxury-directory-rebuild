@@ -533,7 +533,14 @@ const STAYLATIN_AFFILIATES={
       my_ad:"AFF.US.DIRECT.PHG.1101l441706.1100l68075"
     }
   },
-  trip:null
+  trip:{
+    sample:"https://www.trip.com/?Allianceid=11136945&SID=334407578&trip_sub1=&trip_sub3=D20681383",
+    params:{
+      Allianceid:"11136945",
+      SID:"334407578",
+      trip_sub3:"D20681383"
+    }
+  }
 };
 function withAffiliate(url,network){
   if(!url)return url;
