@@ -649,7 +649,11 @@ function renderAILoungeActivity(realMessages){
  // The database query is newest-first, so answer the newest real post.
  const newest=aiLoungeLatestRealMessages[0]||null;
  const items=[];
- const offset=Math.floor(Date.now()/12000)%aiLoungeConversation.length;
+ // Rotate a cast of no more than seven AI personas every 12 seconds.
+ const rotation=Math.floor(Date.now()/12000);
+ const activeProfiles=profiles.length<=7?profiles:profiles.slice((rotation*7)%profiles.length).concat(profiles.slice(0,(rotation*7)%profiles.length)).slice(0,7);
+ const getActive=id=>activeProfiles.find(p=>p.id===id)||activeProfiles[Math.abs(String(id||"").split("").reduce((n,c)=>n+c.charCodeAt(0),0))%activeProfiles.length]||profiles[0];
+ const offset=rotation%aiLoungeConversation.length;
  if(newest&&newest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
   const body=String(newest.body||"");
   const lower=body.toLowerCase();
@@ -658,7 +662,7 @@ function renderAILoungeActivity(realMessages){
    return first.length>1&&new RegExp("(^|[^a-z])"+first.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")+"([^a-z]|$)","i").test(body);
   });
   const seed=Math.abs(String(newest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0));
-  const p=mentioned||get(profiles[seed%profiles.length].id);
+  const p=(mentioned&&activeProfiles.find(x=>x.id===mentioned.id))||getActive(profiles[seed%profiles.length].id);
   aiLoungeLastHumanMessageId=newest.id;aiLoungeLastHumanReplyAt=Date.now();
   let reply;
   if(mentioned) reply="Hey, you called my name! 😊 I’m here. What would you like to chat about?";
@@ -669,7 +673,7 @@ function renderAILoungeActivity(realMessages){
   items.push({name:p.name+" · AI",avatar:p.avatar,body:reply,stamp:mentioned?"AI persona responding to name":"Fictional AI reply to traveler"});
  }
  for(let n=0;n<5;n++){
-  const pair=aiLoungeConversation[(offset+n)%aiLoungeConversation.length],a=get(pair.a),b=get(pair.b);
+  const pair=aiLoungeConversation[(offset+n)%aiLoungeConversation.length],a=getActive(pair.a),b=getActive(pair.b);
   items.push({name:a.name+" · AI",avatar:a.avatar,body:pair.text,stamp:"Fictional AI conversation"});
   if(n===1||n===3)items.push({name:b.name+" · AI",avatar:b.avatar,body:"That’s a good point! I’d also check local opening times and confirm details with a trusted local source before setting off.",stamp:"Fictional AI reply"});
  }
