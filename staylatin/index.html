@@ -726,7 +726,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 <style id="staylatin-account-overlay-styles">
 #staylatin-account-overlay[hidden]{display:none!important}
 #staylatin-account-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;background:rgba(8,28,23,.64);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
-#staylatin-account-dialog{position:relative;width:min(520px,100%);height:min(690px,calc(100dvh - 36px));background:#eef6f2;border:1px solid rgba(217,173,85,.65);border-radius:18px;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,.36);animation:staylatinAccountIn .18s ease-out}
+#staylatin-account-dialog{position:relative;width:min(440px,100%);height:400px;max-height:calc(100dvh - 36px);background:#eef6f2;border:1px solid rgba(217,173,85,.65);border-radius:18px;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,.36);animation:staylatinAccountIn .18s ease-out}
 #staylatin-account-close{position:absolute;right:10px;top:10px;z-index:2;width:36px;height:36px;border:1px solid #d7e4dc;border-radius:50%;background:#fff;color:#173f35;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.12)}
 #staylatin-account-frame{display:block;width:100%;height:100%;border:0;background:#eef6f2}
 @keyframes staylatinAccountIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -1164,6 +1164,19 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
     document.body.style.overflow="hidden";
     close.focus();
   };
+  function fitAccountDialog(){
+    try{
+      var doc=frame.contentDocument;
+      if(!doc)return;
+      var panel=doc.querySelector(".panel");
+      var body=doc.body;
+      var contentHeight=Math.ceil(Math.max(panel?panel.getBoundingClientRect().height:0,body?body.scrollHeight:0));
+      var maxHeight=Math.max(300,window.innerHeight-36);
+      document.getElementById("staylatin-account-dialog").style.height=Math.min(contentHeight+4,maxHeight)+"px";
+    }catch(e){}
+  }
+  frame&&frame.addEventListener("load",function(){window.setTimeout(fitAccountDialog,30);});
+  window.addEventListener("resize",fitAccountDialog);
   function closeAccount(){
     if(!overlay)return;
     overlay.hidden=true;
