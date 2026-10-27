@@ -3,14 +3,14 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const keys=["trip_planner","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites","emergency_card"];
+const keys=["trip_planner","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites"];
 const defaults={
  trip_planner:{name:"",destination:"",start:"",end:"",days:[],trips:[],activeTripId:""},
  documents_checklist:{items:[["Passport validity and blank pages checked",false],["Passport copy stored securely for backup",false],["Visa / eVisa and entry requirements checked",false],["Arrival, entry, or customs forms checked if required",false],["Return or onward ticket proof saved if required",false],["Flight and transport confirmations saved offline",false],["Accommodation confirmation and address saved offline",false],["Travel insurance and emergency assistance details saved",false],["Required vaccinations and health certificates checked",false],["Prescription medicines and supporting medical letter prepared if needed",false],["International driving permit checked if needed",false],["Backup payment method and bank travel notices checked",false],["Emergency contacts and embassy / consulate details saved",false],["Copies of key travel documents stored securely",false]]},
  packing_checklist:{items:[["Passport and travel documents",false],["Phone and charger",false],["Power adapter",false],["Payment cards and some cash",false],["Prescription medication",false],["Comfortable walking shoes",false],["Weather-appropriate clothing",false],["Toiletries and sunscreen",false]]},
  currency_preferences:{from:"USD",to:"COP",amount:"1"},
  phrasebook_favorites:{favorites:[]},
- emergency_card:{name:"",contact:"",relationship:"",phone:"",localNumber:"",insuranceContact:"",embassy:"",stayAddress:"",notes:""}
+
 };
 const state={};let cloudReady=false;let currentKey="";
 function getUserId(){try{return typeof activeTripUserId!=="undefined"?activeTripUserId:null;}catch(_){return null;}}
@@ -57,7 +57,7 @@ async function save(k){
  }
  
 }
-function renderAll(){renderTrip();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
+function renderAll(){renderTrip();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderTrip(){
  const s=state.trip_planner;$("tripName").value=s.name||"";$("tripDestination").value=s.destination||"";$("tripStart").value=s.start||"";$("tripEnd").value=s.end||"";
  const box=$("tripDayList");if(box)box.innerHTML=(s.days||[]).length?s.days.map((d,i)=>'<article class="tool-item"><div><b>'+escapeHtml(d.date||"Flexible date")+' · '+escapeHtml(d.title)+'</b><p>'+escapeHtml(d.note||"")+'</p></div><button type="button" class="tool-small danger" data-trip-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">Add your first activity to build your day-by-day plan.</p>';renderSavedTrips();
@@ -67,7 +67,7 @@ function renderChecklist(key,boxId,statusId){
  box.innerHTML=s.items.map((it,i)=>'<label class="tool-check"><input type="checkbox" data-check-key="'+key+'" data-check-index="'+i+'" '+(it[1]?"checked":"")+'><span class="'+(it[1]?"done":"")+'">'+escapeHtml(it[0])+'</span><button type="button" class="tool-delete" aria-label="Remove '+escapeHtml(it[0])+'" data-check-delete="'+key+':'+i+'">×</button></label>').join("");
  const done=s.items.filter(i=>i[1]).length;status(statusId,done+" of "+s.items.length+" complete");
 }
-function renderEmergency(){const s=state.emergency_card;["name","contact","relationship","phone","localNumber","insuranceContact","embassy","stayAddress","notes"].forEach(k=>{const el=$("emergency_"+k);if(el)el.value=s[k]||"";});}
+
 const phrases=[
 ["Hello","Hola"],["Good morning","Buenos días"],["Good afternoon","Buenas tardes"],["Good evening","Buenas noches"],["Please","Por favor"],["Thank you","Gracias"],["You're welcome","De nada"],["Excuse me","Disculpe"],["Do you speak English?","¿Habla inglés?"],["I speak a little Spanish","Hablo un poco de español"],["Could you help me?","¿Me puede ayudar?"],["Where is the bathroom?","¿Dónde está el baño?"],["How much does it cost?","¿Cuánto cuesta?"],["Can I pay by card?","¿Puedo pagar con tarjeta?"],["I would like water","Quisiera agua"],["The menu, please","La carta, por favor"],["Where is the bus station?","¿Dónde está la terminal de autobuses?"],["Please call a taxi","Por favor, llame un taxi"],["I need a doctor","Necesito un médico"],["I need help","Necesito ayuda"],["Call the police, please","Llame a la policía, por favor"],["I have a reservation","Tengo una reserva"],["Could I have the bill?","¿Me trae la cuenta?"],["I am allergic to…","Soy alérgico/a a…"],["Where is the nearest pharmacy?","¿Dónde está la farmacia más cercana?"]];
 function renderPhrasebook(){
@@ -113,7 +113,6 @@ function bindForms(){
  ["documents_checklist","packing_checklist"].forEach(k=>{const box=$(k==="documents_checklist"?"documentItems":"packingItems");box.addEventListener("change",async e=>{const el=e.target.closest("[data-check-index]");if(!el)return;state[k].items[Number(el.dataset.checkIndex)][1]=el.checked;renderChecklist(k,k==="documents_checklist"?"documentItems":"packingItems",k==="documents_checklist"?"documentStatus":"packingStatus");await save(k);});box.addEventListener("click",async e=>{const b=e.target.closest("[data-check-delete]");if(!b)return;e.preventDefault();const [key,index]=b.dataset.checkDelete.split(":");state[key].items.splice(Number(index),1);renderChecklist(key,key==="documents_checklist"?"documentItems":"packingItems",key==="documents_checklist"?"documentStatus":"packingStatus");await save(key);});});
  $("addDocumentTask").addEventListener("click",async()=>{const v=$("newDocumentTask").value.trim();if(!v)return;state.documents_checklist.items.push([v,false]);$("newDocumentTask").value="";renderChecklist("documents_checklist","documentItems","documentStatus");await save("documents_checklist");});
  $("addPackingTask").addEventListener("click",async()=>{const v=$("newPackingTask").value.trim();if(!v)return;state.packing_checklist.items.push([v,false]);$("newPackingTask").value="";renderChecklist("packing_checklist","packingItems","packingStatus");await save("packing_checklist");});
- $("emergencyForm").addEventListener("submit",async e=>{e.preventDefault();["name","contact","relationship","phone","localNumber","insuranceContact","embassy","stayAddress","notes"].forEach(k=>state.emergency_card[k]=$("emergency_"+k).value.trim());await save("emergency_card");status("emergencyStatus","Emergency information saved on this device. For privacy, avoid storing passport numbers or insurance policy numbers.");});
  $("phraseSearch").addEventListener("input",renderPhrasebook);
  $("phraseList").addEventListener("click",async e=>{const b=e.target.closest("[data-phrase-fav]");if(!b)return;const i=Number(b.dataset.phraseFav),f=state.phrasebook_favorites.favorites;state.phrasebook_favorites.favorites=f.includes(i)?f.filter(x=>x!==i):f.concat(i);renderPhrasebook();await save("phrasebook_favorites");});
  ["currencyAmount","currencyFrom","currencyTo"].forEach(id=>$(id).addEventListener(id==="currencyAmount"?"input":"change",renderCurrency));
