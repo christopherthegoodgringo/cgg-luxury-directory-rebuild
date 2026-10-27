@@ -1,0 +1,128 @@
+{
+  "9": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297484-d9604044-Reviews-Hotel_Casa_Bugambilia-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/29/76/12/casa-bugambilia.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/a5/f0/42/rooftop-pool.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/a5/ea/5d/piscina.jpg"
+    ],
+    "name": "Casa Bugambilia"
+  },
+  "4": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297484-d33309229-Reviews-Casa_Zarah_Alma_Hotels-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/31/76/2a/fd/caption.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/31/76/2a/fe/caption.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/31/76/2b/03/caption.jpg"
+    ],
+    "name": "Casa Zarah"
+  },
+  "11": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297484-d27147621-Reviews-Casa_Charlotte_Alma_Hotels-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/2e/07/09/80/living-room.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/34/7e/85/04/terrace.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/34/7e/85/03/bathroom.jpg"
+    ],
+    "name": "Casa Charlotte"
+  },
+  "12": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297484-d1998392-Reviews-Casa_de_Isabella_a_Kali_Hotel-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/a0/df/36/casa-de-isabella-a-kali.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/5c/be/d8/casa-de-isabella-hotel.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/02/23/20/bc/pool-at-night.jpg"
+    ],
+    "name": "Casa de Isabella"
+  },
+  "2": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297476-d26164170-Reviews-Hotel_Boutique_Casona_Del_Porvenir-Cartagena_Cartagena_District_Bolivar_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/59/1c/c1/caption.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/35/06/19/1f/salon-y-barra-de-vuelo.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/35/06/19/1e/detalle-de-piscina-y.jpg"
+    ],
+    "name": "Casona del Porvenir"
+  },
+  "1": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297476-d27163405-Reviews-Casa_Noa_Colonial_Rooms-Cartagena_Cartagena_District_Bolivar_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/7c/45/28/king-room.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/af/8d/a1/caption.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/af/8d/a0/caption.jpg"
+    ],
+    "name": "Casa Noa"
+  },
+  "3": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g150801-d14021579-Reviews-Casa_Antonieta-Oaxaca_Southern_Mexico.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/96/5e/62/casa-antonieta.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/96/5c/e5/casa-antonieta.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/a6/44/8a/rooftop.jpg"
+    ],
+    "name": "Casa Antonieta"
+  },
+  "5": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g150811-d2399661-Reviews-Casa_Lecanda_Boutique_Hotel-Merida_Yucatan_Peninsula.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/ab/64/2c/casa-lecanda-boutique.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/ab/61/0b/casa-lecanda-boutique.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/93/ea/ea/casa-lecanda-boutique.jpg"
+    ],
+    "name": "Casa Lecanda"
+  },
+  "6": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g294074-d12879877-Reviews-Casa_Legado-Bogota.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/25/8b/e8/casa-legado.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/25/8b/f2/casa-legado.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/25/8b/9a/casa-legado.jpg"
+    ],
+    "name": "Casa Legado"
+  },
+  "7": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g150801-d1728176-Reviews-Hotel_Boutique_Casa_Los_Cantaros-Oaxaca_Southern_Mexico.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/37/fb/4b/suite-maria-cristina.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/37/fb/44/jardin.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/37/fb/3e/entrada-principal.jpg"
+    ],
+    "name": "Casa Los Cántaros"
+  },
+  "8": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g150807-d6781635-Reviews-Mezcal_Boutique_Hotel-Cancun_Yucatan_Peninsula.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/e1/95/09/nuestra-alberca-es-el.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/12/espacios-comodos-y-bien.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/0d/luz-natural-texturas.jpg"
+    ],
+    "name": "Mezcal Boutique Hotel"
+  },
+  "10": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g297484-d27147674-Reviews-CASA_GAITANA-Santa_Marta_Santa_Marta_Municipality_Magdalena_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/30/d0/bb/fc/swimming-pool.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/31/64/1d/ff/kitchen-or-kitchenett.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/30/d0/bb/fa/property-building.jpg"
+    ],
+    "name": "Casa Gaitana"
+  },
+  "14": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g776258-d23325071-Reviews-Hotel_Aristo_Gold-Tunja_Boyaca_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/2d/f9/a6/eb/bed.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/2d/f9/a6/e9/photo-of-the-whole-ro.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/partner/bookingcom/photo-o/2d/f9/a6/e7/bed.jpg"
+    ],
+    "name": "Hotel Aristo Gold"
+  },
+  "15": {
+    "tripadvisorUrl": "https://www.tripadvisor.com/Hotel_Review-g776258-d6201214-Reviews-Hotel_Parque_Santander_Tunja-Tunja_Boyaca_Department.html",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/d1/2a/0a/en-la-cabecera-norte.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/c4/fe/22/hotel-parque-santander.jpg",
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/c5/00/2a/hotel-parque-santander.jpg"
+    ],
+    "name": "Hotel Parque Santander"
+  }
+}
