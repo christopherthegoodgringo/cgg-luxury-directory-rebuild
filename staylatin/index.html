@@ -853,15 +853,13 @@ function render(){
  grid.innerHTML=visible.length?visible.map(s=>{
   const links=[];
   const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
-  // Booking cards use third-party booking partners only; never expose a property's direct website booking link.
-  if(s.airbnb)links.push(link(s.airbnb,"Book Airbnb","airbnb-booking"));
-  if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
+  // Expedia and Trip.com are the only permitted booking options, now and for future cards.
   if(s.expedia)links.push(link(withAffiliate(s.expedia,"expedia"),"Book Expedia"));
-  if(s.hostelworld)links.push(link(s.hostelworld,"Book Hostelworld","hostelworld-booking"));
-  if(!links.length)links.push('<span class="booking-note">Contact the property directly for booking information.</span>');
+  if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
+  if(!links.length)links.push('<span class="booking-note">Expedia or Trip.com booking links will appear when a verified property profile is available.</span>');
   const layout=links.length>1?"multiple":"single";
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
-  const note=s.note||(links.length>0?"Compare rates with available booking partners":"Booking links will be added when a partner listing is verified.");
+  const note=s.note||(links.length>0?"Compare rates on Expedia and Trip.com":"Only Expedia and Trip.com are supported; booking links appear when a verified profile is available.");
   // Clearly mark this as sample copy until verified traveler testimonials and scores are sourced.
   const reviewTexts=[
    'A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting in '+s.city.split(",")[0]+'.',
