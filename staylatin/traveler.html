@@ -724,6 +724,8 @@ function setTravelerSignedIn(user){
  document.getElementById("formSub").textContent="You are signed in to your StayLatin traveler account.";
  loadTravelerAvatar();
  loadTravelerIntroduction();
+ loadTravelerJournal();
+ loadTravelerSavedPlaces();
  loadTravelerIntroductionDirectory();
  loadPrivateInbox();
  loadTravelerLounge();
@@ -774,6 +776,7 @@ form.addEventListener("submit",async e=>{
      if(intended&&intended!=="traveler"){await db.auth.signOut();throw new Error("This account was registered for a different StayLatin area. Please use its dedicated sign-in page.");}
      setTravelerSignedIn(user);
      setTravelerStatus("Sign-in successful. You are now inside your traveler portal.","success");
+     requestAnimationFrame(()=>document.getElementById("travelerDashboard")?.scrollIntoView({behavior:"smooth",block:"start"}));
    }
  }catch(err){setTravelerStatus(err.message||"Could not complete sign-in. Please check your details and try again.","error");}
  finally{submit.disabled=false;}
