@@ -3,10 +3,9 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const keys=["trip_planner","budget_tracker","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites","emergency_card"];
+const keys=["trip_planner","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites","emergency_card"];
 const defaults={
  trip_planner:{name:"",destination:"",start:"",end:"",days:[],trips:[],activeTripId:""},
- budget_tracker:{budget:"",currency:"USD",expenses:[]},
  documents_checklist:{items:[["Passport validity checked",false],["Visa / entry requirements checked",false],["Travel insurance arranged",false],["Flights or transport confirmed",false],["Accommodation confirmation saved",false],["Copies of key documents stored safely",false],["Medication and prescriptions prepared",false]]},
  packing_checklist:{items:[["Passport and travel documents",false],["Phone and charger",false],["Power adapter",false],["Payment cards and some cash",false],["Prescription medication",false],["Comfortable walking shoes",false],["Weather-appropriate clothing",false],["Toiletries and sunscreen",false]]},
  currency_preferences:{from:"USD",to:"COP",amount:"1"},
@@ -53,21 +52,11 @@ async function save(k){
  }
  status("toolkitStatus",getUserId()?"Saved on this device for this signed-in account. Account sync is awaiting toolkit storage setup.":"Saved on this device. Sign in to keep your tools separated by traveler account.");
 }
-function renderAll(){renderTrip();renderBudget();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
+function renderAll(){renderTrip();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderTrip(){
  const s=state.trip_planner;$("tripName").value=s.name||"";$("tripDestination").value=s.destination||"";$("tripStart").value=s.start||"";$("tripEnd").value=s.end||"";
  const box=$("tripDayList");if(box)box.innerHTML=(s.days||[]).length?s.days.map((d,i)=>'<article class="tool-item"><div><b>'+escapeHtml(d.date||"Flexible date")+' · '+escapeHtml(d.title)+'</b><p>'+escapeHtml(d.note||"")+'</p></div><button type="button" class="tool-small danger" data-trip-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">Add your first activity to build your day-by-day plan.</p>';renderSavedTrips();
 }
-function renderBudget(){
- const s=state.budget_tracker;$("budgetLimit").value=s.budget??"";$("budgetCurrency").value=s.currency||"USD";
- const box=$("budgetExpenseList");if(!box)return;
- const planned=s.expenses.reduce((a,e)=>a+convertAmount(Number(e.planned)||0,e.currency,s.currency),0),actual=s.expenses.reduce((a,e)=>a+convertAmount(Number(e.actual)||0,e.currency,s.currency),0);
- $("budgetPlannedTotal").textContent=money(planned,s.currency);$("budgetActualTotal").textContent=money(actual,s.currency);
- const budget=Number(s.budget)||0;$("budgetRemaining").textContent=money(budget-actual,s.currency);
- box.innerHTML=s.expenses.length?s.expenses.map((e,i)=>'<article class="tool-item"><div><b>'+escapeHtml(e.title)+'</b><p>'+escapeHtml(e.category)+' · '+escapeHtml(e.currency)+' · Planned '+escapeHtml(e.planned)+' / Actual '+escapeHtml(e.actual)+'</p></div><button type="button" class="tool-small danger" data-expense-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">No expenses yet. Planned and actual totals will appear here.</p>';
-}
-function convertAmount(n,from,to){if(!rates||!rates[from]||!rates[to])return from===to?n:0;return n/rates[from]*rates[to];}
-function money(n,c){try{return new Intl.NumberFormat(undefined,{style:"currency",currency:c||"USD",maximumFractionDigits:2}).format(Number(n)||0)}catch(_){return (Number(n)||0).toFixed(2)+" "+c;}}
 function renderChecklist(key,boxId,statusId){
  const s=state[key],box=$(boxId);if(!box)return;
  box.innerHTML=s.items.map((it,i)=>'<label class="tool-check"><input type="checkbox" data-check-key="'+key+'" data-check-index="'+i+'" '+(it[1]?"checked":"")+'><span class="'+(it[1]?"done":"")+'">'+escapeHtml(it[0])+'</span><button type="button" class="tool-delete" aria-label="Remove '+escapeHtml(it[0])+'" data-check-delete="'+key+':'+i+'">×</button></label>').join("");
@@ -116,9 +105,6 @@ function bindForms(){
  $("tripDayList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-delete]");if(!b)return;state.trip_planner.days.splice(Number(b.dataset.tripDelete),1);captureTrip();renderTrip();await save("trip_planner");});
  $("savedTripsList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-open]");if(!b)return;openTrip(b.dataset.tripOpen);await save("trip_planner");});
  $("newTripButton").addEventListener("click",startNewTrip);
- $("budgetDetailsForm").addEventListener("submit",async e=>{e.preventDefault();state.budget_tracker.budget=$("budgetLimit").value;state.budget_tracker.currency=$("budgetCurrency").value;await save("budget_tracker");renderBudget();status("budgetStatus","Budget settings saved.");});
- $("expenseForm").addEventListener("submit",async e=>{e.preventDefault();state.budget_tracker.expenses.push({title:$("expenseTitle").value.trim(),category:$("expenseCategory").value,currency:$("expenseCurrency").value,planned:Number($("expensePlanned").value)||0,actual:Number($("expenseActual").value)||0});$("expenseForm").reset();$("expenseCurrency").value=state.budget_tracker.currency||"USD";renderBudget();await save("budget_tracker");status("budgetStatus","Expense saved.");});
- $("budgetExpenseList").addEventListener("click",async e=>{const b=e.target.closest("[data-expense-delete]");if(!b)return;state.budget_tracker.expenses.splice(Number(b.dataset.expenseDelete),1);renderBudget();await save("budget_tracker");});
  ["documents_checklist","packing_checklist"].forEach(k=>{const box=$(k==="documents_checklist"?"documentItems":"packingItems");box.addEventListener("change",async e=>{const el=e.target.closest("[data-check-index]");if(!el)return;state[k].items[Number(el.dataset.checkIndex)][1]=el.checked;renderChecklist(k,k==="documents_checklist"?"documentItems":"packingItems",k==="documents_checklist"?"documentStatus":"packingStatus");await save(k);});box.addEventListener("click",async e=>{const b=e.target.closest("[data-check-delete]");if(!b)return;e.preventDefault();const [key,index]=b.dataset.checkDelete.split(":");state[key].items.splice(Number(index),1);renderChecklist(key,key==="documents_checklist"?"documentItems":"packingItems",key==="documents_checklist"?"documentStatus":"packingStatus");await save(key);});});
  $("addDocumentTask").addEventListener("click",async()=>{const v=$("newDocumentTask").value.trim();if(!v)return;state.documents_checklist.items.push([v,false]);$("newDocumentTask").value="";renderChecklist("documents_checklist","documentItems","documentStatus");await save("documents_checklist");});
  $("addPackingTask").addEventListener("click",async()=>{const v=$("newPackingTask").value.trim();if(!v)return;state.packing_checklist.items.push([v,false]);$("newPackingTask").value="";renderChecklist("packing_checklist","packingItems","packingStatus");await save("packing_checklist");});
