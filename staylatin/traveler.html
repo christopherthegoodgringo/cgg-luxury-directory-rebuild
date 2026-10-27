@@ -151,7 +151,7 @@
     <p style="font-size:10px;color:var(--muted);margin:8px 0 0">Demo chat: replies come from this persona’s profile and curated response rules. This is not connected to a live AI model, and chats are not saved to your private inbox.</p>
   </section>
   <section id="privateMessagingPanel" aria-label="Private member messages" style="margin-top:22px;border:1px solid #dce8dd;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Only you and the selected member can read your conversation.</p></div><button id="refreshPrivateInbox" type="button" class="minor-action" style="width:auto;margin:0">Refresh inbox ↻</button></div>
+     <div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Messages and inbox update automatically. Only you and the selected member can read your conversation.</p></div>
     <div id="privateInboxList" style="display:grid;gap:8px;margin-top:12px"><div class="status">Loading private inbox…</div></div>
     <div id="privateConversation" hidden style="margin-top:16px;border-top:1px solid #dce8dd;padding-top:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h5 id="privateConversationTitle" style="font:500 20px Georgia,serif;color:var(--forest);margin:0">Conversation</h5><button id="closePrivateConversation" type="button" class="minor-action" style="width:auto;margin:0">Close</button></div>
@@ -419,7 +419,7 @@ document.getElementById("closeAITravelerChat")?.addEventListener("click",()=>{ai
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
 document.getElementById("refreshTravelerIntroductions").addEventListener("click",loadTravelerIntroductionDirectory);
 
-let activePrivateRecipient=null,activePrivateName="Traveler",privateBusy=false,privateRefreshTimer=null;
+ let activePrivateRecipient=null,activePrivateName="Traveler",privateBusy=false,privateRealtimeChannel=null;
 const privateInboxList=document.getElementById("privateInboxList"),privateConversation=document.getElementById("privateConversation"),privateMessages=document.getElementById("privateMessages"),privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageNotice=document.getElementById("privateMessageNotice"),privateMessageSend=document.getElementById("sendPrivateMessage");
 function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
 async function loadPrivateInbox(){
@@ -443,8 +443,8 @@ async function openPrivateConversation(userId,displayName){
  privateMessages.innerHTML='<div class="status">Loading private messages…</div>';setPrivateNotice("Only you and "+activePrivateName+" can read this conversation.");
  privateConversation.scrollIntoView({behavior:"smooth",block:"nearest"});
  await loadPrivateConversation();
- if(privateRefreshTimer)window.clearInterval(privateRefreshTimer);
- privateRefreshTimer=window.setInterval(()=>{if(!document.hidden&&activePrivateRecipient)loadPrivateConversation(true)},8000);
+
+  ensurePrivateMessageRealtime();
 }
 async function loadPrivateConversation(silent=false){
  const db=introClient();if(!db||!activeTripUserId||!activePrivateRecipient||!privateMessages)return;
@@ -474,11 +474,25 @@ privateMessageForm?.addEventListener("submit",async e=>{
  catch(e){const detail=String(e&&e.message||"").trim();setPrivateNotice("Could not send your private message"+(detail?": "+detail:"")+".",true)}
  finally{privateBusy=false;privateMessageSend.disabled=false;privateMessageSend.textContent="Send privately ↗"}
 });
-document.getElementById("refreshPrivateInbox")?.addEventListener("click",async()=>{await loadPrivateInbox();if(activePrivateRecipient)await loadPrivateConversation()});
-document.getElementById("closePrivateConversation")?.addEventListener("click",()=>{privateConversation.hidden=true;activePrivateRecipient=null;if(privateRefreshTimer){window.clearInterval(privateRefreshTimer);privateRefreshTimer=null}});
+
+ document.getElementById("closePrivateConversation")?.addEventListener("click",()=>{privateConversation.hidden=true;activePrivateRecipient=null});
+ function ensurePrivateMessageRealtime(){
+  const db=introClient();if(!db||!activeTripUserId||privateRealtimeChannel)return;
+  const me=activeTripUserId;
+  privateRealtimeChannel=db.channel("staylatin-private-messages-"+me)
+   .on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_private_messages"},payload=>{
+    const m=payload.new||{};if(m.sender_id!==me&&m.recipient_id!==me)return;
+    loadPrivateInbox();
+    if(activePrivateRecipient&&(m.sender_id===activePrivateRecipient||m.recipient_id===activePrivateRecipient))loadPrivateConversation(true);
+   })
+   .on("postgres_changes",{event:"UPDATE",schema:"public",table:"staylatin_traveler_private_messages"},payload=>{
+    const m=payload.new||{};if(m.sender_id!==me&&m.recipient_id!==me)return;loadPrivateInbox();
+   }).subscribe();
+ }
 
 function showTravelerDashboard(session){
   activeTripUserId=session&&session.user?session.user.id:null;
+  ensurePrivateMessageRealtime();
   loadTravelerAvatar();
   loadTravelerIntroduction();
   connectTravelerChat(session);
