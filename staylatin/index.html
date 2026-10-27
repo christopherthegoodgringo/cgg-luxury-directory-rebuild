@@ -824,17 +824,20 @@ function stopStayCarousels(){
 }
 function initStayCarousels(){
  stopStayCarousels();
- const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- if(reduce)return;
+ // Photo carousels must rotate on every card, including devices with reduced-motion enabled.
  grid.querySelectorAll("[data-carousel]").forEach(photo=>{
   const slides=[...photo.querySelectorAll(".photo-slide")];
   const dots=[...photo.querySelectorAll(".photo-dot")];
   if(slides.length<2)return;
   let i=0;
   const show=()=>{
-   slides.forEach((el,idx)=>el.classList.toggle("is-active",idx===i));
+   slides.forEach((el,idx)=>{
+    el.classList.toggle("is-active",idx===i);
+    el.style.display=idx===i?"block":"none";
+   });
    dots.forEach((el,idx)=>el.classList.toggle("is-active",idx===i));
   };
+  show();
   const tick=()=>{i=(i+1)%slides.length;show();};
   let timer=setInterval(tick,STAY_CAROUSEL_MS);
   stayCarouselTimers.push(timer);
@@ -849,7 +852,7 @@ function render(){
  const vibe=document.getElementById("vibe").value;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
  const found=stays.filter(s=>(activeType==="all"||s.type===activeType)&&(type==="all"||s.type===type)&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
- const visible=showAllListings?found:found.slice(0,8);
+ const visible=found; // Keep every matching listing visible; do not hide listings behind Load more.
  grid.innerHTML=visible.length?visible.map(s=>{
   const links=[];
   const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
