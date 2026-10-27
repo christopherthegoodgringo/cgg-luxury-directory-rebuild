@@ -26,7 +26,7 @@
 function privateChatAvatar(identity){
  const name=identity?.name||"StayLatin";
  if(identity?.photo)return '<img src="'+esc(identity.photo)+'" alt="'+esc(name)+' profile photo" style="width:34px;height:34px;flex:0 0 34px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b;background:#e5efe6">';
- const initials=name.trim().split(/\\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()||"SL";
+ const initials=name.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()||"SL";
  return '<span aria-hidden="true" style="display:inline-grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:50%;border:1px solid #c8a86b;background:#e5efe6;color:#24563f;font:700 11px Georgia,serif">'+esc(initials)+'</span>';
 }
 async function loadInboxConversation(travelerId){
