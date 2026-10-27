@@ -575,26 +575,15 @@ function withAffiliate(url,network){
 
 function tierBenefits(tier){return ""}
 function handleStayImageError(img){
- const photo=img.closest?img.closest(".photo"):img.parentElement;
- let candidates=[];
- try{candidates=JSON.parse(img.dataset.fallbacks||"[]")}catch(e){}
- if(img.dataset.fallback)candidates.unshift(img.dataset.fallback);
- let tried=[];
- try{tried=JSON.parse(img.dataset.triedSources||"[]")}catch(e){}
- const current=img.getAttribute("src")||"";
- if(current&&!tried.includes(current))tried.push(current);
- const next=candidates.find(url=>url&&!tried.includes(url));
- if(next){tried.push(next);img.dataset.triedSources=JSON.stringify(tried);img.src=next;if(photo)photo.style.backgroundImage="url('"+next+"')";return;}
- // Never substitute unrelated stock photography when a property image fails.
- img.style.display="none";
  const photoBox=img.closest?img.closest(".photo"):img.parentElement;
- if(photoBox){
-  const slides=[...photoBox.querySelectorAll(".photo-slide")];
-  const dots=[...photoBox.querySelectorAll(".photo-dot")];
-  const valid=slides.filter(el=>el.style.display!=="none");
-  dots.forEach((dot,i)=>{dot.style.display=valid[i]?"":"none";});
-  if(!valid.length)photoBox.classList.add("image-failed");
- }
+ const slides=photoBox?[...photoBox.querySelectorAll(".photo-slide")]:[];
+ const dots=photoBox?[...photoBox.querySelectorAll(".photo-dot")]:[];
+ const index=slides.indexOf(img);
+ // Never swap in another hotel's photo or duplicate a fallback slide.
+ img.style.display="none";
+ img.classList.remove("is-active");
+ if(index>=0&&dots[index])dots[index].style.display="none";
+ if(photoBox&&!slides.some(slide=>slide!==img&&slide.style.display!=="none"))photoBox.classList.add("image-failed");
 }
 
 const STAY_CAROUSEL_MS=5500;
