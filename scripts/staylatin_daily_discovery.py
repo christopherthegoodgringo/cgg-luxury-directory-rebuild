@@ -120,6 +120,10 @@ def choose_for_city(city, existing):
         if not official: continue
         site = fetch_page(official)
         if not site or not site["image"]: continue
+        # Require the official-looking site to identify the property in its title or domain.
+        name_tokens = [t for t in re.findall(r"[a-z0-9]+", name.casefold()) if len(t) >= 4]
+        site_identity = (site["title"] + " " + urlparse(site["url"]).netloc).casefold()
+        if not name_tokens or not any(token in site_identity for token in name_tokens): continue
         # Verify the photo URL is accessible; never substitute an unrelated stock photo.
         img_status, img_final, _ = get(site["image"], timeout=12)
         if img_status < 200 or img_status >= 400: continue
