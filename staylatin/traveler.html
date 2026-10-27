@@ -313,7 +313,9 @@ async function loadTravelerIntroductionDirectory(){
  box.innerHTML='<div class="status">Loading your profile and member directory…</div>';
  const {data:directoryData,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").limit(1000);
  if(error){box.innerHTML='<div class="status error">The member directory could not load. Please try again.</div>';return}
- let otherRows=(directoryData||[]).filter(x=>x.user_id!==activeTripUserId);\n // Sort real members by actual account creation timestamp (newest first), not profile edit time.\n if(otherRows.length){const {data:accountRows}=await db.from("staylatin_profiles").select("id,created_at").in("id",otherRows.map(x=>x.user_id));const createdAtById=Object.fromEntries((accountRows||[]).map(x=>[x.id,x.created_at]));otherRows.sort((a,b)=>new Date(createdAtById[b.user_id]||0)-new Date(createdAtById[a.user_id]||0));}
+ let otherRows=(directoryData||[]).filter(x=>x.user_id!==activeTripUserId);
+ // Sort real members by actual account creation timestamp (newest first), not profile edit time.
+ if(otherRows.length){const {data:accountRows}=await db.from("staylatin_profiles").select("id,created_at").in("id",otherRows.map(x=>x.user_id));const createdAtById=Object.fromEntries((accountRows||[]).map(x=>[x.id,x.created_at]));otherRows.sort((a,b)=>new Date(createdAtById[b.user_id]||0)-new Date(createdAtById[a.user_id]||0));}
  let ownIntro=null,ownPhotoProfile=null,ownPhotoUrl="";
  const [{data:ownIntroData,error:ownIntroError},{data:ownPhotoData,error:ownPhotoError}]=await Promise.all([
    db.from("staylatin_traveler_introductions").select("*").eq("user_id",activeTripUserId).maybeSingle(),
