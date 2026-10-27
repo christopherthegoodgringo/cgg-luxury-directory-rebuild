@@ -397,6 +397,28 @@ function ensureInitialListings(){
  render();
 }
 ensureInitialListings();
+// Merge only records produced by the scheduled verifier. Existing hand-maintained listings
+// remain untouched; the generated file is served from the same StayLatin directory.
+fetch("auto-discovered-stays.json",{cache:"no-store"})
+ .then(response=>{if(!response.ok)throw new Error("Discovery data unavailable");return response.json()})
+ .then(items=>{
+  if(!Array.isArray(items))return;
+  const keys=new Set(stays.map(s=>(s.name+"|"+s.city).toLowerCase()));
+  let changed=false;
+  items.forEach(item=>{
+   if(!item||!item.name||!item.city||!item.type||!item.image)return;
+   const key=(item.name+"|"+item.city).toLowerCase();
+   if(keys.has(key))return;
+   // Only hotel/hostel records with an Expedia or Trip.com property profile are eligible.
+   const validProfile=url=>{try{const u=new URL(url);return (u.hostname==="expedia.com"||u.hostname.endsWith(".expedia.com")||u.hostname==="trip.com"||u.hostname.endsWith(".trip.com"))}catch(e){return false}};
+   if(!["Boutique hotel","Hostel"].includes(item.type)||!(validProfile(item.expedia)||validProfile(item.trip)))return;
+   if(!["Tunja, Colombia","Santa Marta, Colombia"].includes(item.city))return;
+   if(!item.website||!/^https:\/\//i.test(item.website)||!/^https:\/\//i.test(item.image))return;
+   stays.push(item);keys.add(key);changed=true;
+  });
+  if(changed)ensureInitialListings();
+ })
+ .catch(()=>{/* Discovery is additive; a missing data file never blocks existing cards. */});
 window.addEventListener("pageshow",ensureInitialListings);
 document.addEventListener("DOMContentLoaded",ensureInitialListings,{once:true});
 let stayReviewRotationTimer=null;
