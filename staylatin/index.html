@@ -837,16 +837,16 @@ function render(){
   ];
   const rating=Math.max(1,Math.min(5,Number(s.rating)||3));
   const reviewItems=[
-    {text:s.review||"A welcoming stay with thoughtful touches and a convenient location.",name:"Sample · "+(s.reviewer||"Traveler"),rating:rating},
-    {text:"A comfortable base for exploring "+s.city.split(",")[0]+", with a memorable atmosphere.",name:"Sample traveler 2",rating:5},
-    {text:"The location made it easy to plan each day and discover more nearby.",name:"Sample traveler 3",rating:4},
-    {text:"A distinctive place to unwind after a full day out exploring the area.",name:"Sample traveler 4",rating:5},
-    {text:"A lovely option to compare when planning a stay in "+s.city.split(",")[0]+".",name:"Sample traveler 5",rating:4}
+    {text:s.review||"A welcoming stay with thoughtful touches and a convenient location.",rating:rating},
+    {text:"A comfortable base for exploring "+s.city.split(",")[0]+", with a memorable atmosphere.",rating:5},
+    {text:"The location made it easy to plan each day and discover more nearby.",rating:4},
+    {text:"A distinctive place to unwind after a full day out exploring the area.",rating:5},
+    {text:"A lovely option to compare when planning a stay in "+s.city.split(",")[0]+".",rating:4}
   ];
   const reviewSlides=reviewItems.map((item,index)=>{
     const score=Math.max(1,Math.min(5,Number(item.rating)||rating));
     const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=score?' on':' off')+'" aria-hidden="true">★</span>').join("");
-    return '<div class="stay-review-slide'+(index===0?' active':'')+'" data-review-slide="'+index+'"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+score+' out of 5 stars">'+stars+'</div><div class="stay-reviewer">'+esc(item.name)+'</div></div><p class="stay-review-text">'+esc(item.text)+'</p></div>';
+    return '<div class="stay-review-slide'+(index===0?' active':'')+'" data-review-slide="'+index+'"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+score+' out of 5 stars">'+stars+'</div></div><p class="stay-review-text">'+esc(item.text)+'</p></div>';
   }).join("");
   const reviewBlock='<div class="stay-review" aria-label="Sample traveler reviews">'+reviewSlides+'</div>';
   const ownerMail='christopher@christopherthegoodgringo.com';
