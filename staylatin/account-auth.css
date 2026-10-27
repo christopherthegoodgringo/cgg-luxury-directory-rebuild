@@ -79,3 +79,46 @@ input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
 .footer-links a{color:#e8f6ef;font-weight:750;text-decoration:underline;text-underline-offset:3px}
 .sl-mark{border:none!important;padding:0;overflow:hidden;line-height:0;background:transparent}
 .sl-mark svg{display:block;width:37px;height:37px}
+
+
+/* After a popup action, focus the user on one centered result message. */
+.panel.action-result{
+  min-height:280px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  background:linear-gradient(145deg,#f4fff7 0%,#e1f5e8 42%,#c5ebd3 100%);
+  border:1px solid #78bd91;
+  box-shadow:0 24px 65px rgba(15,90,55,.2),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.panel.action-result:before{height:9px;background:linear-gradient(90deg,#064e3b 0%,#087f5b 18%,#16a765 38%,#39c777 58%,#7be0a2 78%,#d1f8dc 100%)}
+.panel.action-result>:not(.status){display:none!important}
+.panel.action-result .status{
+  display:block!important;
+  width:100%;
+  margin:0;
+  padding:28px 22px;
+  border:1px solid #7dc798;
+  border-radius:16px;
+  background:linear-gradient(135deg,#e9fff0 0%,#c8f2d6 35%,#91dfae 68%,#dff9e7 100%);
+  color:#0b5134;
+  box-shadow:0 12px 30px rgba(21,122,75,.16);
+  text-align:center;
+  font-size:clamp(16px,2.8vw,20px);
+  line-height:1.55;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.panel.action-result .status.success{
+  background:linear-gradient(135deg,#eaffef 0%,#bdf0ce 38%,#78d69c 70%,#d8f8e2 100%);
+  border-color:#56b97b;color:#064e32;
+}
+.panel.action-result .status.error{
+  background:linear-gradient(135deg,#f0fff4 0%,#d9f4e1 45%,#b8e7c8 100%);
+  border-color:#5cae7a;color:#174b31;
+}
+@media(prefers-reduced-motion:no-preference){
+ .panel.action-result .status{animation:staylatinResultIn .24s ease-out both}
+}
+@keyframes staylatinResultIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
