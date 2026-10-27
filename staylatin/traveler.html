@@ -570,7 +570,7 @@ async function loadTravelerIntroductionDirectory(){
    const photo='<img src="'+introEscape(p.avatar)+'" alt="Cartoon portrait of '+name+'" loading="lazy" style="width:78px;height:78px;flex:0 0 78px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">';
    const tags=p.interests.map(t=>'<span style="display:inline-block;background:#e7f0e9;color:#245448;border-radius:999px;padding:4px 8px;margin:3px 3px 0 0;font-size:10px;font-weight:750">'+introEscape(t)+'</span>').join("");
    const rows=[["Age",String(p.age)],["Travel style",p.style],["Languages",p.languages],["Dream trip",p.dream],["Favorite advice",p.tip],["Food tip",p.food],["Budget tip",p.budget],["Fun fact",p.fact],["Open to","Destination chats, trip planning ideas, and travel inspiration"]].map(x=>'<div style="font-size:11px;margin-top:7px"><b style="color:var(--forest)">'+introEscape(x[0])+':</b> '+introEscape(x[1])+'</div>').join("");
-   return '<article data-member-card="1" style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px;position:relative"><div style="display:flex;align-items:center;gap:12px;margin:0 0 10px">'+photo+'<div><div style="display:inline-block;background:#f5e9c9;border:1px solid #e7d39c;color:#805d18;border-radius:999px;padding:3px 7px;font-size:9px;letter-spacing:.04em;font-weight:900;margin-bottom:5px">AI TRAVELER</div><h5 style="font:500 19px Georgia,serif;color:var(--forest);margin:0 0 4px">'+name+'</h5><div style="font-size:11px;color:var(--muted)">'+p.flag+' '+loc+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">'+introEscape(p.style)+' · Age '+p.age+'</div></div></div><p style="font-size:12px;line-height:1.5;margin:0 0 8px">'+introEscape(p.bio)+'</p><div>'+tags+'</div><details style="margin-top:9px;border-top:1px solid #e5e0d5;padding-top:9px"><summary style="cursor:pointer;font-size:11px;font-weight:850;color:var(--forest)">Complete AI profile</summary>'+rows+'</details><button type="button" data-ai-chat-id="'+introEscape(p.id)+'" class="primary-action" style="width:100%;margin-top:12px">Chat with AI ✦</button><div style="font-size:9px;color:var(--muted);margin-top:6px">Fictional AI persona · not a real member</div></article>';
+   return '<article data-member-card="1" data-ai-persona="1" style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px;position:relative"><div style="display:flex;align-items:center;gap:12px;margin:0 0 10px">'+photo+'<div><div style="display:inline-block;background:#f5e9c9;border:1px solid #e7d39c;color:#805d18;border-radius:999px;padding:3px 7px;font-size:9px;letter-spacing:.04em;font-weight:900;margin-bottom:5px">AI TRAVELER</div><h5 style="font:500 19px Georgia,serif;color:var(--forest);margin:0 0 4px">'+name+'</h5><div style="font-size:11px;color:var(--muted)">'+p.flag+' '+loc+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">'+introEscape(p.style)+' · Age '+p.age+'</div></div></div><p style="font-size:12px;line-height:1.5;margin:0 0 8px">'+introEscape(p.bio)+'</p><div>'+tags+'</div><details style="margin-top:9px;border-top:1px solid #e5e0d5;padding-top:9px"><summary style="cursor:pointer;font-size:11px;font-weight:850;color:var(--forest)">Complete AI profile</summary>'+rows+'</details><button type="button" data-ai-chat-id="'+introEscape(p.id)+'" class="primary-action" style="width:100%;margin-top:12px">Chat with AI ✦</button><div style="font-size:9px;color:var(--muted);margin-top:6px">Fictional AI persona · not a real member</div></article>';
  }).join("");
  const otherCards=otherRows.map(r=>{
    const name=r.display_name||"StayLatin traveler";
@@ -579,9 +579,32 @@ async function loadTravelerIntroductionDirectory(){
  box.innerHTML=ownCard+otherCards+aiCards;
  const memberSearch=document.getElementById("travelerMemberSearch"),memberSearchStatus=document.getElementById("travelerMemberSearchStatus"),loadMoreWrap=document.getElementById("travelerMemberLoadMoreWrap"),loadMoreButton=document.getElementById("travelerMemberLoadMore"),pageStatus=document.getElementById("travelerMemberPageStatus");
  let memberPageSize=12;
- const updateMemberDirectoryVisibility=()=>{const term=(memberSearch?.value||"").trim().toLowerCase();const cards=[...box.querySelectorAll(":scope > article[data-member-card]")];const matches=cards.filter(card=>!term||card.textContent.toLowerCase().includes(term));cards.forEach(card=>{card.hidden=true});matches.slice(0,memberPageSize).forEach(card=>{card.hidden=false});if(memberSearchStatus)memberSearchStatus.textContent=term?(matches.length+" matching traveler"+(matches.length===1?"":"s")):"Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length+" travelers";if(loadMoreWrap)loadMoreWrap.style.display=matches.length>memberPageSize?"block":"none";if(pageStatus)pageStatus.textContent="Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length;};
+ const updateMemberDirectoryVisibility=()=>{
+   const term=(memberSearch?.value||"").trim().toLowerCase();
+   const cards=[...box.querySelectorAll(":scope > article[data-member-card]")];
+   const matches=cards.filter(card=>!term||card.textContent.toLowerCase().includes(term));
+   const regularMatches=matches.filter(card=>card.dataset.aiPersona!=="1");
+   const aiMatches=matches.filter(card=>card.dataset.aiPersona==="1");
+   cards.forEach(card=>{card.hidden=true});
+   regularMatches.slice(0,memberPageSize).forEach(card=>{card.hidden=false});
+   const rotationStart=window.STAYLATIN_AI_TRAVELER_ROTATION_INDEX||0;
+   const visibleAI=aiMatches.length<=7?aiMatches:Array.from({length:7},(_,i)=>aiMatches[(rotationStart+i)%aiMatches.length]);
+   visibleAI.forEach(card=>{card.hidden=false});
+   if(memberSearchStatus)memberSearchStatus.textContent=(term?(matches.length+" matching traveler"+(matches.length===1?"":"s")):("Showing "+Math.min(memberPageSize,regularMatches.length)+" members plus "+visibleAI.length+" AI travelers"))+(aiMatches.length>7?" · AI characters rotate every 12 seconds":"");
+   if(loadMoreWrap)loadMoreWrap.style.display=regularMatches.length>memberPageSize?"block":"none";
+   if(pageStatus)pageStatus.textContent="Showing "+Math.min(memberPageSize,regularMatches.length)+" members + "+visibleAI.length+" AI travelers";
+ };
  if(memberSearch&&!memberSearch.dataset.bound){memberSearch.dataset.bound="1";memberSearch.addEventListener("input",()=>{memberPageSize=12;updateMemberDirectoryVisibility()});}
  if(loadMoreButton&&!loadMoreButton.dataset.bound){loadMoreButton.dataset.bound="1";loadMoreButton.addEventListener("click",()=>{memberPageSize+=10;updateMemberDirectoryVisibility()});}
+ if(!box.dataset.aiRotationBound){
+   box.dataset.aiRotationBound="1";
+   window.STAYLATIN_AI_TRAVELER_ROTATION_INDEX=0;
+   window.setInterval(()=>{
+     const total=(window.STAYLATIN_AI_TRAVELERS||[]).length;
+     if(total>7)window.STAYLATIN_AI_TRAVELER_ROTATION_INDEX=((window.STAYLATIN_AI_TRAVELER_ROTATION_INDEX||0)+7)%total;
+     updateMemberDirectoryVisibility();
+   },12000);
+ }
  updateMemberDirectoryVisibility();
  document.getElementById("editOwnMemberProfile")?.addEventListener("click",()=>document.getElementById("travelerIntroForm")?.scrollIntoView({behavior:"smooth",block:"start"}));
  box.querySelectorAll("[data-private-message]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.privateMessage,button.dataset.privateName)));
