@@ -599,6 +599,35 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
   }
 }
 </style>
+<style id="staylatin-basic-verified-tier-stars">
+/* Ensure Verified and Basic tier badges both visibly include their star. */
+.listing-grid .stay-card.tier-verified .photo>.pill .tier-star,
+.listing-grid .stay-card.tier-basic .photo>.pill .tier-star{
+  display:inline-grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:15px!important;
+  height:15px!important;
+  flex:0 0 15px!important;
+  place-items:center!important;
+  font-size:15px!important;
+  line-height:1!important;
+  margin-right:5px!important;
+  -webkit-text-fill-color:currentColor!important;
+  color:#d49a24!important;
+  text-shadow:0 0 4px #ffe6a3,0 0 8px #f0b94c!important;
+  animation:tierStarSpin 3.5s linear infinite,tierStarGlow 3.4s ease-in-out infinite!important;
+}
+.listing-grid .stay-card.tier-verified .photo>.pill .tier-star{
+  color:#16865a!important;
+  -webkit-text-fill-color:#16865a!important;
+  text-shadow:0 0 4px #b9f0d0,0 0 8px #72c99b!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .listing-grid .stay-card.tier-verified .photo>.pill .tier-star,
+  .listing-grid .stay-card.tier-basic .photo>.pill .tier-star{animation:none!important}
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
