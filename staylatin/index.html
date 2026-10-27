@@ -629,7 +629,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 }
 </style>
 <style id="staylatin-donation-tab-style">
-/* Full-width animated FOREVER FREE donation banner, fixed above all site content. */
+/* Full-width animated FOREVER FREE informational banner, not clickable. */
 #staylatin-donation-tab{
  position:fixed;top:0;left:0;right:0;width:100%;max-width:none;
  transform:none;z-index:99999;box-sizing:border-box;
@@ -654,7 +654,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
  font-size:10px;font-weight:900;letter-spacing:.025em;
 }
 #staylatin-donation-tab .donation-paypal em{font-style:normal;opacity:.92;font-size:9px}
-#staylatin-donation-tab:hover{animation-play-state:paused;filter:saturate(1.12)}
+#staylatin-donation-tab{cursor:default}
 @keyframes staylatinDonationPulse{
  0%,100%{opacity:.82;box-shadow:0 2px 10px rgba(36,67,75,.12)}
  50%{opacity:1;box-shadow:0 3px 20px rgba(164,108,232,.34),0 0 10px rgba(239,93,168,.2)}
@@ -1071,10 +1071,10 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 })();
 </script>
 
-<a id="staylatin-donation-tab" href="#staylatin-forever-free" aria-label="For travelers, Forever Free. Support StayLatin. PayPal coming soon." title="For travelers, Forever Free">
+<div id="staylatin-donation-tab" role="note" aria-label="For travelers, Forever Free. Support StayLatin. PayPal coming soon." title="For travelers, Forever Free">
  <span class="donation-heart" aria-hidden="true">♥</span>
  <span class="donation-vertical">FOR TRAVELERS · FOREVER FREE</span>
  <span class="donation-paypal">Support StayLatin <em>· PayPal Coming Soon</em></span>
-</a>
+</div>
 </body>
 </html>
