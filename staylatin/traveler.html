@@ -544,6 +544,34 @@ async function loadPrivateConversation(silent=false){
   if(privateMessages)privateMessages.innerHTML='<div class="status error">Could not load this conversation. Please refresh and try again.</div>';
  }
 }
+const loungeMessages=document.getElementById("chatMessages"),loungeForm=document.getElementById("chatForm"),loungeInput=document.getElementById("chatMessage"),loungeNotice=document.getElementById("chatNotice"),loungeSend=document.getElementById("sendChat"),loungeBadge=document.getElementById("chatUnreadBadge");
+let loungeChannel=null,loungeLoading=false;
+function setLoungeNotice(message,isError=false){if(!loungeNotice)return;loungeNotice.className="status show"+(isError?" error":"");loungeNotice.textContent=message;}
+async function loadTravelerLounge(silent=false){
+ const db=introClient();
+ if(!db||!activeTripUserId){if(loungeMessages)loungeMessages.innerHTML='<div class="status">Sign in with a traveler account to connect to the Traveler Lounge.</div>';setLoungeNotice("Sign in to join the Traveler Lounge.");return;}
+ if(loungeLoading)return;loungeLoading=true;
+ if(!silent)loungeMessages.innerHTML='<div class="status">Connecting to the Traveler Lounge…</div>';
+ try{
+  const {data,error}=await db.from("staylatin_traveler_chat_messages").select("id,sender_id,destination,body,created_at").eq("destination","General Traveler Lounge").eq("moderation_status","visible").order("created_at",{ascending:true}).limit(150);
+  if(error)throw error;
+  const rows=data||[],ids=[...new Set(rows.map(m=>m.sender_id))],names=Object.create(null),photos=Object.create(null);
+  const [{data:profiles},{data:chatProfiles}]=await Promise.all([
+   ids.length?db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids):Promise.resolve({data:[]}),
+   ids.length?db.from("staylatin_traveler_chat_profiles").select("user_id,display_name,share_name,share_photo,avatar_path").in("user_id",ids):Promise.resolve({data:[]})
+  ]);
+  (profiles||[]).forEach(p=>{if(p.display_name)names[p.user_id]=p.display_name;});
+  await Promise.all((chatProfiles||[]).map(async p=>{if(p.share_name&&p.display_name)names[p.user_id]=p.display_name;if(p.share_photo&&p.avatar_path){try{const {data,error}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!error&&data?.signedUrl)photos[p.user_id]=data.signedUrl;}catch(_){}}}));
+  const current=(await db.auth.getUser()).data?.user;if(current)names[current.id]=names[current.id]||current.user_metadata?.full_name||"You";
+  if(!rows.length)loungeMessages.innerHTML='<div class="status">The Traveler Lounge is connected. Be the first to share a travel tip or ask a question.</div>';
+  else loungeMessages.innerHTML=rows.map(m=>{const name=names[m.sender_id]||(m.sender_id===activeTripUserId?"You":"StayLatin traveler");const photo=photos[m.sender_id]?'<img src="'+introEscape(photos[m.sender_id])+'" alt="" style="width:32px;height:32px;flex:0 0 32px;object-fit:cover;border-radius:50%;border:1px solid #c8a86b">':'<span aria-hidden="true" style="display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#e5efe6;color:var(--forest);border:1px solid #c8a86b;font:700 11px Georgia,serif">'+introEscape(name.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase())+'</span>';return '<article style="display:flex;align-items:flex-start;gap:9px;max-width:100%;padding:10px 12px;border:1px solid #dce8dd;border-radius:10px;background:'+(m.sender_id===activeTripUserId?"#edf6ee":"#fffdf8")+'">'+photo+'<div style="min-width:0;flex:1"><div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;font-weight:800;color:var(--forest);margin-bottom:4px"><span>'+introEscape(name)+'</span><span style="font-weight:500;color:var(--muted)">'+introEscape(new Date(m.created_at).toLocaleString())+'</span></div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></div></article>';}).join("");
+  loungeMessages.scrollTop=loungeMessages.scrollHeight;setLoungeNotice("Connected to the Traveler Lounge. Messages refresh automatically.");if(loungeBadge){loungeBadge.hidden=true;loungeBadge.textContent="";}connectTravelerLoungeRealtime();
+ }catch(err){loungeMessages.innerHTML='<div class="status error">The Traveler Lounge could not connect. Please refresh; if the problem continues, the lounge database permissions need attention.</div>';setLoungeNotice("Connection failed: "+(err.message||"unable to load lounge messages"),true);}
+ finally{loungeLoading=false;}
+}
+function connectTravelerLoungeRealtime(){const db=introClient();if(!db||!activeTripUserId||loungeChannel)return;loungeChannel=db.channel("staylatin-traveler-lounge-live").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages",filter:"destination=eq.General Traveler Lounge"},()=>loadTravelerLounge(true)).subscribe(status=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setLoungeNotice("Live updates are reconnecting. You can still refresh the lounge.",true);});}
+loungeForm?.addEventListener("submit",async event=>{event.preventDefault();const body=(loungeInput?.value||"").trim(),db=introClient();if(!body)return;if(!db||!activeTripUserId){setLoungeNotice("Please sign in to post in the Traveler Lounge.",true);return;}if(body.length>1200){setLoungeNotice("Messages must be 1,200 characters or fewer.",true);return;}loungeSend.disabled=true;setLoungeNotice("Sending your message…");try{const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user)throw new Error("Your session expired. Please sign in again.");const {error}=await db.from("staylatin_traveler_chat_messages").insert({sender_id:user.id,destination:"General Traveler Lounge",body:body,moderation_status:"visible"});if(error)throw error;loungeInput.value="";await loadTravelerLounge(true);setLoungeNotice("Your message was posted to the Traveler Lounge.");}catch(err){setLoungeNotice(err.message||"Your message could not be sent. Please try again.",true);}finally{loungeSend.disabled=false;}});
+
 function setTravelerStatus(message,kind=""){
  if(!statusBox)return;
  statusBox.hidden=false;
