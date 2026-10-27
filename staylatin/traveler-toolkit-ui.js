@@ -16,6 +16,16 @@
 </div></section>`;
  const anchor=document.getElementById("travelerIntroductions");
  if(anchor)anchor.insertAdjacentHTML("beforebegin",markup);
+ /* Keep the existing live Favorites panel inside the toolkit so saved stays and booking links keep working. */
+ const favorites=document.getElementById("travelerListingActions");
+ const grid=document.querySelector("#travelerToolkit .tool-grid");
+ const journal=document.getElementById("travelerJournal");
+ if(favorites&&grid&&journal){
+  favorites.className="tool-card";favorites.removeAttribute("style");favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
+  const oldTitle=document.getElementById("travelerListingActionsTitle");
+  if(oldTitle){const title=document.createElement("h4");title.id=oldTitle.id;title.textContent="6. Your Favorites";oldTitle.replaceWith(title);}
+  grid.insertBefore(favorites,journal);
+ }
  /* Every toolkit section starts collapsed on each portal visit and can be opened independently. */
  const collapseStyle=document.createElement("style");
  collapseStyle.textContent=".tool-card>h4,.journal-card>h3{display:flex;align-items:center;justify-content:space-between;gap:12px}.tool-collapse-toggle{flex:0 0 auto;border:1px solid #cfe0d7;border-radius:999px;background:#edf5ec;color:#173f35;padding:7px 11px;font:700 11px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap}.tool-collapse-toggle:hover{background:#dcecdf}.tool-card-body,.journal-card-body{min-width:0}.tool-card.is-collapsed .tool-card-body,.journal-card.is-collapsed .journal-card-body{display:none}.tool-card.is-collapsed,.journal-card.is-collapsed{min-height:0}.tool-card.is-collapsed{height:auto}.tool-card.is-collapsed>h4{margin-bottom:0}.journal-card.is-collapsed>h3{margin-bottom:0}@media(prefers-reduced-motion:no-preference){.tool-collapse-toggle{transition:background .2s ease}}";
