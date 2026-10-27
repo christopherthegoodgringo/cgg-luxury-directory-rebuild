@@ -670,7 +670,6 @@ function connectTravelerChat(session){
  if(!chatMessages||!chatNotice||!chatForm)return;
  if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}
  if(chatRefreshTimer){window.clearInterval(chatRefreshTimer);chatRefreshTimer=null;}
- if(aiLoungeTicker){window.clearInterval(aiLoungeTicker);aiLoungeTicker=null;}
  if(!session){chatMessages.innerHTML='<div class="status show">Sign in to view lounge messages.</div>';setChatNotice("Sign in to join the Traveler Lounge.");return;}
  setChatNotice("Connecting to the Traveler Lounge…");loadTravelerChat();
  
