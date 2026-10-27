@@ -307,14 +307,18 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 </style>
 
 <style id="staylatin-sample-review-card">
-.stay-review{margin:0 0 8px;padding:6px 10px;min-height:0;display:flex;flex-direction:column;gap:4px;border:1px solid rgba(89,96,77,.2);border-radius:8px;background:rgba(255,255,255,.56);box-shadow:none}
+/* One compact review viewport per card; reviews cross-fade gently without changing card height. */
+.stay-review{position:relative;display:grid;margin:0 0 8px;padding:0;min-height:91px;overflow:hidden}
+.stay-review-slide{grid-area:1/1;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;padding:7px 10px;border:1px solid rgba(89,96,77,.2);border-radius:8px;background:rgba(255,255,255,.56);box-shadow:none;opacity:0;visibility:hidden;transition:opacity 1.45s ease-in-out,visibility 1.45s ease-in-out}
+.stay-review-slide.active{opacity:1;visibility:visible}
 .stay-review-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0}
-.stay-reviewer{font-size:11px;font-weight:800;color:#0f3d32;white-space:nowrap}
+.stay-reviewer{font-size:10px;font-weight:800;color:#0f3d32;white-space:nowrap;letter-spacing:.02em}
 .stay-stars{display:flex;gap:2px;line-height:1;font-size:14px}
 .stay-stars .star.on{color:#ffd54a!important;text-shadow:0 0 4px rgba(255,213,74,.4)}
 .stay-stars .star.off{color:#c5d0c4!important}
-.stay-review-text{margin:0;font-size:12px;line-height:1.25;color:#45534a;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;min-height:0}
-@media(max-width:560px){.stay-review{padding:6px 9px}}
+.stay-review-text{margin:0;font-size:11.5px;line-height:1.3;color:#45534a;font-family:ui-sans-serif,system-ui,sans-serif;white-space:normal;min-height:0}
+@media(max-width:560px){.stay-review{min-height:88px}.stay-review-slide{padding:7px 9px}}
+@media(prefers-reduced-motion:reduce){.stay-review-slide{transition:none}}
 </style>
 <style id="staylatin-card-body-tight">
 /* Compact listing copy: keep description, location, property name and sample review visually grouped. */
@@ -832,10 +836,19 @@ function render(){
    'Worth comparing for a trip to '+s.city.split(",")[0]+' alongside location, amenities and direct-booking details.'
   ];
   const rating=Math.max(1,Math.min(5,Number(s.rating)||3));
-  const reviewText=((s.review||"Sample traveler note for this stay.").slice(0,96)).padEnd(96," ");
-  const reviewer=s.reviewer||"Traveler";
-  const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=rating?' on':' off')+'" aria-hidden="true">★</span>').join("");
-  const reviewBlock='<div class="stay-review"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+rating+' out of 5 stars">'+stars+'</div><div class="stay-reviewer">'+esc(reviewer)+'</div></div><p class="stay-review-text">'+esc(reviewText)+'</p></div>';
+  const reviewItems=[
+    {text:s.review||"A welcoming stay with thoughtful touches and a convenient location.",name:"Sample · "+(s.reviewer||"Traveler"),rating:rating},
+    {text:"A comfortable base for exploring "+s.city.split(",")[0]+", with a memorable atmosphere.",name:"Sample traveler 2",rating:5},
+    {text:"The location made it easy to plan each day and discover more nearby.",name:"Sample traveler 3",rating:4},
+    {text:"A distinctive place to unwind after a full day out exploring the area.",name:"Sample traveler 4",rating:5},
+    {text:"A lovely option to compare when planning a stay in "+s.city.split(",")[0]+".",name:"Sample traveler 5",rating:4}
+  ];
+  const reviewSlides=reviewItems.map((item,index)=>{
+    const score=Math.max(1,Math.min(5,Number(item.rating)||rating));
+    const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=score?' on':' off')+'" aria-hidden="true">★</span>').join("");
+    return '<div class="stay-review-slide'+(index===0?' active':'')+'" data-review-slide="'+index+'"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+score+' out of 5 stars">'+stars+'</div><div class="stay-reviewer">'+esc(item.name)+'</div></div><p class="stay-review-text">'+esc(item.text)+'</p></div>';
+  }).join("");
+  const reviewBlock='<div class="stay-review" aria-label="Sample traveler reviews">'+reviewSlides+'</div>';
   const ownerMail='christopher@christopherthegoodgringo.com';
   const ownerSubject=encodeURIComponent('StayLatin listing info — '+s.name);
   const ownerBody=encodeURIComponent('Hi Christopher,\n\nThis is my business / I represent "'+s.name+'" ('+s.city+').\nI\'d like more information about StayLatin listings.\n\nThanks,');
@@ -1008,7 +1021,7 @@ function rotateStayReviews(){
   slides.forEach((slide,index)=>{slide.classList.toggle("active",index===next);if(index===next)slide.setAttribute("aria-live","polite");else slide.removeAttribute("aria-live");});
  });
 }
-if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,5000);
+if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,8000);
 </script>
 
 <div id="slCompareModal" hidden>
