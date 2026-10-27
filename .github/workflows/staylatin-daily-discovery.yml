@@ -1,0 +1,41 @@
+name: StayLatin daily hotel and hostel discovery
+
+on:
+  schedule:
+    # 7:00 AM Colombia time (UTC-5) = 12:00 UTC
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: staylatin-daily-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Discover verified properties
+        env:
+          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
+        run: python scripts/staylatin_daily_discovery.py
+      - name: Commit newly verified listings
+        run: |
+          if git diff --quiet -- staylatin/auto-discovered-stays.json; then
+            echo "No qualifying new properties today; nothing to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add staylatin/auto-discovered-stays.json
+          git commit -m "Add verified StayLatin hotel and hostel discoveries"
+          git push
