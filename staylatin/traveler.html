@@ -540,20 +540,32 @@ privateMessageForm?.addEventListener("submit",async e=>{
  }
 
 function showTravelerDashboard(session){
-  activeTripUserId=session&&session.user?session.user.id:null;
-  connectTravelerDirectoryRealtime();
-  ensurePrivateMessageRealtime();
-  loadTravelerAvatar();
-  loadTravelerIntroduction();
-  connectTravelerChat(session);
+  if(!session||!session.user){return;}
+  activeTripUserId=session.user.id;
+  /* Render the authenticated portal first. Optional profile/chat requests must never
+     prevent a signed-in traveler from reaching their dashboard. */
   document.querySelector(".traveler-intro").hidden=true;
   document.getElementById("traveler-memberships").hidden=true;
   document.querySelector(".traveler-content").style.paddingTop="8px";
-  document.querySelector(".traveler-auth").hidden=true;signin.closest(".tabs").hidden=true;form.hidden=true;document.getElementById("privacyNote").hidden=true;document.getElementById("travelerDashboard").hidden=false;const freeBenefits=document.querySelector("#travelerDashboard .member-benefits");if(freeBenefits){freeBenefits.hidden=false;freeBenefits.style.display="block";freeBenefits.style.visibility="visible";}
-  resetPassword.hidden=true;resendConfirmation.hidden=true;signout.hidden=true;
+  document.querySelector(".traveler-auth").hidden=true;
+  signin.closest(".tabs").hidden=true;
+  form.hidden=true;
+  document.getElementById("privacyNote").hidden=true;
+  document.getElementById("travelerDashboard").hidden=false;
+  const freeBenefits=document.querySelector("#travelerDashboard .member-benefits");
+  if(freeBenefits){freeBenefits.hidden=false;freeBenefits.style.display="block";freeBenefits.style.visibility="visible";}
+  resetPassword.hidden=true;
+  resendConfirmation.hidden=true;
+  signout.hidden=false;
   document.getElementById("dashboardGreeting").textContent="Welcome back. Where will you go next?";
   const savedCountEl=document.getElementById("savedStayCount");if(savedCountEl)savedCountEl.textContent="…";
-  loadDashboardStays(session);
+  const safelyStart=fn=>{try{const pending=fn();if(pending&&typeof pending.catch==="function")pending.catch(err=>console.warn("Traveler dashboard feature unavailable:",err));}catch(err){console.warn("Traveler dashboard feature unavailable:",err);}};
+  safelyStart(()=>connectTravelerDirectoryRealtime());
+  safelyStart(()=>ensurePrivateMessageRealtime());
+  safelyStart(()=>loadTravelerAvatar());
+  safelyStart(()=>loadTravelerIntroduction());
+  safelyStart(()=>connectTravelerChat(session));
+  safelyStart(()=>loadDashboardStays(session));
 }
 const dashResults=document.getElementById("dashboardStayResults");
 const homepageSavedIdeas=document.getElementById("homepageSavedIdeas");
