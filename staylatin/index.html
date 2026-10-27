@@ -306,6 +306,25 @@ let activeType="all",language="en",saved=[],showAllListings=false;try{saved=JSON
 const grid=document.getElementById("listingGrid");
 function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function tierBenefits(tier){return ""}
+function handleStayImageError(img){
+ let candidates=[];
+ try{candidates=JSON.parse(img.dataset.fallbacks||"[]")}catch(e){}
+ if(img.dataset.fallback)candidates.unshift(img.dataset.fallback);
+ let tried=[];
+ try{tried=JSON.parse(img.dataset.triedSources||"[]")}catch(e){}
+ const current=img.getAttribute("src")||"";
+ if(current&&!tried.includes(current))tried.push(current);
+ const next=candidates.find(url=>url&&!tried.includes(url));
+ if(next){tried.push(next);img.dataset.triedSources=JSON.stringify(tried);img.src=next;return;}
+ if(!img.dataset.finalFallbackTried){
+  img.dataset.finalFallbackTried="1";
+  const qualityPhotos=["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1000&q=85"];
+  const card=img.closest(".stay-card");const id=Number((card&&card.querySelector("[data-save]")||{}).dataset?.save||0);
+  const fallback=qualityPhotos[Math.abs(id)%qualityPhotos.length];
+  img.dataset.triedSources=JSON.stringify(tried.concat(fallback));img.src=fallback;return;
+ }
+ img.style.display="none";img.parentElement.classList.add("image-failed");
+}
 function render(){
  const q=document.getElementById("destination").value.trim().toLowerCase();
  const type=document.getElementById("style").value;
@@ -336,13 +355,12 @@ function render(){
    'Worth comparing for a trip to '+s.city.split(",")[0]+' alongside location, amenities and direct-booking details.'
   ];
   const reviewBlock='<section class="stay-review" aria-label="Five rotating illustrative travel review samples"><div class="stay-review-head"><span class="stay-review-label">Travel review preview</span><span class="stay-review-score">Sample · 4.0 / 5</span></div><div class="stay-review-stars" aria-label="Illustrative four out of five stars"><span>★★★★</span><span class="empty-star">☆</span></div><div class="stay-review-slides">'+reviewTexts.map((txt,i)=>'<p class="stay-review-copy'+(i===0?' active':'')+'" data-review-slide="'+i+'"'+(i===0?' aria-live="polite"':'')+'>'+esc(txt)+'</p>').join("")+'</div><span class="stay-review-note">Illustrative sample copy — not verified guest feedback</span></section>';
-  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'"><div class="photo"><img class="property-photo" src="'+esc(s.image)+'" data-fallback="'+esc(s.imageFallback||"")+'" data-fallbacks="'+esc(JSON.stringify(s.imageFallbacks||[]))+'" alt="Photo of '+esc(s.name)+'" loading="eager" decoding="async"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span></span><button class="share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'">↗</button><button class="heart '+(saved.includes(s.id)?"saved":"")+'" type="button" aria-label="Save '+esc(s.name)+'" data-save="'+s.id+'">'+(saved.includes(s.id)?"♥":"♡")+'</button></div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
+  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'"><div class="photo"><img class="property-photo" onerror="handleStayImageError(this)" src="'+esc(s.image)+'" data-fallback="'+esc(s.imageFallback||"")+'" data-fallbacks="'+esc(JSON.stringify(s.imageFallbacks||[]))+'" alt="Photo of '+esc(s.name)+'" loading="eager" decoding="async"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span></span><button class="share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'">↗</button><button class="heart '+(saved.includes(s.id)?"saved":"")+'" type="button" aria-label="Save '+esc(s.name)+'" data-save="'+s.id+'">'+(saved.includes(s.id)?"♥":"♡")+'</button></div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
  }).join(""):'<div class="empty">'+(language==="en"?(activeType==="Hostel"?"No hostels are listed yet.":activeType==="Long-stay base"?"No long-stay bases are listed yet.":"No public listings match those filters. Try another destination or stay style."):(activeType==="Hostel"?"Todavía no hay hostales en el directorio.":activeType==="Long-stay base"?"Todavía no hay alojamientos para largas estancias.":"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."))+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
  const viewBtn=document.getElementById("viewMoreBtn");
  viewWrap.hidden=found.length<=8;
  viewBtn.textContent=language==="en"?(showAllListings?"Show fewer":"Load more"):(showAllListings?"Ver menos":"Cargar más");
- grid.querySelectorAll(".property-photo").forEach(img=>{img.addEventListener("error",()=>{let candidates=[];try{candidates=JSON.parse(img.dataset.fallbacks||"[]")}catch(e){}if(img.dataset.fallback)candidates.unshift(img.dataset.fallback);let tried=[];try{tried=JSON.parse(img.dataset.triedSources||"[]")}catch(e){}if(!tried.includes(img.src))tried.push(img.src);const next=candidates.find(url=>url&&!tried.includes(url));if(next){tried.push(next);img.dataset.triedSources=JSON.stringify(tried);img.src=next;return;}if(!img.dataset.finalFallbackTried){img.dataset.finalFallbackTried="1";const qualityPhotos=["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1000&q=85"];const card=img.closest(".stay-card");const id=Number((card&&card.querySelector("[data-save]")||{}).dataset?.save||0);img.src=qualityPhotos[Math.abs(id)%qualityPhotos.length];return;}img.style.display="none";img.parentElement.classList.add("image-failed");});});
  grid.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>{const id=Number(b.dataset.save);saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];localStorage.setItem("staylatin-saved",JSON.stringify(saved));render();}));
  grid.querySelectorAll("[data-share]").forEach(b=>b.addEventListener("click",async()=>{
   const item=stays.find(x=>x.id===Number(b.dataset.share));if(!item)return;
