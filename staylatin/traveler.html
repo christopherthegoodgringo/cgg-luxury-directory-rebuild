@@ -676,3 +676,34 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
  }catch(err){setTravelerStatus(err.message||"Could not restore your traveler session. Please refresh and try again.","error");}
 })();
 </script>
+<script>
+/* Keep the active portal work area anchored after clicks, form submissions, chat actions, and async UI updates. */
+(function(){
+ if(window.__stayLatinKeepWorkArea)return;window.__stayLatinKeepWorkArea=true;
+ let pending=null;
+ function capture(el){
+  if(!el||!el.getBoundingClientRect)return;
+  if(el.matches&&el.matches('a[href]')&&el.target==='_blank')return;
+  const rect=el.getBoundingClientRect();
+  pending={el:el,top:rect.top,left:rect.left,startedAt:Date.now()};
+  [70,220,480,850].forEach(function(delay){setTimeout(function(){
+   const p=pending;if(!p||p.el!==el||!el.isConnected||Date.now()-p.startedAt>1200)return;
+   const now=el.getBoundingClientRect();const delta=now.top-p.top;
+   if(Math.abs(delta)>2)window.scrollBy({top:delta,left:0,behavior:'instant'});
+  },delay);});
+ }
+ document.addEventListener('click',function(event){
+  const target=event.target&&event.target.closest?event.target.closest('button,input[type="submit"],input[type="button"],[role="button"],a[href],summary'):null;
+  if(target)capture(target);
+ },true);
+ document.addEventListener('submit',function(event){
+  const form=event.target;if(!form||!form.getBoundingClientRect)return;
+  const active=form.querySelector('button[type="submit"],input[type="submit"]')||form;
+  capture(active);
+ },true);
+ document.addEventListener('change',function(event){
+  const target=event.target;if(!target||!target.matches||!target.matches('select,input[type="checkbox"],input[type="radio"]'))return;
+  capture(target);
+ },true);
+})();
+</script>
