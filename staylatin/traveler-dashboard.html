@@ -1,9 +1,854 @@
 <!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your traveler space — StayLatin</title><link rel="stylesheet" href="account-auth.css"><style>
-body{margin:0;background:#f6f3ec;color:#17372e;font-family:Arial,sans-serif}.top{background:#112e27;color:#fff;padding:14px 24px;letter-spacing:1px}.wrap{max-width:900px;margin:48px auto;padding:24px}.panel{background:white;border:1px solid #e4ddcf;border-radius:18px;padding:32px;box-shadow:0 8px 32px #172e2510}h1{margin:8px 0 12px}.muted{color:#5f6d65;line-height:1.6}.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.links a,button{border:0;border-radius:8px;padding:12px 16px;background:#17372e;color:white;text-decoration:none;cursor:pointer;font-size:14px}.links a.secondary{background:#eee8dc;color:#17372e}.status{margin-top:16px;padding:12px;background:#f5eee2;border-radius:8px}
-</style></head>
-<body><div class="top">✳ STAYLATIN · TRAVELER SPACE</div><main class="wrap"><section class="panel"><p>YOUR TRAVEL ACCOUNT</p><h1 id="welcome">Loading your traveler space…</h1><p class="muted" id="description">Checking your secure sign-in session.</p><div id="status" class="status" hidden></div><div class="links"><a href="index.html#top">Explore StayLatin</a><a class="secondary" href="traveler-signin.html">Account sign in</a><button id="logout" hidden>Sign out</button></div></section></main>
-<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-(async()=>{const title=document.getElementById("welcome"),desc=document.getElementById("description"),status=document.getElementById("status"),logout=document.getElementById("logout");try{const cfg=window.STAYLATIN_SUPABASE_CONFIG;if(!cfg?.url||!cfg?.anonKey||!window.supabase?.createClient)throw new Error("The account service is temporarily unavailable. Please try again shortly.");const client=window.supabase.createClient(cfg.url,cfg.anonKey);const {data,error}=await client.auth.getSession();if(error)throw error;const session=data.session;if(!session){window.location.replace("traveler-signin.html");return;}const user=session.user;title.textContent="Welcome to your traveler space";desc.textContent="You are signed in as "+(user.email||"your traveler account")+". Your account is verified and your session is active.";status.hidden=false;status.textContent="Traveler sign-in successful.";logout.hidden=false;logout.addEventListener("click",async()=>{logout.disabled=true;const {error}=await client.auth.signOut();if(error){status.textContent=error.message;logout.disabled=false;return;}window.location.replace("traveler-signin.html");});}catch(e){title.textContent="We couldn't open your traveler space";desc.textContent="Please try signing in again.";status.hidden=false;status.textContent=e.message||"Unexpected account error.";}})();
-</script></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Traveler account — StayLatin</title><meta name="description" content="Create your StayLatin traveler account to organize places and travel plans."><style>
+:root{--forest:#173f35;--forest2:#245448;--cream:#f7f4ec;--paper:#fffdf8;--ink:#24332e;--muted:#68746d;--terra:#c86d4a;--gold:#c8a86b;--line:#e5e0d5}*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.wrap{width:min(1120px,calc(100% - 32px));margin:auto}.nav{height:78px;display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{font:700 27px Georgia,serif;color:var(--forest);display:flex;gap:10px;align-items:center}.mark{border:1px solid var(--gold);color:var(--terra);border-radius:50%;width:36px;height:36px;display:grid;place-items:center}.nav a:last-child{font-size:13px;color:var(--forest);font-weight:750}.hero{background:var(--forest);border-radius:15px;color:#fff;padding:clamp(30px,6vw,66px);position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;font-size:280px;right:-35px;bottom:-130px;color:#ffffff0b}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#e7c989;font-weight:800}.hero h1{font:500 clamp(38px,5.6vw,62px)/1.06 Georgia,serif;max-width:690px;margin:13px 0 16px;letter-spacing:-.8px}.hero p{max-width:620px;color:#dce6dd;margin:0;font-size:16px}.section{padding:48px 0}.head{margin-bottom:22px}.head .kicker{color:var(--terra)}h2{font:500 clamp(30px,4vw,40px)/1.12 Georgia,serif;color:var(--forest);margin:8px 0}.head p{color:var(--muted);max-width:650px;margin:0}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.step{padding:22px;background:var(--paper);border:1px solid var(--line);border-radius:10px}.number{font:italic 27px Georgia,serif;color:var(--terra)}.step h3{font:500 22px Georgia,serif;color:var(--forest);margin:9px 0 5px}.step p{font-size:13px;color:var(--muted);margin:0}.content{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}.formcard,.sidecard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:clamp(20px,3vw,30px)}.formcard h2,.sidecard h2{font-size:29px;margin-top:0}.formcard .desc{font-size:13px;color:var(--muted);margin-top:-4px;margin-bottom:20px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{margin-bottom:13px}.field.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:800;color:#506056;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #dcd8cd;background:#fffefb;border-radius:6px;padding:11px;color:var(--ink);outline-color:var(--gold)}.field textarea{min-height:94px;resize:vertical}.checkrow{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--muted);margin:12px 0}.checkrow input{margin-top:4px}.btn{border:0;border-radius:7px;padding:12px 16px;font-weight:800;cursor:pointer;display:inline-flex;justify-content:center}.primary{background:var(--forest);color:white}.primary:hover{background:var(--forest2)}.submit{width:100%;margin-top:6px}.status{display:none;margin-top:14px;padding:12px;border-radius:7px;background:#f3eee2;color:#665b42;font-size:12px}.status.show{display:block}.sidecard{position:sticky;top:18px}.sidecard>p{font-size:13px;color:var(--muted)}.tier{padding:15px 0;border-top:1px solid var(--line)}.tier:first-of-type{margin-top:16px}.tier-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.tier h3{font:500 20px Georgia,serif;color:var(--forest);margin:0}.price{font-weight:800;color:var(--forest);white-space:nowrap}.tier p{font-size:12px;color:var(--muted);margin:6px 0 0}.disclaimer{font-size:11px;color:var(--muted);margin-top:14px}.footer{background:#112e27;color:#d7e0d7;padding:23px 0;font-size:12px}.footer .wrap{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.footer a{color:#ecd49f}
+@media(max-width:800px){.content{grid-template-columns:1fr}.sidecard{position:static}.steps{grid-template-columns:1fr}.hero h1{font-size:44px}}
+@media(max-width:520px){.wrap{width:calc(100% - 24px)}.nav{height:68px}.brand{font-size:24px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.hero{padding:30px 22px}.hero h1{font-size:39px}.section{padding:34px 0}}
+
+.traveler-content{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start;padding:38px 0 58px}.traveler-intro{background:var(--forest);border-radius:15px;color:#fff;padding:clamp(30px,5vw,56px);position:relative;overflow:hidden}.traveler-intro:after{content:"✳";position:absolute;font-size:230px;right:-26px;bottom:-110px;color:#ffffff0b}.traveler-intro .kicker{color:#e7c989}.traveler-intro h1{font:500 clamp(38px,5vw,58px)/1.06 Georgia,serif;max-width:620px;margin:13px 0 16px;letter-spacing:-.8px}.traveler-intro>p{max-width:540px;color:#dce6dd}.traveler-benefits{display:grid;gap:12px;margin-top:28px;position:relative;z-index:1}.traveler-benefit{display:flex;gap:12px;align-items:flex-start}.traveler-benefit .tick{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:#ffffff17;color:#ecd49f;flex-shrink:0}.traveler-benefit b{display:block;color:#fff;font-size:14px}.traveler-benefit span{font-size:12px;color:#dce6dd}.traveler-auth{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:clamp(20px,3vw,30px);box-shadow:0 12px 32px #173f350b}.traveler-auth h2{font-size:29px;margin-top:0}.traveler-auth .desc{font-size:13px;color:var(--muted);margin-top:-4px;margin-bottom:20px}.traveler-auth .tabs{display:none!important}.tabs[hidden]{display:none!important}.traveler-auth .tab{border:0;background:transparent;padding:10px;border-radius:6px;color:var(--muted);font-weight:700;cursor:pointer}.traveler-auth .tab.active{background:var(--paper);color:var(--forest);box-shadow:0 1px 4px #0000000c}.traveler-auth .submit{width:100%;margin-top:6px}.traveler-auth .minor-action{width:100%;margin-top:9px;background:transparent;border:1px solid var(--line);border-radius:7px;padding:10px;color:var(--forest);font-size:12px;font-weight:700;cursor:pointer}.traveler-auth .minor-action:hover{background:#f2eee4}.traveler-auth .status{display:block}.traveler-dashboard{grid-column:1/-1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:clamp(20px,3vw,30px)}.traveler-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.traveler-plan{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px}.traveler-plan h3{font:500 23px Georgia,serif;color:var(--forest);margin:8px 0}.traveler-plan strong{font-size:20px;color:var(--forest)}.traveler-plan ul{padding-left:18px;color:var(--muted);font-size:13px}.traveler-memberships{padding:0 0 46px}.traveler-memberships .head p{max-width:700px}@media(max-width:800px){.traveler-content{grid-template-columns:1fr;gap:20px;padding-top:22px}.traveler-intro h1{font-size:44px}.traveler-dashboard{grid-column:auto}.traveler-plans{grid-template-columns:1fr}}@media(max-width:520px){.traveler-intro{padding:30px 22px}.traveler-intro h1{font-size:39px}.traveler-content{padding-bottom:34px}}
+
+/* Remove redundant account welcome/status copy */
+.traveler-auth>.kicker,#formTitle,#formSub{display:none!important}
+/* Simplified, colorful traveler experience */
+.traveler-intro{background:linear-gradient(135deg,#163f35 0%,#287a67 56%,#d78b5b 140%);}
+.traveler-intro h1{max-width:540px}
+.traveler-intro .traveler-benefits{gap:8px;margin-top:20px}
+.traveler-intro .traveler-benefit:nth-child(n+2){display:none}
+.traveler-dashboard{background:linear-gradient(135deg,#fffdf8 0%,#f0f7ef 100%);border:1px solid #d7e6d9;box-shadow:0 12px 30px #173f3510;padding:clamp(22px,4vw,38px)}
+.traveler-dashboard .dashboard-topline{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid #dce8dd;padding-bottom:18px}
+.traveler-dashboard .dashboard-topline h2{font:500 clamp(30px,4vw,42px)/1.1 Georgia,serif;color:var(--forest);margin:7px 0 4px}
+.traveler-dashboard .dashboard-topline p{margin:0;color:var(--muted);font-size:14px}
+.traveler-dashboard .dashboard-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0 28px}
+.traveler-dashboard .dashboard-stat{border:0;border-radius:12px;padding:18px;background:linear-gradient(135deg,#e0f0e4,#fffdf8);box-shadow:inset 0 0 0 1px #d4e7d7}
+.traveler-dashboard .dashboard-stat:nth-child(2){background:linear-gradient(135deg,#fff0dd,#fffdf8);box-shadow:inset 0 0 0 1px #f0ddc5}
+.traveler-dashboard .dashboard-stat strong{font:500 27px Georgia,serif!important;color:var(--forest)!important}
+.traveler-dashboard .dashboard-section-title{font:500 27px Georgia,serif;color:var(--forest);margin:0 0 5px}
+.traveler-dashboard .desc{color:var(--muted)}
+@media(max-width:520px){.traveler-dashboard .dashboard-stats{grid-template-columns:1fr}.traveler-dashboard .dashboard-topline h2{font-size:32px}}
+
+/* Shared StayLatin home-page header and footer styling */
+.topbar{height:42px;background:var(--forest);color:#f8f4e9;font-size:12px;letter-spacing:.04em}
+.topbar .wrap{height:100%;display:flex;align-items:center;justify-content:space-between}
+.topbar .top-extra{color:#f0f0e8}
+.nav{height:82px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:28px;font-weight:700;letter-spacing:-.8px;color:var(--forest)}
+.brandmark{width:37px;height:37px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--terra);font-size:20px;background:linear-gradient(145deg,#fff8e7,#e1f3e8)}
+.navlinks{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;font-size:12px}
+.navlinks .signup-action{display:inline-flex;align-items:center;border-radius:999px;padding:10px 13px;color:#fff;font-weight:700;background:linear-gradient(125deg,#167b68,#239b86);border:1px solid rgba(255,255,255,.25);box-shadow:0 4px 12px rgba(13,72,61,.14)}
+.navlinks .signup-action:nth-child(2){background:linear-gradient(125deg,#b9852f,#d9ad55)}
+.navlinks .signup-action:nth-child(3){background:linear-gradient(125deg,#6b65ad,#9583d0)}
+.navlinks .signup-action:nth-child(4){background:linear-gradient(125deg,#c56b4b,#df8c67)}
+.navright{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.btn-quiet{background:transparent;color:var(--forest);border:1px solid #d7d9cf;border-radius:7px;padding:10px 13px;font-weight:650;cursor:pointer}
+.footer{background:linear-gradient(110deg,#153d32,#245448);color:#e5e9e1;padding:38px 0 22px;margin-top:55px}
+.footer-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;padding-bottom:28px}
+.footer .brand{color:#fff8e8}
+.footer p{font-size:13px;color:#b8c7bd;max-width:360px}
+.copyright{border-top:1px solid #ffffff24;padding-top:18px;color:#aab9af;font-size:11px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:1200px){.nav{height:auto;min-height:82px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px}.navlinks{order:2;width:100%;flex-wrap:wrap;white-space:normal;gap:10px 12px}.navright{margin-left:auto;order:1}}
+@media(max-width:560px){.wrap{width:calc(100% - 28px)}.topbar{height:38px}.topbar .wrap{font-size:10px}.topbar .top-extra{display:none}.nav{height:auto;min-height:70px}.brand{font-size:25px}.navlinks{font-size:11px;gap:8px}.navlinks .signup-action{padding:8px 10px}.navright .btn-quiet{display:none}.copyright{flex-direction:column}}
+
+
+/* Ensure free traveler benefits remain visible after login */
+#travelerDashboard .member-benefits{display:block!important;visibility:visible!important;opacity:1!important;height:auto!important;overflow:visible!important}
+#travelerDashboard .member-benefits article{min-width:0}
+@media(max-width:520px){#travelerDashboard .member-benefits>div[style*="grid-template-columns"]{grid-template-columns:1fr!important}}
+/* Restore the simple traveler sign-in layout while keeping account logic intact */
+.traveler-content{display:grid;grid-template-columns:1fr;gap:20px;max-width:820px;margin:0 auto;padding:8px 0 28px}
+.traveler-intro{background:transparent!important;color:var(--ink)!important;border-radius:0!important;padding:0!important;overflow:visible!important}
+.traveler-intro:after{display:none!important}
+.traveler-intro .kicker{color:var(--terra)!important}
+.traveler-intro h1{font:500 clamp(34px,4.5vw,48px)/1.12 Georgia,serif!important;color:var(--forest)!important;max-width:650px;margin:8px 0 12px!important;letter-spacing:0!important}
+.traveler-intro>p{color:var(--muted)!important;max-width:650px;margin:0!important}
+.traveler-benefits{margin-top:16px!important;gap:0!important}
+.traveler-benefit{background:transparent!important;padding:0!important;border:0!important}
+.traveler-benefit .tick{background:#e5efe6!important;color:var(--forest)!important}
+.traveler-benefit b{color:var(--forest)!important}
+.traveler-benefit span{color:var(--muted)!important}
+.traveler-auth{box-shadow:none!important;border-radius:8px!important;padding:22px!important}
+.traveler-auth h2{display:none!important}
+.traveler-auth .desc{display:none!important}
+.traveler-auth .field{margin-bottom:14px}
+.traveler-auth .field label{font-size:12px}
+.traveler-auth .field input{border-radius:5px;padding:12px}
+.traveler-auth .submit{margin-top:4px}
+.traveler-auth .minor-action{margin-top:8px}
+.traveler-dashboard{box-shadow:none!important;background:var(--paper)!important;border:1px solid var(--line)!important}
+.traveler-memberships{max-width:820px;margin:0 auto;padding-top:16px!important}
+.traveler-memberships .head h2{font-size:32px}
+.traveler-plans{gap:12px}
+.traveler-plan{box-shadow:none!important;border-radius:8px!important;padding:16px!important}
+@media(max-width:800px){.traveler-content{grid-template-columns:1fr;padding-top:8px}.traveler-plans{grid-template-columns:1fr}#preTripChecklistItems{grid-template-columns:1fr!important}}
+#travelerAvatarWrap:hover #travelerAvatarOverlay,#travelerAvatarWrap:focus-within #travelerAvatarOverlay{opacity:1}
+/* Shared homepage header: use on every StayLatin page */
+.sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:1.5px solid #c8a86b;border-radius:50%;display:grid;place-items:center;color:#c86d4a;font:20px Georgia,serif;flex:none}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}.sl-language{font-size:11px;font-weight:850;white-space:nowrap;text-decoration:none;color:#173f35;background:#fffdf8;border:1px solid #e5e0d5;border-radius:999px;padding:9px 12px}@media(max-width:850px){.sl-mainnav{align-items:flex-start;flex-wrap:wrap;gap:12px}.sl-brand{font-size:25px}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start;gap:10px 16px}.sl-language{margin-left:auto}.sl-tagline .sl-shell{align-items:flex-start;flex-direction:column;gap:3px}}@media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a{font-size:11px}}
+
+/* Traveler Lounge chat layout */
+#travelerLounge .lounge-messages .status{display:block}
+#travelerLounge .lounge-toolbar .minor-action{font-size:12px}
+
+#travelerLounge #chatNotice.status{display:block}
+#travelerLounge #chatNotice.error{color:#a43d2e;background:#f8e9e5}
+#travelerLounge #chatNotice.success{color:#245448;background:#e8f2e8}
+#travelerLounge #sendChat{border:0;border-radius:7px;background:var(--forest);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+#travelerLounge #sendChat:disabled{opacity:.6;cursor:wait}
+@media(max-width:560px){#travelerLounge .lounge-compose{grid-template-columns:minmax(0,1fr)!important}#travelerLounge #sendChat{width:100%!important}#travelerLounge .lounge-toolbar .minor-action{padding:9px 10px}}
+
+/* Password recovery: match traveler-signup.html's shared account panel */
+body.password-recovery-mode{background:radial-gradient(circle at 8% 5%,#f8d9c7 0,transparent 28%),radial-gradient(circle at 92% 8%,#cde9dc 0,transparent 30%),linear-gradient(135deg,#f7f4ec 0%,#f0f5ed 48%,#fff1e7 100%);min-height:100vh}
+body.password-recovery-mode .traveler-content{display:block!important;width:min(980px,calc(100% - 32px));max-width:none;margin:0 auto;padding:36px 0 72px}
+body.password-recovery-mode .traveler-intro,body.password-recovery-mode .traveler-dashboard,body.password-recovery-mode #traveler-memberships{display:none!important}
+body.password-recovery-mode .traveler-auth{display:block!important;position:relative;overflow:hidden;width:min(520px,100%);margin:0 auto;background:var(--paper)!important;border:1px solid #d9e5d9!important;border-radius:24px!important;padding:clamp(28px,5vw,38px)!important;box-shadow:0 24px 60px #173f3518!important}
+body.password-recovery-mode .traveler-auth:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#1c6650,#57a878,#e7b85f,#dc805a,#9c7bd0)}
+body.password-recovery-mode .traveler-auth>.kicker{display:inline-flex!important;align-items:center;padding:7px 11px;margin:0 0 4px;border-radius:999px;background:linear-gradient(110deg,#e1f3e8,#fff0d9);color:#245448!important;font-size:11px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
+body.password-recovery-mode #formTitle{display:block!important;font:500 clamp(29px,5vw,38px)/1.12 Georgia,serif!important;color:var(--forest)!important;margin:15px 0 10px!important}
+body.password-recovery-mode #formSub{display:block!important;font-size:15px;color:var(--muted)!important;margin:0 0 20px!important}
+body.password-recovery-mode #authForm{display:none!important}
+body.password-recovery-mode #passwordRecoveryForm{display:block!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+body.password-recovery-mode #passwordRecoveryForm h3,body.password-recovery-mode #passwordRecoveryForm>p{display:none!important}
+body.password-recovery-mode #passwordRecoveryForm .field{margin-bottom:0}
+body.password-recovery-mode #passwordRecoveryForm .field label{display:block;font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--ink);margin:16px 0 6px}
+body.password-recovery-mode #passwordRecoveryForm .field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px;background:#fffefb;color:var(--ink);outline-color:#4a9b70}
+body.password-recovery-mode #passwordRecoveryForm .field input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
+body.password-recovery-mode #passwordRecoveryForm .submit{width:100%;margin-top:20px;border:0;border-radius:8px;padding:12px 16px;background:linear-gradient(100deg,#174c3c,#2c8061 60%,#4a9b70);box-shadow:0 8px 18px #24544825;color:#fff;font-weight:750}
+body.password-recovery-mode #status{display:block;margin-top:14px;padding:11px;border-radius:8px;background:#f1eee5;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+body.password-recovery-mode #status.error{background:#f9e9e5;color:#8b392a}
+body.password-recovery-mode #privacyNote{display:none!important}
+@media(max-width:520px){body.password-recovery-mode .traveler-content{width:calc(100% - 24px);padding:20px 0 42px}body.password-recovery-mode .traveler-auth{border-radius:19px!important;padding:27px 22px!important}}
+.danger-action{background:#fff2ef!important;border:1px solid #d98a7a!important;color:#9f3325!important;font-weight:800}.danger-action:hover{background:#fbe2dc!important}.account-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.account-actions .minor-action{width:auto;margin:0}@media(max-width:560px){#travelerJournalForm,#travelerSavedPlaceForm{grid-template-columns:minmax(0,1fr)!important}#travelerJournalForm>label,#travelerSavedPlaceForm>label{grid-column:1!important}#travelerJournalForm>div,#travelerSavedPlaceForm>div{grid-column:1!important}}
+</style><style id="staylatin-donation-glow-style">
+#travelerDonationCta.staylatin-donation-glow{animation:staylatinGreenFade 12s ease-in-out infinite;transition:box-shadow 1s ease}
+#travelerDonationCta.staylatin-donation-glow::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(190,255,195,.38),transparent 42%),radial-gradient(ellipse at 85% 80%,rgba(0,70,45,.36),transparent 46%);opacity:.8;animation:staylatinGreenGlow 8s ease-in-out infinite alternate}
+#travelerDonationCta.staylatin-donation-glow>div[aria-hidden="true"]{color:#e5ffe533!important}
+@keyframes staylatinGreenFade{0%,100%{background-position:0% 50%;box-shadow:0 12px 30px #16845b22}50%{background-position:100% 50%;box-shadow:0 14px 36px #43b58155}}
+@keyframes staylatinGreenGlow{0%{opacity:.35}100%{opacity:1}}
+@media(prefers-reduced-motion:reduce){#travelerDonationCta.staylatin-donation-glow,#travelerDonationCta.staylatin-donation-glow::before{animation:none}}
+</style>
+</head><body>
+<div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
+<header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a href="index.html#top">Home</a><a href="traveler-signup.html">Traveler Join / Sign in</a><span class="sl-nav-disabled">Business Join / Sign in</span><span class="sl-nav-disabled">Agent Join / Sign in</span><a href="admin-signup.html">Admin Join / Sign in</a></nav><a class="sl-language" href="index.html#top" aria-label="Language options">ES / EN</a></div></header>
+<main class="wrap">
+<section class="traveler-content">
+<section class="traveler-intro"><div class="kicker">Your next adventure starts here</div><h1>Find a stay worth remembering.</h1><p>Save your favorites. Plan your next escape. Explore Latin America your way.</p><div class="traveler-benefits"><div class="traveler-benefit"><span class="tick">✓</span><div><b>Your travel, all together</b><span>Keep favorite stays close at hand.</span></div></div></div></section>
+<section class="traveler-auth"><div class="kicker" style="color:var(--terra)">Traveler account</div><h2 id="formTitle">Welcome back.</h2><p class="desc" id="formSub">Sign in to your StayLatin traveler account.</p><div class="tabs" role="tablist" hidden><button class="tab active" id="signinTab" type="button">Sign in</button><button class="tab" id="signupTab" type="button">Create account</button></div>
+<form id="authForm"><div class="field" id="nameField" hidden><label for="name">YOUR NAME</label><input id="name" name="name" autocomplete="name" placeholder="Your name"></div><div class="field"><label for="email">EMAIL ADDRESS</label><input id="email" type="email" name="email" autocomplete="email" required placeholder="you@example.com"></div><div class="field"><label for="password">PASSWORD</label><input id="password" type="password" name="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></div><button class="btn primary submit" id="submit" type="submit">Sign in</button><button class="minor-action" id="resetPassword" type="button">Email me a password-reset link</button><button class="minor-action" id="resendConfirmation" type="button" hidden>Resend confirmation email</button><button class="minor-action" id="signout" type="button" hidden>Sign out</button></form><form id="passwordRecoveryForm" hidden style="margin:16px 0;padding:18px;border:1px solid #c8a86b;border-radius:10px;background:#fffdf8"><h3 style="font:500 22px Georgia,serif;color:var(--forest);margin:0 0 8px">Create a new password</h3><p style="font-size:13px;color:var(--muted);margin:0 0 14px">Choose a new password for your StayLatin account.</p><div class="field"><label for="recoveryNewPassword">NEW PASSWORD</label><input id="recoveryNewPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"></div><div class="field"><label for="recoveryConfirmPassword">CONFIRM NEW PASSWORD</label><input id="recoveryConfirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter it again"></div><button class="btn primary submit" id="saveNewPassword" type="submit">Save new password</button></form><div class="status" id="status" role="status">StayLatin uses its own dedicated account service, separate from the existing CGG database.</div><p class="disclaimer" id="privacyNote">Your account details are sent to StayLatin's dedicated authentication service only. Never share your password with anyone.</p></section>
+<section id="travelerDashboard" class="traveler-dashboard" hidden aria-live="polite"><section id="travelerDonationCta" class="staylatin-donation-glow" aria-labelledby="travelerDonationTitle" style="position:relative;overflow:hidden;margin:0 0 24px;padding:clamp(20px,3.5vw,30px);border-radius:16px;color:#fff;background:linear-gradient(120deg,#0d4b36 0%,#16845b 24%,#43b581 47%,#b4e7a1 62%,#238b62 80%,#0b4636 100%);background-size:240% 240%;box-shadow:0 12px 30px #16845b30"><div aria-hidden="true" style="position:absolute;right:18px;top:-20px;font-size:112px;line-height:1;color:#ffffff18;pointer-events:none">✦</div><div style="position:relative;z-index:1;max-width:760px"><div style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#ffffff24;border:1px solid #ffffff55;font-size:10px;letter-spacing:.13em;font-weight:900;text-transform:uppercase">Traveler accounts are forever free</div><h3 id="travelerDonationTitle" style="font:500 clamp(26px,3.8vw,36px)/1.12 Georgia,serif;margin:13px 0 9px;color:#fff">Enjoy StayLatin? Help us keep it growing.</h3><p style="max-width:690px;color:#fff;margin:0 0 16px;font-size:14px;line-height:1.65">Your traveler account will always be free. If StayLatin helps you discover better stays and connect with fellow travelers, a voluntary donation can help support the directory and keep improving the experience. There is no charge and no obligation.</p><button type="button" disabled aria-disabled="true" title="PayPal donations are not active yet" style="display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid #ffffff80;border-radius:999px;padding:11px 17px;background:#ffffff25;color:#fff;font:800 13px/1.2 Inter,system-ui,sans-serif;opacity:.86;cursor:not-allowed"><span aria-hidden="true">♡</span> PayPal donations · Coming soon</button><p style="margin:9px 0 0;color:#fff;font-size:11px;opacity:.9">Donations are optional. The PayPal button is not active yet.</p></div></section><div class="dashboard-topline"><div><div class="kicker" style="color:var(--terra)">Your StayLatin space</div><h2>Your travel dashboard</h2><p id="dashboardGreeting">Your travel space is ready.</p></div><div class="account-actions"><button id="dashSignout" type="button" class="minor-action">Sign out</button><button id="deleteTravelerAccount" type="button" class="minor-action danger-action">Delete account</button></div></div><div class="dashboard-stats"><div class="dashboard-stat"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted)">YOUR MEMBERSHIP</div><strong style="display:block;margin-top:7px">Forever free</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">No traveler membership fee. Ever.</div></div></div>
+
+
+<section id="travelerAccountSecurity" aria-labelledby="travelerAccountSecurityTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+<h3 id="travelerAccountSecurityTitle" style="font:500 25px Georgia,serif;color:var(--forest);margin:0 0 6px">Account &amp; password</h3>
+<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Your sign-in email is shown below. Change your password here while signed in. Your existing password is never displayed.</p>
+<label for="travelerAccountEmail" style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">ACCOUNT EMAIL</label>
+<input id="travelerAccountEmail" type="email" readonly aria-readonly="true" style="width:100%;max-width:520px;padding:11px;border:1px solid #dce3dc;border-radius:8px;background:#f5f7f3;color:var(--forest);margin-bottom:18px">
+<form id="travelerChangeEmailForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px;margin:0 0 18px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW EMAIL ADDRESS<input id="travelerNewEmail" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerEmailCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end;grid-column:1/-1"><button id="travelerChangeEmailButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Change email</button></div>
+</form><p id="travelerEmailStatus" aria-live="polite" style="font-size:12px;margin:-8px 0 18px;color:var(--muted)">We'll send a confirmation email if required by your account security settings.</p>
+<form id="travelerChangePasswordForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW PASSWORD<input id="travelerNewPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
+</form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
+</section><section id="travelerJournal" aria-labelledby="travelerJournalTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+  <div class="kicker" style="color:var(--terra)">Your journeys · Your memories</div>
+  <h3 id="travelerJournalTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">My Travel Journal</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Save trip memories, useful notes, and destination ideas. Entries are private by default. You choose if an entry can be shared with signed-in StayLatin travelers.</p>
+  <form id="travelerJournalForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:15px;border:1px solid #e4dfd2;border-radius:10px;background:#fff">
+    <input id="journalEntryId" type="hidden">
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">ENTRY TITLE<input id="journalTitle" maxlength="120" required placeholder="A perfect weekend in Santa Marta" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">DESTINATION<input id="journalDestination" maxlength="120" placeholder="City or region" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">TRIP DATE<input id="journalDate" type="date" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">SHARING<select id="journalVisibility" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"><option value="private">Private — only me</option><option value="shared">Share with signed-in travelers</option></select></label>
+    <label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">YOUR NOTES<textarea id="journalBody" maxlength="10000" rows="4" placeholder="Places to remember, what worked well, tips for next time…" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;grid-column:1/-1"><button id="journalSaveButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save journal entry</button><button id="journalCancelEdit" type="button" class="minor-action" hidden>Cancel edit</button></div>
+  </form>
+  <p id="journalStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p>
+  <div id="travelerJournalEntries" style="display:grid;gap:10px"><div class="status">Your journal entries will appear here.</div></div>
+</section><section id="travelerSavedPlaces" aria-labelledby="travelerSavedPlacesTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+<div class="kicker" style="color:var(--terra)">Keep your shortlist close</div><h3 id="travelerSavedPlacesTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Saved Places</h3>
+<p style="font-size:13px;color:var(--muted);margin:0 0 15px">Keep a private shortlist of stays and places you want to remember. Add a website and a personal note for your next trip.</p>
+<form id="travelerSavedPlaceForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px;border:1px solid #e4dfd2;border-radius:10px;background:#fff">
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800">PLACE NAME<input id="savedPlaceName" required maxlength="160" placeholder="Hotel or place name" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800">CATEGORY<select id="savedPlaceCategory" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"><option>Hotel</option><option>Hostel</option><option>Restaurant</option><option>Bar</option><option>Activity</option><option selected>Other</option></select></label>
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800">CITY<input id="savedPlaceCity" maxlength="120" placeholder="Santa Marta" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800">COUNTRY<input id="savedPlaceCountry" maxlength="120" placeholder="Colombia" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">WEBSITE (OPTIONAL)<input id="savedPlaceUrl" type="url" maxlength="1000" placeholder="https://example.com" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
+<label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">PERSONAL NOTE<textarea id="savedPlaceNote" maxlength="2000" rows="2" placeholder="Why I saved this place…" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
+<div style="grid-column:1/-1"><button type="submit" id="savedPlaceSubmit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save place</button></div></form>
+<p id="savedPlacesStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p><div id="travelerSavedPlacesList" style="display:grid;gap:9px"><div class="status">Your saved places will appear here.</div></div>
+</section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+  <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
+  <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Share a little about yourself and discover travelers with similar interests. Every detail has its own visibility switch. Only details you choose to share are copied to the member directory; private details remain in your own profile.</p>
+  <form id="travelerIntroForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;background:#fffdf8;border:1px solid #dce8dd;border-radius:12px;padding:16px">
+    <div style="grid-column:1/-1;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:2px"><div id="travelerProfilePhoto" style="display:flex;align-items:center;gap:14px;margin:0 0 22px">
+<div id="travelerAvatarWrap" style="position:relative;width:84px;height:84px;flex:0 0 84px;border-radius:50%;overflow:hidden;background:#e4eee5;border:2px solid #c8a86b">
+<div id="travelerAvatarPlaceholder" aria-hidden="true" style="width:100%;height:100%;display:grid;place-items:center;color:#245448;font-size:30px">♙</div>
+<img id="travelerAvatarPreview" alt="Your profile picture" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+<label id="travelerAvatarOverlay" for="travelerAvatarInput" title="Add or update profile photo" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px;background:#173f35c9;color:#fff;font-size:11px;font-weight:700;cursor:pointer;opacity:0;transition:opacity .18s">Change photo</label>
+<input id="travelerAvatarInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Add or update profile photo" style="display:none">
+</div>
+<div id="travelerAvatarHint" style="font-size:12px;color:var(--muted)">Hover over the photo to add or update it.</div>
+<div id="travelerAvatarStatus" role="status" aria-live="polite" style="font-size:11px;color:var(--muted)"></div>
+</div></div>
+    <div style="display:grid;gap:6px"><label for="introDisplayName" style="font-size:11px;font-weight:800;color:#506056">DISPLAY NAME</label><input id="introDisplayName" maxlength="80" placeholder="Name you'd like members to see" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px"><label for="introHomeCountry" style="font-size:11px;font-weight:800;color:#506056">HOME COUNTRY</label><input id="introHomeCountry" maxlength="100" placeholder="e.g. Canada" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px;grid-column:1/-1"><label for="introText" style="font-size:11px;font-weight:800;color:#506056">SHORT INTRODUCTION</label><textarea id="introText" maxlength="500" rows="3" placeholder="A little about you and how you like to travel…" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px;resize:vertical"></textarea></div>
+    <div style="display:grid;gap:6px"><label for="introDestinations" style="font-size:11px;font-weight:800;color:#506056">FAVORITE DESTINATIONS</label><input id="introDestinations" maxlength="400" placeholder="e.g. Colombia, Oaxaca, Lisbon" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px"><label for="introLanguages" style="font-size:11px;font-weight:800;color:#506056">LANGUAGES SPOKEN</label><input id="introLanguages" maxlength="200" placeholder="e.g. English, Spanish" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="display:grid;gap:6px;grid-column:1/-1"><label for="introInterests" style="font-size:11px;font-weight:800;color:#506056">TRAVEL INTERESTS</label><input id="introInterests" maxlength="300" placeholder="e.g. boutique hotels, food, hiking, culture" style="width:100%;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></div>
+    <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px">
+      <strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:8px">Privacy controls</strong>
+      <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="introShowDirectory" type="checkbox" style="margin-top:4px"> <span><b>Include me in the member directory</b><br><span style="color:var(--muted)">If unchecked, your introduction will not appear to other members.</span></span></label>
+      <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="introShowPhoto" type="checkbox" style="margin-top:4px"> <span><b>Show my profile photo in the member directory</b><br><span style="color:var(--muted)">Your photo is private unless you enable this separately.</span></span></label>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowName" type="checkbox" checked> Show display name</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowText" type="checkbox" checked> Show introduction</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowCountry" type="checkbox"> Show home country</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowDestinations" type="checkbox"> Show destinations</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowLanguages" type="checkbox"> Show languages</label>
+        <label style="display:flex;gap:8px;font-size:12px"><input id="introShowInterests" type="checkbox"> Show interests</label>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin:10px 0 0">Your email, login details and private versions of these fields are never shown in the directory.</p>
+    </div>
+    <div style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px"><strong style="display:block;color:var(--forest);font-size:13px;margin-bottom:6px">Traveler Lounge privacy</strong><p style="font-size:11px;color:var(--muted);margin:0 0 8px">These choices are separate from your member-directory settings. Your name and photo stay hidden in chat unless you opt in below.</p><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatShareName" type="checkbox" style="margin-top:4px"><span>Show my display name beside my messages</span></label><label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;margin:8px 0"><input id="chatSharePhoto" type="checkbox" style="margin-top:4px"><span>Show my profile photo beside my messages</span></label><p id="chatProfilePrivacyStatus" role="status" aria-live="polite" style="font-size:11px;color:var(--muted);margin:8px 0 0">Your name and photo are hidden from other travelers by default. Save your profile to apply any changes.</p></div><div style="grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="primary-action" style="width:auto;margin:0">Save profile &amp; privacy settings</button><span id="travelerIntroStatus" role="status" style="font-size:12px;color:var(--muted)">Your introduction is private until you choose to share it.</span></div>
+  </form>
+  <div style="margin-top:24px"><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members. The directory updates automatically when members join or change their profiles.</p></div>
+  <div style="margin-top:12px;max-width:560px"><label for="travelerMemberSearch" style="display:block;font-size:11px;font-weight:850;letter-spacing:.04em;color:var(--forest);margin-bottom:6px">SEARCH THE TRAVELER DIRECTORY</label><input id="travelerMemberSearch" type="search" autocomplete="off" placeholder="Search names, destinations, languages, or interests…" style="width:100%;border:1px solid var(--line);border-radius:9px;background:#fffdf8;padding:12px 14px;color:var(--ink)"><p id="travelerMemberSearchStatus" aria-live="polite" style="font-size:11px;color:var(--muted);margin:5px 0 0">Search member introductions and AI traveler profiles.</p></div><div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div><div id="travelerMemberLoadMoreWrap" style="display:none;text-align:center;margin:18px 0 0"><button type="button" id="travelerMemberLoadMore" class="primary-action" style="width:auto;min-width:190px">Load more travelers</button><p id="travelerMemberPageStatus" aria-live="polite" style="font-size:11px;color:var(--muted);margin:7px 0 0"></p></div>
+
+  <section id="aiTravelerChatPanel" hidden style="margin-top:22px;border:1px solid #c8a86b;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8b6a2f;font-weight:900">AI TRAVEL COMPANION · FICTIONAL PERSONA</div><h4 id="aiTravelerChatTitle" style="font:500 24px Georgia,serif;color:var(--forest);margin:5px 0 0">Chat with an AI traveler</h4></div><button id="closeAITravelerChat" type="button" class="minor-action" style="width:auto;margin:0">Close chat</button></div>
+    <p id="aiTravelerChatBio" style="font-size:12px;color:var(--muted);margin:8px 0">This is an AI-generated character, not a real member.</p>
+    <div id="aiTravelerChatMessages" role="log" aria-live="polite" style="height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px;margin-top:10px;background:#fff;border:1px solid #dce8dd;border-radius:8px"></div>
+    <form id="aiTravelerChatForm" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:10px"><label for="aiTravelerChatInput" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">MESSAGE THE AI TRAVELER</label><textarea id="aiTravelerChatInput" maxlength="1000" rows="2" required placeholder="Ask for ideas about destinations, food, travel style, or planning…" style="width:100%;min-width:0;resize:vertical;border:1px solid #dcd8cd;border-radius:7px;padding:11px"></textarea><button id="sendAITravelerChat" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px">Send ↗</button></form>
+    <p style="font-size:10px;color:var(--muted);margin:8px 0 0">Demo chat: replies come from this persona’s profile and curated response rules. This is not connected to a live AI model, and chats are not saved to your private inbox.</p>
+  </section>
+  <section id="privateMessagingPanel" aria-label="Private member messages" style="margin-top:22px;border:1px solid #dce8dd;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
+     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Messages and inbox update automatically. Only you and the selected member can read your conversation.</p></div><button id="chatWithAdminButton" type="button" class="primary" style="border:0;border-radius:7px;padding:11px 15px;font-weight:800;cursor:pointer;white-space:nowrap">✉ Chat with StayLatin Admin</button></div>
+    <div id="privateInboxList" style="display:grid;gap:8px;margin-top:12px"><div class="status">Loading private inbox…</div></div>
+    <div id="privateConversation" hidden style="margin-top:16px;border-top:1px solid #dce8dd;padding-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h5 id="privateConversationTitle" style="font:500 20px Georgia,serif;color:var(--forest);margin:0">Conversation</h5><button id="closePrivateConversation" type="button" class="minor-action" style="width:auto;margin:0">Close</button></div>
+      <div id="privateMessages" role="log" aria-live="polite" style="height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px;margin-top:10px;background:#fff;border:1px solid #dce8dd;border-radius:8px"><div class="status">Choose a member to begin.</div></div>
+      <form id="privateMessageForm" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:10px">
+        <label for="privateMessageInput" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">PRIVATE MESSAGE</label>
+        <textarea id="privateMessageInput" maxlength="2000" rows="2" required placeholder="Write a private message…" style="width:100%;min-width:0;resize:vertical;border:1px solid #dcd8cd;border-radius:7px;padding:11px"></textarea>
+        <button id="sendPrivateMessage" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px">Send privately ↗</button>
+      </form>
+      <div id="privateMessageNotice" class="status" role="status" aria-live="polite" style="margin-top:8px"></div>
+    </div>
+  </section>
+</section>
+
+<section id="travelerLounge" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+  <div class="kicker" style="color:var(--terra)">Paid traveler feature</div>
+  <h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0">Share travel tips, ask questions, and meet other StayLatin travelers in the community lounge.</p>
+  <p style="font-size:11px;color:var(--muted);margin:8px 0 14px">Preview access is open to signed-in traveler accounts while membership billing is being prepared. Messages can be seen by other traveler members; please don't share passwords, private contact details, or sensitive information.</p>
+  
+  <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
+    <span id="chatUnreadBadge" hidden style="background:#e8d2a2;color:var(--forest);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800"></span>
+  </div>
+  
+  <div id="chatMessages" class="lounge-messages" role="log" aria-live="polite" aria-relevant="additions" style="height:min(45vh,420px);min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#f6f7f1;border:1px solid #dce8dd;border-radius:10px">
+    <div class="status show">Connecting to the Traveler Lounge…</div>
+  </div>
+  <form id="chatForm" class="lounge-compose" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:12px">
+    <label for="chatMessage" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">YOUR MESSAGE</label>
+    <textarea id="chatMessage" name="chatMessage" maxlength="1200" required placeholder="Share a travel tip or ask the community…" style="width:100%;min-width:0;min-height:76px;resize:vertical;border:1px solid #dcd8cd;background:white;border-radius:7px;padding:11px"></textarea>
+    <button id="sendChat" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px;white-space:nowrap">Send message ↗</button>
+  </form>
+  <div id="chatNotice" class="status show" role="status" aria-live="polite" style="margin-top:10px">Preparing the Traveler Lounge…</div>
+</section>
+
+
+</main>
+<footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/index.html#top"><span class="brandmark">✳</span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português soon</span></div></div></footer>
+<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js"></script><script>
+const avatarInput=document.getElementById("travelerAvatarInput"),avatarPreview=document.getElementById("travelerAvatarPreview"),avatarPlaceholder=document.getElementById("travelerAvatarPlaceholder"),avatarStatus=document.getElementById("travelerAvatarStatus"),avatarHint=document.getElementById("travelerAvatarHint"),avatarOverlay=document.getElementById("travelerAvatarOverlay");
+function avatarStorageKey(){return "staylatin-avatar-"+(activeTripUserId||"guest")}
+async function loadTravelerAvatar(){try{const db=introClient();let saved=null;if(db&&activeTripUserId){const {data:profile,error}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",activeTripUserId).maybeSingle();if(error)throw error;if(profile?.avatar_path){const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(profile.avatar_path,3600);if(signedError)throw signedError;if(signed?.signedUrl)saved=signed.signedUrl;}}if(!saved){try{saved=localStorage.getItem(avatarStorageKey())}catch(e){}}if(saved){avatarPreview.src=saved;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";avatarStatus.textContent=""}else{avatarPreview.removeAttribute("src");avatarPreview.style.display="none";avatarPlaceholder.style.display="grid";avatarHint.textContent="Hover over the photo to add or update it.";avatarOverlay.textContent="Add photo";avatarStatus.textContent=""}}catch(e){avatarStatus.textContent="Could not load your saved profile photo from StayLatin. "+(e.message||"Please refresh and try again.");}}
+avatarInput.addEventListener("change",()=>{const file=avatarInput.files&&avatarInput.files[0];if(!file)return;if(!["image/png","image/jpeg","image/webp","image/gif"].includes(file.type)){avatarStatus.textContent="Please choose a JPG, PNG, WEBP or GIF image.";avatarInput.value="";return}if(file.size>2*1024*1024){avatarStatus.textContent="That image is over 2 MB. Choose a smaller photo.";avatarInput.value="";return}const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem(avatarStorageKey(),String(reader.result));loadTravelerAvatar()}catch(e){avatarStatus.textContent="Could not save this photo. Try a smaller image.";}};reader.onerror=()=>{avatarStatus.textContent="Could not read that image. Please try another.";};reader.readAsDataURL(file)});
+let mode="signin";let client=null;const resetPassword=document.getElementById("resetPassword"),resendConfirmation=document.getElementById("resendConfirmation"),signout=document.getElementById("signout");const signin=document.getElementById("signinTab"),signup=document.getElementById("signupTab"),title=document.getElementById("formTitle"),sub=document.getElementById("formSub"),nameField=document.getElementById("nameField"),password=document.getElementById("password"),submit=document.getElementById("submit"),statusBox=document.getElementById("status"),form=document.getElementById("authForm");
+function setMode(next){mode=next;document.getElementById("travelerDashboard").hidden=true;document.getElementById("privacyNote").hidden=false;signin.closest(".tabs").hidden=false;form.hidden=false;signin.classList.toggle("active",mode==="signin");signup.classList.toggle("active",mode==="signup");nameField.hidden=mode==="signin";document.getElementById("name").required=mode==="signup";title.textContent=mode==="signin"?"Welcome back.":"Start your journey.";sub.textContent=mode==="signin"?"Sign in to your StayLatin traveler account.":"Create a free traveler account.";submit.textContent=mode==="signin"?"Sign in":"Create free account";password.autocomplete=mode==="signin"?"current-password":"new-password";statusBox.className="status";statusBox.textContent=window.STAYLATIN_SUPABASE_CONFIG&&window.STAYLATIN_SUPABASE_CONFIG.url&&window.STAYLATIN_SUPABASE_CONFIG.anonKey?"StayLatin authentication is configured.":"Account registration is not connected yet. StayLatin is using its own backend setup, separate from the existing CGG database."}
+let activeTripUserId=null;
+function tripEscape(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+const introFields = {
+ display_name:["introDisplayName","introShowName"], introduction:["introText","introShowText"],
+ home_country:["introHomeCountry","introShowCountry"], favorite_destinations:["introDestinations","introShowDestinations"],
+ languages_spoken:["introLanguages","introShowLanguages"], travel_interests:["introInterests","introShowInterests"]
+};
+function setIntroStatus(message,isError=false){const el=document.getElementById("travelerIntroStatus");if(el){el.textContent=message;el.style.color=isError?"#a43d2e":"var(--muted)"}}
+function setChatPrivacyStatus(message,isError=false){const el=document.getElementById("chatProfilePrivacyStatus");if(el){el.textContent=message;el.style.color=isError?"#a43d2e":"var(--muted)"}}
+function introEscape(v){return tripEscape(v||"")}
+function introClient(){if(!client){const cfg=window.STAYLATIN_SUPABASE_CONFIG;if(!cfg||!window.supabase)return null;client=window.supabase.createClient(cfg.url,cfg.anonKey)}return client}
+async function saveTravelerChatProfile(db,userId){
+ const shareName=!!document.getElementById("chatShareName")?.checked;
+ const sharePhoto=!!document.getElementById("chatSharePhoto")?.checked;
+ const sharePhotoDirectory=!!document.getElementById("introShowPhoto")?.checked;
+ const displayName=document.getElementById("introDisplayName").value.trim();
+ if(shareName&&!displayName)throw new Error("Add a display name above before choosing to show your name in the Traveler Lounge.");
+ const {data:existing,error:existingError}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",userId).maybeSingle();
+ if(existingError)throw existingError;
+ let avatarPath=existing?.avatar_path||null;
+ if(sharePhoto||sharePhotoDirectory){
+   const saved=localStorage.getItem(avatarStorageKey());
+   if(saved){
+     const blob=await (await fetch(saved)).blob();
+     const mime=blob.type||"image/jpeg";
+     if(!["image/png","image/jpeg","image/webp","image/gif"].includes(mime))throw new Error("Choose a JPG, PNG, WEBP or GIF profile photo.");
+     const objectPath=userId+"/avatar";
+     const {error:uploadError}=await db.storage.from("staylatin-traveler-avatars").upload(objectPath,blob,{cacheControl:"3600",upsert:true,contentType:mime});
+     if(uploadError)throw uploadError;
+     avatarPath=objectPath;
+   }
+   if(!avatarPath)throw new Error("Add a profile photo above before choosing to share it in chat or the member directory.");
+ }
+ const {error:saveError}=await db.from("staylatin_traveler_chat_profiles").upsert({user_id:userId,display_name:shareName?displayName:"",share_name:shareName,share_photo:sharePhoto,share_photo_in_directory:sharePhotoDirectory,avatar_path:avatarPath,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ if(saveError)throw saveError;
+ setChatPrivacyStatus(!shareName&&!sharePhoto&&!sharePhotoDirectory?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":sharePhoto?"Your profile photo will appear beside your chat messages.":sharePhotoDirectory?"Your profile photo is shared in the member directory only.":"Your photo privacy settings were saved.");
+}
+async const journalForm=document.getElementById("travelerJournalForm"),journalEntries=document.getElementById("travelerJournalEntries"),journalStatus=document.getElementById("journalStatus");
+function setJournalStatus(message,isError=false){if(!journalStatus)return;journalStatus.textContent=message;journalStatus.style.color=isError?"#9b392c":"var(--muted)";}
+function resetJournalForm(){journalForm?.reset();document.getElementById("journalEntryId").value="";document.getElementById("journalSaveButton").textContent="Save journal entry";document.getElementById("journalCancelEdit").hidden=true;}
+async function loadTravelerJournal(){
+ const db=introClient();if(!journalEntries)return;
+ if(!db||!activeTripUserId){journalEntries.innerHTML='<div class="status">Sign in to view your travel journal.</div>';return;}
+ journalEntries.innerHTML='<div class="status">Loading your journal…</div>';
+ const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,user_id,title,destination,entry_date,body,visibility,created_at,updated_at").eq("user_id",activeTripUserId).order("updated_at",{ascending:false}).limit(100);
+ if(error){journalEntries.innerHTML='<div class="status error">Your journal could not load. Please refresh and try again.</div>';return;}
+ const rows=data||[];
+ if(!rows.length){journalEntries.innerHTML='<div class="status">Your journal is ready. Add your first travel memory above.</div>';return;}
+ journalEntries.innerHTML=rows.map(row=>'<article style="border:1px solid #e4dfd2;border-radius:10px;padding:14px;background:#fff"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0;flex:1"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap"><span style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+(row.visibility==="shared"?"Shared entry":"Private entry")+'</span>'+(row.entry_date?'<span style="font-size:11px;color:var(--muted)">'+introEscape(row.entry_date)+'</span>':'')+'</div><h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:5px 0">'+introEscape(row.title)+'</h4>'+(row.destination?'<div style="font-size:12px;color:var(--muted);margin-bottom:7px">⌖ '+introEscape(row.destination)+'</div>':'')+'<div style="font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(row.body||"No notes added yet.")+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="minor-action" data-journal-edit="'+row.id+'" style="width:auto;margin:0">Edit</button><button type="button" class="minor-action danger-action" data-journal-delete="'+row.id+'" style="width:auto;margin:0">Delete</button></div></div></article>').join("");
+}
+journalForm?.addEventListener("submit",async event=>{
+ event.preventDefault();const db=introClient(),userId=activeTripUserId;if(!db||!userId){setJournalStatus("Please sign in again to save your journal.",true);return;}
+ const button=document.getElementById("journalSaveButton"),id=document.getElementById("journalEntryId").value;
+ const row={user_id:userId,title:document.getElementById("journalTitle").value.trim(),destination:document.getElementById("journalDestination").value.trim(),entry_date:document.getElementById("journalDate").value||null,body:document.getElementById("journalBody").value.trim(),visibility:document.getElementById("journalVisibility").value,updated_at:new Date().toISOString()};
+ if(!row.title){setJournalStatus("Add a title for this entry.",true);return;}button.disabled=true;setJournalStatus("Saving your journal entry…");
+ try{let result;if(id)result=await db.from("staylatin_traveler_journal_entries").update(row).eq("id",id).eq("user_id",userId);else result=await db.from("staylatin_traveler_journal_entries").insert(row);if(result.error)throw result.error;resetJournalForm();setJournalStatus("Journal entry saved.");await loadTravelerJournal();}
+ catch(error){setJournalStatus("Could not save your entry: "+(error?.message||"Please try again."),true);}
+ finally{button.disabled=false;}
+});
+document.getElementById("journalCancelEdit")?.addEventListener("click",()=>{resetJournalForm();setJournalStatus("Edit cancelled.");});
+journalEntries?.addEventListener("click",async event=>{
+ const edit=event.target.closest("[data-journal-edit]"),del=event.target.closest("[data-journal-delete]");if(!edit&&!del)return;
+ const db=introClient(),userId=activeTripUserId;if(!db||!userId)return;
+ if(edit){const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,title,destination,entry_date,body,visibility").eq("id",edit.dataset.journalEdit).eq("user_id",userId).maybeSingle();if(error||!data){setJournalStatus("Could not open that entry for editing.",true);return;}document.getElementById("journalEntryId").value=data.id;document.getElementById("journalTitle").value=data.title;document.getElementById("journalDestination").value=data.destination||"";document.getElementById("journalDate").value=data.entry_date||"";document.getElementById("journalBody").value=data.body||"";document.getElementById("journalVisibility").value=data.visibility;document.getElementById("journalSaveButton").textContent="Update journal entry";document.getElementById("journalCancelEdit").hidden=false;document.getElementById("journalTitle").focus();setJournalStatus("Editing your entry.");return;}
+ if(!confirm("Delete this journal entry permanently? This cannot be undone."))return;
+ const {error}=await db.from("staylatin_traveler_journal_entries").delete().eq("id",del.dataset.journalDelete).eq("user_id",userId);if(error){setJournalStatus("Could not delete the entry. Please try again.",true);return;}setJournalStatus("Journal entry deleted.");await loadTravelerJournal();
+});
+const savedPlaceForm=document.getElementById("travelerSavedPlaceForm"),savedPlacesList=document.getElementById("travelerSavedPlacesList"),savedPlacesStatus=document.getElementById("savedPlacesStatus");
+function setSavedPlacesStatus(message,isError=false){if(!savedPlacesStatus)return;savedPlacesStatus.textContent=message;savedPlacesStatus.style.color=isError?"#9b392c":"var(--muted)";}
+async function loadTravelerSavedPlaces(){const db=introClient();if(!savedPlacesList)return;if(!db||!activeTripUserId){savedPlacesList.innerHTML='<div class="status">Sign in to view your saved places.</div>';return;}savedPlacesList.innerHTML='<div class="status">Loading saved places…</div>';const {data,error}=await db.from("staylatin_traveler_saved_places").select("id,place_name,city,country,category,website_url,note,created_at").order("created_at",{ascending:false}).limit(200);if(error){savedPlacesList.innerHTML='<div class="status error">Saved places could not load. Please refresh and try again.</div>';return;}const rows=data||[];if(!rows.length){savedPlacesList.innerHTML='<div class="status">Your shortlist is empty. Save a place above to get started.</div>';return;}savedPlacesList.innerHTML=rows.map(row=>'<article style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:10px;padding:12px;background:#fff"><div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+introEscape(row.category)+'</div><h4 style="font:500 19px Georgia,serif;color:var(--forest);margin:4px 0">'+introEscape(row.place_name)+'</h4><div style="font-size:12px;color:var(--muted)">'+introEscape([row.city,row.country].filter(Boolean).join(", "))+'</div>'+(row.note?'<p style="font-size:13px;line-height:1.5;white-space:pre-wrap;margin:7px 0">'+introEscape(row.note)+'</p>':'')+(row.website_url?'<a href="'+introEscape(row.website_url)+'" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--forest);font-weight:700">Open website ↗</a>':'')+'</div><button type="button" class="minor-action danger-action" data-saved-place-delete="'+row.id+'" style="width:auto;margin:0">Remove</button></article>').join("");}
+savedPlaceForm?.addEventListener("submit",async event=>{event.preventDefault();const db=introClient(),userId=activeTripUserId;if(!db||!userId){setSavedPlacesStatus("Please sign in again to save a place.",true);return;}const button=document.getElementById("savedPlaceSubmit"),rawUrl=document.getElementById("savedPlaceUrl").value.trim();let website_url="";if(rawUrl){try{const parsed=new URL(rawUrl);if(!["http:","https:"].includes(parsed.protocol))throw new Error();website_url=parsed.href;}catch(_){setSavedPlacesStatus("Enter a valid website beginning with https:// or http://.",true);return;}}const row={user_id:userId,place_name:document.getElementById("savedPlaceName").value.trim(),category:document.getElementById("savedPlaceCategory").value,city:document.getElementById("savedPlaceCity").value.trim(),country:document.getElementById("savedPlaceCountry").value.trim(),website_url,note:document.getElementById("savedPlaceNote").value.trim()};button.disabled=true;setSavedPlacesStatus("Saving place…");try{const {error}=await db.from("staylatin_traveler_saved_places").insert(row);if(error)throw error;savedPlaceForm.reset();setSavedPlacesStatus("Place saved privately.");await loadTravelerSavedPlaces();}catch(error){setSavedPlacesStatus("Could not save this place: "+(error?.message||"Please try again."),true);}finally{button.disabled=false;}});
+savedPlacesList?.addEventListener("click",async event=>{const button=event.target.closest("[data-saved-place-delete]");if(!button)return;if(!confirm("Remove this saved place from your shortlist?"))return;const db=introClient(),userId=activeTripUserId;if(!db||!userId)return;const {error}=await db.from("staylatin_traveler_saved_places").delete().eq("id",button.dataset.savedPlaceDelete).eq("user_id",userId);if(error){setSavedPlacesStatus("Could not remove this place. Please try again.",true);return;}setSavedPlacesStatus("Place removed.");await loadTravelerSavedPlaces();});
+function loadTravelerIntroduction(){
+ const db=introClient(),userId=activeTripUserId;
+ if(!db||!userId)return;
+ setIntroStatus("Loading your introduction…");
+ const {data,error}=await db.from("staylatin_traveler_introductions").select("*").eq("user_id",userId).maybeSingle();
+ if(error){setIntroStatus("Could not load your introduction. Please refresh and try again.",true);return}
+ const row=data||{};
+ for(const [field,ids] of Object.entries(introFields)){document.getElementById(ids[0]).value=row[field]||"";document.getElementById(ids[1]).checked=row["show_"+field]===undefined?(field==="display_name"||field==="introduction"):!!row["show_"+field]}
+ document.getElementById("introShowDirectory").checked=!!row.show_in_directory;
+ try{
+   const {data:loungeProfile,error:loungeProfileError}=await db.from("staylatin_traveler_chat_profiles").select("share_name,share_photo,share_photo_in_directory").eq("user_id",userId).maybeSingle();
+   if(loungeProfileError)throw loungeProfileError;
+   document.getElementById("chatShareName").checked=!!loungeProfile?.share_name;
+   document.getElementById("chatSharePhoto").checked=!!loungeProfile?.share_photo;
+   document.getElementById("introShowPhoto").checked=!!loungeProfile?.share_photo_in_directory;
+   setChatPrivacyStatus(!loungeProfile||(!loungeProfile.share_name&&!loungeProfile.share_photo&&!loungeProfile.share_photo_in_directory)?"Your name and photo are hidden from other travelers.":loungeProfile.share_name&&loungeProfile.share_photo?"Your display name and photo are shared in chat.":loungeProfile.share_name?"Your display name is shared in chat.":loungeProfile.share_photo?"Your profile photo is shared in chat.":loungeProfile.share_photo_in_directory?"Your profile photo is shared in the member directory only.":"Your privacy settings are saved.");
+ }catch(e){
+   setChatPrivacyStatus("Could not load your Traveler Lounge privacy settings. Check the connection and save again if needed.",true);
+ }
+ setIntroStatus(row.show_in_directory?"Your selected details are shared with signed-in members.":"Your introduction is private.");
+ await loadTravelerIntroductionDirectory();
+}
+async function saveTravelerIntroduction(e){
+ e.preventDefault();
+ const db=introClient(),userId=activeTripUserId;
+ if(!db||!userId){setIntroStatus("Please sign in to save your introduction.",true);return}
+ const button=document.querySelector('#travelerIntroForm button[type="submit"]');
+ button.disabled=true;
+ setIntroStatus("Saving your privacy settings…");
+ const row={user_id:userId,show_in_directory:document.getElementById("introShowDirectory").checked,updated_at:new Date().toISOString()};
+ for(const [field,ids] of Object.entries(introFields)){row[field]=document.getElementById(ids[0]).value.trim();row["show_"+field]=document.getElementById(ids[1]).checked}
+ try{
+   const {error}=await db.from("staylatin_traveler_introductions").upsert(row,{onConflict:"user_id"});
+   if(error)throw error;
+   if(row.show_in_directory){
+     const pub={user_id:userId,updated_at:row.updated_at};
+     for(const [field,ids] of Object.entries(introFields))pub[field]=row["show_"+field]?row[field]:null;
+     const result=await db.from("staylatin_traveler_introduction_directory").upsert(pub,{onConflict:"user_id"});
+     if(result.error)throw result.error;
+   }else{
+     const result=await db.from("staylatin_traveler_introduction_directory").delete().eq("user_id",userId);
+     if(result.error)throw result.error;
+   }
+ }catch(err){
+   button.disabled=false;
+   setIntroStatus(err.message||"Could not save your introduction. Please try again.",true);
+   return;
+ }
+ try{
+   await saveTravelerChatProfile(db,userId);
+ }catch(err){
+   button.disabled=false;
+   setChatPrivacyStatus(err.message||"Could not save Traveler Lounge privacy settings.",true);
+   setIntroStatus("Your introduction was saved, but the Traveler Lounge privacy choices could not be saved. Please correct the issue above and save again.",true);
+   return;
+ }
+ button.disabled=false;
+ setIntroStatus(row.show_in_directory?"Saved. Only the details you selected are visible to signed-in members.":"Saved privately. You are not listed in the member directory.");
+ await loadTravelerIntroductionDirectory();
+}
+async function loadTravelerIntroductionDirectory(){
+ const box=document.getElementById("travelerIntroDirectory"),db=introClient();if(!box||!db)return;
+ if(!activeTripUserId){box.innerHTML='<div class="status">Sign in to see the member directory.</div>';return}
+ box.innerHTML='<div class="status">Loading your profile and member directory…</div>';
+ const {data:directoryData,error}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name,introduction,home_country,favorite_destinations,languages_spoken,travel_interests,updated_at").limit(1000);
+ if(error){box.innerHTML='<div class="status error">The member directory could not load. Please try again.</div>';return}
+ let otherRows=(directoryData||[]).filter(x=>x.user_id!==activeTripUserId);
+ // Sort real members by actual account creation timestamp (newest first), not profile edit time.
+ if(otherRows.length){const {data:accountRows}=await db.from("staylatin_profiles").select("id,created_at").in("id",otherRows.map(x=>x.user_id));const createdAtById=Object.fromEntries((accountRows||[]).map(x=>[x.id,x.created_at]));otherRows.sort((a,b)=>new Date(createdAtById[b.user_id]||0)-new Date(createdAtById[a.user_id]||0));}
+ let ownIntro=null,ownPhotoProfile=null,ownPhotoUrl="";
+ const [{data:ownIntroData,error:ownIntroError},{data:ownPhotoData,error:ownPhotoError}]=await Promise.all([
+   db.from("staylatin_traveler_introductions").select("*").eq("user_id",activeTripUserId).maybeSingle(),
+   db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").eq("user_id",activeTripUserId).maybeSingle()
+ ]);
+ if(ownIntroError){box.innerHTML='<div class="status error">Your profile could not be loaded. Please refresh and try again.</div>';return}
+ ownIntro=ownIntroData||{user_id:activeTripUserId,display_name:document.getElementById("introDisplayName")?.value||"",introduction:document.getElementById("introText")?.value||"",home_country:document.getElementById("introHomeCountry")?.value||"",favorite_destinations:document.getElementById("introDestinations")?.value||"",languages_spoken:document.getElementById("introLanguages")?.value||"",travel_interests:document.getElementById("introInterests")?.value||"",show_in_directory:false,show_display_name:true,show_introduction:true};
+ ownPhotoProfile=ownPhotoError?null:ownPhotoData;
+ if(ownPhotoProfile?.avatar_path){
+   try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(ownPhotoProfile.avatar_path,3600);if(!signedError&&signed?.signedUrl)ownPhotoUrl=signed.signedUrl}catch(e){}
+ }
+ if(!ownPhotoUrl){
+   try{const localPhoto=localStorage.getItem(avatarStorageKey());if(localPhoto&&/^data:image\/(png|jpeg|webp|gif);base64,/i.test(localPhoto))ownPhotoUrl=localPhoto}catch(e){}
+ }
+ const otherIds=otherRows.map(r=>r.user_id),photoById=Object.create(null);
+ if(otherIds.length){
+   const {data:photoProfiles,error:photoError}=await db.from("staylatin_traveler_chat_profiles").select("user_id,avatar_path,share_photo_in_directory").in("user_id",otherIds);
+   if(!photoError)await Promise.all((photoProfiles||[]).map(async p=>{
+     if(!p.share_photo_in_directory||!p.avatar_path)return;
+     try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!signedError&&signed?.signedUrl)photoById[p.user_id]=signed.signedUrl}catch(e){}
+   }));
+ }
+ function memberPhoto(url,name){
+   return url?'<img src="'+introEscape(url)+'" alt="'+introEscape(name||"Traveler")+' profile photo" style="width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<div aria-hidden="true" style="width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:27px">✳</div>';
+ }
+ function memberDetails(r,fields){
+   return fields.filter(x=>x[1]).map(x=>'<div style="font-size:12px;margin-top:7px"><b style="color:var(--forest)">'+x[0]+':</b> '+introEscape(x[1])+'</div>').join("");
+ }
+ const ownName=ownIntro.display_name||"Your profile";
+ const ownVisible=!!ownIntro.show_in_directory;
+ const ownFields=ownVisible
+   ? [["Home country",ownIntro.show_home_country?ownIntro.home_country:""],["Favorite destinations",ownIntro.show_favorite_destinations?ownIntro.favorite_destinations:""],["Languages",ownIntro.show_languages_spoken?ownIntro.languages_spoken:""],["Travel interests",ownIntro.show_travel_interests?ownIntro.travel_interests:""]]
+   : [["Home country",ownIntro.home_country],["Favorite destinations",ownIntro.favorite_destinations],["Languages",ownIntro.languages_spoken],["Travel interests",ownIntro.travel_interests]];
+ const ownCard='<article data-member-card="1" style="background:linear-gradient(135deg,#f1f7ef,#fffdf8);border:2px solid #c8a86b;border-radius:11px;padding:15px;order:-1"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(ownPhotoUrl,ownName)+'<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b6a2f;font-weight:900;margin-bottom:4px">YOUR PROFILE · FIRST</div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(ownName)+'</h5><div style="font-size:10px;color:var(--muted)">'+(ownVisible?"Visible to signed-in members":"Private preview · only you can see this profile")+'</div></div></div>'+(ownIntro.show_introduction&&ownIntro.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(ownIntro.introduction)+'</p>':'')+memberDetails(ownIntro,ownFields)+'<button type="button" id="editOwnMemberProfile" class="primary-action" style="width:100%;margin-top:14px">Edit my profile ↗</button></article>';
+
+ const aiProfiles=Array.isArray(window.STAYLATIN_AI_TRAVELERS)?window.STAYLATIN_AI_TRAVELERS:[];
+ const aiCards=aiProfiles.map(p=>{
+   const name=introEscape(p.name),loc=introEscape(p.city+", "+p.country);
+   const photo='<img src="'+introEscape(p.avatar)+'" alt="Cartoon portrait of '+name+'" loading="lazy" style="width:78px;height:78px;flex:0 0 78px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">';
+   const tags=p.interests.map(t=>'<span style="display:inline-block;background:#e7f0e9;color:#245448;border-radius:999px;padding:4px 8px;margin:3px 3px 0 0;font-size:10px;font-weight:750">'+introEscape(t)+'</span>').join("");
+   const rows=[["Age",String(p.age)],["Travel style",p.style],["Languages",p.languages],["Dream trip",p.dream],["Favorite advice",p.tip],["Food tip",p.food],["Budget tip",p.budget],["Fun fact",p.fact],["Open to","Destination chats, trip planning ideas, and travel inspiration"]].map(x=>'<div style="font-size:11px;margin-top:7px"><b style="color:var(--forest)">'+introEscape(x[0])+':</b> '+introEscape(x[1])+'</div>').join("");
+   return '<article data-member-card="1" style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px;position:relative"><div style="display:flex;align-items:center;gap:12px;margin:0 0 10px">'+photo+'<div><div style="display:inline-block;background:#f5e9c9;border:1px solid #e7d39c;color:#805d18;border-radius:999px;padding:3px 7px;font-size:9px;letter-spacing:.04em;font-weight:900;margin-bottom:5px">AI TRAVELER</div><h5 style="font:500 19px Georgia,serif;color:var(--forest);margin:0 0 4px">'+name+'</h5><div style="font-size:11px;color:var(--muted)">'+p.flag+' '+loc+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">'+introEscape(p.style)+' · Age '+p.age+'</div></div></div><p style="font-size:12px;line-height:1.5;margin:0 0 8px">'+introEscape(p.bio)+'</p><div>'+tags+'</div><details style="margin-top:9px;border-top:1px solid #e5e0d5;padding-top:9px"><summary style="cursor:pointer;font-size:11px;font-weight:850;color:var(--forest)">Complete AI profile</summary>'+rows+'</details><button type="button" data-ai-chat-id="'+introEscape(p.id)+'" class="primary-action" style="width:100%;margin-top:12px">Chat with AI ✦</button><div style="font-size:9px;color:var(--muted);margin-top:6px">Fictional AI persona · not a real member</div></article>';
+ }).join("");
+ const otherCards=otherRows.map(r=>{
+   const name=r.display_name||"StayLatin traveler";
+   return '<article data-member-card="1" style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px">'+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(photoById[r.user_id],name)+'<div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(name)+'</h5><div style="font-size:10px;color:var(--muted)">StayLatin member</div></div></div>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+memberDetails(r,[["Home country",r.home_country],["Favorite destinations",r.favorite_destinations],["Languages",r.languages_spoken],["Travel interests",r.travel_interests]])+'<button type="button" data-private-message="'+introEscape(r.user_id)+'" data-private-name="'+introEscape(name)+'" class="primary-action" style="width:100%;margin-top:14px">Message privately ↗</button></article>';
+ }).join("");
+ box.innerHTML=ownCard+otherCards+aiCards;
+ const memberSearch=document.getElementById("travelerMemberSearch"),memberSearchStatus=document.getElementById("travelerMemberSearchStatus"),loadMoreWrap=document.getElementById("travelerMemberLoadMoreWrap"),loadMoreButton=document.getElementById("travelerMemberLoadMore"),pageStatus=document.getElementById("travelerMemberPageStatus");
+ let memberPageSize=12;
+ const updateMemberDirectoryVisibility=()=>{const term=(memberSearch?.value||"").trim().toLowerCase();const cards=[...box.querySelectorAll(":scope > article[data-member-card]")];const matches=cards.filter(card=>!term||card.textContent.toLowerCase().includes(term));cards.forEach(card=>{card.hidden=true});matches.slice(0,memberPageSize).forEach(card=>{card.hidden=false});if(memberSearchStatus)memberSearchStatus.textContent=term?(matches.length+" matching traveler"+(matches.length===1?"":"s")):"Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length+" travelers";if(loadMoreWrap)loadMoreWrap.style.display=matches.length>memberPageSize?"block":"none";if(pageStatus)pageStatus.textContent="Showing "+Math.min(memberPageSize,matches.length)+" of "+matches.length;};
+ if(memberSearch&&!memberSearch.dataset.bound){memberSearch.dataset.bound="1";memberSearch.addEventListener("input",()=>{memberPageSize=12;updateMemberDirectoryVisibility()});}
+ if(loadMoreButton&&!loadMoreButton.dataset.bound){loadMoreButton.dataset.bound="1";loadMoreButton.addEventListener("click",()=>{memberPageSize+=10;updateMemberDirectoryVisibility()});}
+ updateMemberDirectoryVisibility();
+ document.getElementById("editOwnMemberProfile")?.addEventListener("click",()=>document.getElementById("travelerIntroForm")?.scrollIntoView({behavior:"smooth",block:"start"}));
+ box.querySelectorAll("[data-private-message]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.privateMessage,button.dataset.privateName)));
+ box.querySelectorAll("[data-ai-chat-id]").forEach(button=>button.addEventListener("click",()=>openAITravelerChat(button.dataset.aiChatId)));
+ if(!otherRows.length)box.insertAdjacentHTML("beforeend",'<div class="status" style="grid-column:1/-1">Your profile is shown first. No other members have shared introductions yet.</div>');
+ await loadPrivateInbox();
+}
+
+let activeAITraveler=null;
+const aiChatPanel=document.getElementById("aiTravelerChatPanel"),aiChatMessages=document.getElementById("aiTravelerChatMessages"),aiChatInput=document.getElementById("aiTravelerChatInput"),aiChatForm=document.getElementById("aiTravelerChatForm");
+function addAIChatBubble(who,body,isUser=false){
+ if(!aiChatMessages)return;
+ const row=document.createElement("article");row.style.cssText="align-self:"+(isUser?"flex-end":"flex-start")+";max-width:90%;border:1px solid "+(isUser?"#d4e7d7":"#e5e0d5")+";border-radius:10px;padding:9px 12px;background:"+(isUser?"#edf6ee":"#fffdf8");
+ const label=document.createElement("div");label.style.cssText="font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px";label.textContent=who;
+ const bodyEl=document.createElement("div");bodyEl.style.cssText="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";bodyEl.textContent=body;
+ row.append(label,bodyEl);aiChatMessages.appendChild(row);aiChatMessages.scrollTop=aiChatMessages.scrollHeight;
+}
+async function aiReplyFor(p,msg){
+ const m=String(msg||"").trim();
+ if(!m)return "Ask me anything about travel, culture, planning, or everyday questions. I'm an AI persona, so I'll be clear when I don't know something.";
+ // Use a configured OpenAI-compatible server endpoint when the site owner deploys one.
+ // Never put a private API key in this public GitHub Pages code.
+ const endpoint=window.STAYLATIN_AI_CHAT_ENDPOINT;
+ if(endpoint){
+  try{
+   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+   const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:m,persona:{name:p.name,city:p.city,country:p.country,style:p.style,languages:p.languages,bio:p.bio,interests:p.interests,dream:p.dream,tip:p.tip,food:p.food,budget:p.budget,fact:p.fact,starter:p.starter}}),signal:controller.signal});
+   clearTimeout(timer);
+   if(!response.ok)throw new Error("AI endpoint returned "+response.status);
+   const data=await response.json();
+   if(typeof data.reply==="string"&&data.reply.trim())return data.reply.trim();
+   throw new Error("AI endpoint response did not include reply text");
+  }catch(err){console.warn("StayLatin AI chat endpoint unavailable",err);return "I'm having trouble reaching the AI chat service right now. Please try again in a moment. You can still explore my profile for travel tips."}
+ }
+ // Honest local fallback; this is not a general-purpose AI model.
+ if(/food|eat|restaurant|cafe|coffee|dish|meal|market/.test(m.toLowerCase()))return p.food;
+ if(/budget|cheap|cost|money|price|afford|expensive/.test(m.toLowerCase()))return p.budget;
+ if(/safe|safety|security|scam|alone|night/.test(m.toLowerCase()))return "For safety decisions, check current local guidance and advice from your accommodation or a trusted local source. Keep valuables secure, use reputable transport, and choose activities that fit your comfort level. I'm an AI persona, not a live local source.";
+ if(/plan|itinerary|where|destination|visit|trip|go to|recommend|place/.test(m.toLowerCase()))return p.tip+" For a trip idea, I'd start with this dream: "+p.dream;
+ if(/meet|friend|buddy|together|hang out|real person/.test(m.toLowerCase()))return "Just to be transparent: I'm a fictional AI traveler persona, not a real person who can meet up. I can still help you brainstorm experiences and questions to ask real travelers.";
+ if(/language|speak|spanish|translate/.test(m.toLowerCase()))return "This persona lists these languages: "+p.languages+". This demo chat does not translate reliably, but we can plan language-learning prompts or polite phrases to verify with a current source.";
+ if(/who are you|about you|profile|tell me/.test(m.toLowerCase()))return "I'm "+p.name+", an AI traveler persona based in "+p.city+", "+p.country+". "+p.bio+" My interests are "+p.interests.join(", ")+". A fun fact: "+p.fact;
+ return "I'm currently in demo mode, so I can't reliably answer every possible question yet. To let me answer open-ended questions, StayLatin needs a secure AI service endpoint configured by the site owner.";
+}
+function openAITravelerChat(id){
+ const list=window.STAYLATIN_AI_TRAVELERS||[];activeAITraveler=list.find(p=>p.id===id)||null;if(!activeAITraveler)return;
+ aiChatPanel.hidden=false;aiChatMessages.innerHTML="";
+ document.getElementById("aiTravelerChatTitle").textContent="Chat with "+activeAITraveler.name;
+ document.getElementById("aiTravelerChatBio").textContent=activeAITraveler.flag+" "+activeAITraveler.city+", "+activeAITraveler.country+" · Fictional AI-generated character, not a real member.";
+ addAIChatBubble(activeAITraveler.name+" · AI","Hi! I'm an AI traveler persona who loves "+activeAITraveler.interests.join(", ").toLowerCase()+". "+activeAITraveler.starter,false);
+ aiChatPanel.scrollIntoView({behavior:"smooth",block:"start"});aiChatInput?.focus();
+}
+aiChatForm?.addEventListener("submit",async e=>{e.preventDefault();if(!activeAITraveler||!aiChatInput)return;const text=aiChatInput.value.trim();if(!text)return;const persona=activeAITraveler;addAIChatBubble("You",text,true);aiChatInput.value="";const send=document.getElementById("sendAITravelerChat");if(send)send.disabled=true;const pending=document.createElement("div");pending.textContent=persona.name+" is thinking…";pending.style.cssText="font-size:11px;color:var(--muted);align-self:flex-start;padding:8px";aiChatMessages.appendChild(pending);try{const answer=await aiReplyFor(persona,text);pending.remove();addAIChatBubble(persona.name+" · AI",answer,false)}finally{pending.remove();if(send)send.disabled=false}});
+document.getElementById("closeAITravelerChat")?.addEventListener("click",()=>{aiChatPanel.hidden=true;activeAITraveler=null;});
+
+document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
+
+
+ let activePrivateRecipient=null,activePrivateName="Traveler",privateBusy=false,privateRealtimeChannel=null;
+ let travelerDirectoryChannel=null;
+ function connectTravelerDirectoryRealtime(){
+  const db=introClient();if(!db||!activeTripUserId||travelerDirectoryChannel)return;
+  travelerDirectoryChannel=db.channel("staylatin-traveler-directory-"+activeTripUserId)
+   .on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_introduction_directory"},()=>{if(activeTripUserId)loadTravelerIntroductionDirectory()})
+   .subscribe();
+ }
+const privateInboxList=document.getElementById("privateInboxList"),privateConversation=document.getElementById("privateConversation"),privateMessages=document.getElementById("privateMessages"),privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageNotice=document.getElementById("privateMessageNotice"),privateMessageSend=document.getElementById("sendPrivateMessage");
+function setPrivateNotice(message,isError=false){if(!privateMessageNotice)return;privateMessageNotice.className="status show"+(isError?" error":"");privateMessageNotice.textContent=message;}
+async function loadPrivateInbox(){
+ const db=introClient(),box=privateInboxList;if(!db||!box||!activeTripUserId){if(box)box.innerHTML='<div class="status">Sign in to use private messages.</div>';return}
+ const {data,error}=await db.from("staylatin_traveler_private_messages").select("id,sender_id,recipient_id,body,read_at,created_at").order("created_at",{ascending:false}).limit(150);
+ if(error){box.innerHTML='<div class="status error">Private inbox is not available yet. Please refresh and try again.</div>';return}
+ const latestByPartner=new Map();
+ (data||[]).forEach(m=>{const partner=m.sender_id===activeTripUserId?m.recipient_id:m.sender_id;if(!latestByPartner.has(partner)){latestByPartner.set(partner,{...m,partner,unread:m.recipient_id===activeTripUserId&&!m.read_at})}});
+ const partners=[...latestByPartner.values()];
+ if(!partners.length){box.innerHTML='<div class="status">Your private inbox is empty. A private conversation will appear here when someone messages you.</div>';return}
+ const ids=partners.map(x=>x.partner);
+ const [{data:profiles},{data:chatProfiles}]=await Promise.all([
+  db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids),
+  db.from("staylatin_traveler_chat_profiles").select("user_id,display_name,share_name,share_photo,avatar_path").in("user_id",ids)
+ ]);
+ const names=Object.create(null),photos=Object.create(null);
+ (profiles||[]).forEach(p=>names[p.user_id]=p.display_name||"StayLatin traveler");
+ const publicAdmin=ids.includes(STAYLATIN_ADMIN_CONTACT_ID)?await loadPublicAdminProfile(db):null;
+ if(publicAdmin){names[STAYLATIN_ADMIN_CONTACT_ID]=publicAdmin.name;if(publicAdmin.photo)photos[STAYLATIN_ADMIN_CONTACT_ID]=publicAdmin.photo;}
+ await Promise.all((chatProfiles||[]).map(async p=>{
+  if(p.share_name&&p.display_name)names[p.user_id]=p.display_name;
+  if(p.share_photo&&p.avatar_path){try{const {data,error}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!error&&data?.signedUrl)photos[p.user_id]=data.signedUrl}catch(e){}}
+ }));
+ box.innerHTML=partners.map(m=>{const name=names[m.partner]||"StayLatin Team";const photo=photos[m.partner]?'<img src="'+introEscape(photos[m.partner])+'" alt="'+introEscape(name)+' profile photo" style="width:46px;height:46px;flex:0 0 46px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<span aria-hidden="true" style="width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:20px">✳</span>';return '<button type="button" data-inbox-partner="'+introEscape(m.partner)+'" data-inbox-name="'+introEscape(name)+'" style="display:flex;align-items:center;gap:11px;text-align:left;border:1px solid #dce8dd;border-radius:9px;background:#fff;padding:11px 13px;cursor:pointer;width:100%">'+photo+'<span style="min-width:0;flex:1"><strong style="display:block;color:var(--forest);font-size:13px">'+introEscape(name)+'</strong><span style="display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px">'+introEscape(m.body)+'</span></span><span style="flex:0 0 auto;color:var(--terra);font-size:10px;font-weight:800">'+(m.unread?"NEW":"Open ↗")+'</span></button>'}).join("");
+ box.querySelectorAll("[data-inbox-partner]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.inboxPartner,button.dataset.inboxName)));
+}
+const STAYLATIN_ADMIN_CONTACT_ID="d6530e9c-d8c1-4209-a446-9a03741d90e7";
+async function loadPublicAdminProfile(db){const fallback={name:"Christopher Kesl",photo:null};try{const {data,error}=await db.from("staylatin_public_admin_profiles").select("display_name,avatar_path").eq("user_id",STAYLATIN_ADMIN_CONTACT_ID).maybeSingle();if(error)throw error;if(!data)return fallback;let photo=null;if(data.avatar_path){const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(data.avatar_path,3600);if(!signedError&&signed?.signedUrl)photo=signed.signedUrl;}return {name:data.display_name||fallback.name,photo};}catch(e){return fallback;}}
+document.getElementById("chatWithAdminButton")?.addEventListener("click",async()=>{
+ if(!activeTripUserId){setPrivateNotice("Please sign in to chat with the StayLatin admin.",true);return;}
+ if(activeTripUserId===STAYLATIN_ADMIN_CONTACT_ID){setPrivateNotice("You are signed in as the administrator account.",true);return;}
+ const adminProfile=await loadPublicAdminProfile(introClient());openPrivateConversation(STAYLATIN_ADMIN_CONTACT_ID,adminProfile.name);
+});
+async function openPrivateConversation(userId,displayName){
+ if(!activeTripUserId||!userId||userId===activeTripUserId)return;
+ activePrivateRecipient=userId;activePrivateName=displayName||"StayLatin traveler";
+ privateConversation.hidden=false;document.getElementById("privateConversationTitle").textContent="Private conversation with "+activePrivateName;
+ privateMessages.innerHTML='<div class="status">Loading private messages…</div>';setPrivateNotice("Only you and "+activePrivateName+" can read this conversation.");
+ privateConversation.scrollIntoView({behavior:"smooth",block:"nearest"});
+ await loadPrivateConversation();
+
+  ensurePrivateMessageRealtime();
+}
+async function loadPrivateConversation(silent=false){
+ const db=introClient();if(!db||!activeTripUserId||!activePrivateRecipient||!privateMessages)return;
+ if(!silent)privateMessages.innerHTML='<div class="status">Loading private messages…</div>';
+ try{
+  const me=activeTripUserId,other=activePrivateRecipient;
+  const {data,error}=await db.from("staylatin_traveler_private_messages").select("id,sender_id,recipient_id,body,read_at,created_at").or("and(sender_id.eq."+me+",recipient_id.eq."+other+"),and(sender_id.eq."+other+",recipient_id.eq."+me+")").order("created_at",{ascending:true}).limit(200);
+  if(error)throw error;
+  const rows=data||[],ids=[me,other],names=Object.create(null),photos=Object.create(null);
+  const [{data:baseProfiles},{data:chatProfiles},{data:introProfiles}]=await Promise.all([
+   db.from("staylatin_profiles").select("id,display_name").in("id",ids),
+   db.from("staylatin_traveler_chat_profiles").select("user_id,display_name,avatar_path").in("user_id",ids),
+   db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids)
+  ]);
+  (baseProfiles||[]).forEach(p=>{if(p.display_name)names[p.id]=p.display_name});
+  (introProfiles||[]).forEach(p=>{if(p.display_name)names[p.user_id]=p.display_name});
+  await Promise.all((chatProfiles||[]).map(async p=>{
+   if(p.display_name)names[p.user_id]=p.display_name;
+   if(p.avatar_path){try{const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!signedError&&signed?.signedUrl)photos[p.user_id]=signed.signedUrl}catch(e){}}
+  }));
+  const adminProfile=(ids.includes(STAYLATIN_ADMIN_CONTACT_ID))?await loadPublicAdminProfile(db):null;
+  if(adminProfile){names[STAYLATIN_ADMIN_CONTACT_ID]=adminProfile.name;if(adminProfile.photo)photos[STAYLATIN_ADMIN_CONTACT_ID]=adminProfile.photo;}
+  const currentUser=(await db.auth.getUser()).data?.user;
+  names[me]=names[me]||currentUser?.user_metadata?.full_name||currentUser?.email||"You";
+  names[other]=names[other]||(other===STAYLATIN_ADMIN_CONTACT_ID?"StayLatin Admin":"StayLatin traveler");
+  activePrivateName=names[other];
+  document.getElementById("privateConversationTitle").textContent="Private conversation with "+activePrivateName;
+  const avatar=(id,name)=>photos[id]?'<img src="'+introEscape(photos[id])+'" alt="'+introEscape(name)+' profile photo" style="width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b;background:#e5efe6">':'<span aria-hidden="true" style="display:inline-grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#e5efe6;color:var(--forest);border:1px solid #c8a86b;font:700 12px Georgia,serif">'+introEscape((name||"?").trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase())+'</span>';
+  if(!rows.length)privateMessages.innerHTML='<div class="status">No messages yet. Send a private hello to begin.</div>';
+  else privateMessages.innerHTML=rows.map(m=>{const senderName=names[m.sender_id]||(m.sender_id===me?"You":"StayLatin traveler");return '<article style="display:flex;align-items:flex-start;gap:9px;align-self:'+(m.sender_id===me?"flex-end":"flex-start")+';max-width:94%;border:1px solid '+(m.sender_id===me?"#d4e7d7":"#e5e0d5")+';border-radius:10px;padding:9px 12px;background:'+(m.sender_id===me?"#edf6ee":"#fffdf8")+'">'+avatar(m.sender_id,senderName)+'<div style="min-width:0"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px"><span>'+introEscape(senderName)+'</span><span style="font-weight:500;color:var(--muted)">· '+introEscape(new Date(m.created_at).toLocaleString())+'</span></div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></div></article>'}).join("");
+ }catch(err){
+  if(privateMessages)privateMessages.innerHTML='<div class="status error">Could not load this conversation. Please refresh and try again.</div>';
+ }
+}
+const privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageSend=document.getElementById("sendPrivateMessage"),privateMessageNotice=document.getElementById("privateMessageNotice");
+privateMessageForm?.addEventListener("submit",async event=>{
+ event.preventDefault();
+ const body=(privateMessageInput?.value||"").trim(),db=introClient();
+ if(!body)return;
+ if(!db||!activeTripUserId){setPrivateNotice("Please sign in again before sending a private message.",true);return;}
+ if(!activePrivateRecipient){setPrivateNotice("Open a conversation before sending a message.",true);return;}
+ if(body.length>2000){setPrivateNotice("Messages must be 2,000 characters or fewer.",true);return;}
+ const scrollY=window.scrollY;
+ if(privateMessageSend)privateMessageSend.disabled=true;
+ setPrivateNotice("Sending privately…");
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user)throw new Error("Your sign-in session expired. Please sign in again.");
+  const {error}=await db.from("staylatin_traveler_private_messages").insert({sender_id:user.id,recipient_id:activePrivateRecipient,body});
+  if(error)throw error;
+  privateMessageInput.value="";
+  await Promise.all([loadPrivateConversation(true),loadPrivateInbox()]);
+  setPrivateNotice("Message sent.");
+ }catch(err){setPrivateNotice("Message not sent: "+(err?.message||"Please try again."),true);}
+ finally{
+  if(privateMessageSend)privateMessageSend.disabled=false;
+  requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"auto"}));
+ }
+});
+
+const loungeMessages=document.getElementById("chatMessages"),loungeForm=document.getElementById("chatForm"),loungeInput=document.getElementById("chatMessage"),loungeNotice=document.getElementById("chatNotice"),loungeSend=document.getElementById("sendChat"),loungeBadge=document.getElementById("chatUnreadBadge");
+let loungeChannel=null,loungeLoading=false;
+function setLoungeNotice(message,isError=false){if(!loungeNotice)return;loungeNotice.className="status show"+(isError?" error":"");loungeNotice.textContent=message;}
+async function loadTravelerLounge(silent=false){
+ const db=introClient();
+ if(!db||!activeTripUserId){if(loungeMessages)loungeMessages.innerHTML='<div class="status">Sign in with a traveler account to connect to the Traveler Lounge.</div>';setLoungeNotice("Sign in to join the Traveler Lounge.");return;}
+ if(loungeLoading)return;loungeLoading=true;
+ if(!silent)loungeMessages.innerHTML='<div class="status">Connecting to the Traveler Lounge…</div>';
+ try{
+  const {data,error}=await db.from("staylatin_traveler_chat_messages").select("id,sender_id,destination,body,created_at").eq("destination","General Traveler Lounge").eq("moderation_status","visible").order("created_at",{ascending:true}).limit(150);
+  if(error)throw error;
+  const rows=data||[],ids=[...new Set(rows.map(m=>m.sender_id))],names=Object.create(null),photos=Object.create(null);
+  const [{data:profiles},{data:chatProfiles}]=await Promise.all([
+   ids.length?db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids):Promise.resolve({data:[]}),
+   ids.length?db.from("staylatin_traveler_chat_profiles").select("user_id,display_name,share_name,share_photo,avatar_path").in("user_id",ids):Promise.resolve({data:[]})
+  ]);
+  (profiles||[]).forEach(p=>{if(p.display_name)names[p.user_id]=p.display_name;});
+  await Promise.all((chatProfiles||[]).map(async p=>{if(p.share_name&&p.display_name)names[p.user_id]=p.display_name;if(p.share_photo&&p.avatar_path){try{const {data,error}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!error&&data?.signedUrl)photos[p.user_id]=data.signedUrl;}catch(_){}}}));
+  const current=(await db.auth.getUser()).data?.user;if(current)names[current.id]=names[current.id]||current.user_metadata?.full_name||"You";
+  if(!rows.length)loungeMessages.innerHTML='<div class="status">The Traveler Lounge is connected. Be the first to share a travel tip or ask a question.</div>';
+  else loungeMessages.innerHTML=rows.map(m=>{const name=names[m.sender_id]||(m.sender_id===activeTripUserId?"You":"StayLatin traveler");const photo=photos[m.sender_id]?'<img src="'+introEscape(photos[m.sender_id])+'" alt="" style="width:32px;height:32px;flex:0 0 32px;object-fit:cover;border-radius:50%;border:1px solid #c8a86b">':'<span aria-hidden="true" style="display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#e5efe6;color:var(--forest);border:1px solid #c8a86b;font:700 11px Georgia,serif">'+introEscape(name.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase())+'</span>';return '<article style="display:flex;align-items:flex-start;gap:9px;max-width:100%;padding:10px 12px;border:1px solid #dce8dd;border-radius:10px;background:'+(m.sender_id===activeTripUserId?"#edf6ee":"#fffdf8")+'">'+photo+'<div style="min-width:0;flex:1"><div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;font-weight:800;color:var(--forest);margin-bottom:4px"><span>'+introEscape(name)+'</span><span style="font-weight:500;color:var(--muted)">'+introEscape(new Date(m.created_at).toLocaleString())+'</span></div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></div></article>';}).join("");
+  loungeMessages.scrollTop=loungeMessages.scrollHeight;setLoungeNotice("Connected to the Traveler Lounge. Messages refresh automatically.");if(loungeBadge){loungeBadge.hidden=true;loungeBadge.textContent="";}connectTravelerLoungeRealtime();
+ }catch(err){loungeMessages.innerHTML='<div class="status error">The Traveler Lounge could not connect. Please refresh; if the problem continues, the lounge database permissions need attention.</div>';setLoungeNotice("Connection failed: "+(err.message||"unable to load lounge messages"),true);}
+ finally{loungeLoading=false;}
+}
+function connectTravelerLoungeRealtime(){const db=introClient();if(!db||!activeTripUserId||loungeChannel)return;loungeChannel=db.channel("staylatin-traveler-lounge-live").on("postgres_changes",{event:"*",schema:"public",table:"staylatin_traveler_chat_messages",filter:"destination=eq.General Traveler Lounge"},()=>loadTravelerLounge(true)).subscribe(status=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setLoungeNotice("Live updates are reconnecting. You can still refresh the lounge.",true);});}
+loungeForm?.addEventListener("submit",async event=>{event.preventDefault();const body=(loungeInput?.value||"").trim(),db=introClient();if(!body)return;if(!db||!activeTripUserId){setLoungeNotice("Please sign in to post in the Traveler Lounge.",true);return;}if(body.length>1200){setLoungeNotice("Messages must be 1,200 characters or fewer.",true);return;}loungeSend.disabled=true;setLoungeNotice("Sending your message…");try{const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user)throw new Error("Your session expired. Please sign in again.");const {error}=await db.from("staylatin_traveler_chat_messages").insert({sender_id:user.id,destination:"General Traveler Lounge",body:body,moderation_status:"visible"});if(error)throw error;loungeInput.value="";await loadTravelerLounge(true);setLoungeNotice("Your message was posted to the Traveler Lounge.");}catch(err){setLoungeNotice(err.message||"Your message could not be sent. Please try again.",true);}finally{loungeSend.disabled=false;}});
+
+function setTravelerStatus(message,kind=""){
+ if(!statusBox)return;
+ statusBox.hidden=false;
+ statusBox.className="status show"+(kind?" "+kind:"");
+ statusBox.textContent=message;
+}
+async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangeEmailForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,button=document.getElementById("travelerChangeEmailButton"),status=document.getElementById("travelerEmailStatus");
+ const email=document.getElementById("travelerNewEmail").value.trim().toLowerCase(),password=document.getElementById("travelerEmailCurrentPassword").value;
+ const db=introClient();
+ if(!db||!activeTripUserId){status.textContent="Please sign in again before changing your email.";return;}
+ const {data:{user},error:userError}=await db.auth.getUser();
+ if(userError||!user?.email){status.textContent="Could not verify your signed-in account. Please sign in again.";return;}
+ if(email===user.email.toLowerCase()){status.textContent="That is already your current email address.";return;}
+ button.disabled=true;status.textContent="Verifying your password and requesting the email change…";
+ try{
+  const {error:verifyError}=await db.auth.signInWithPassword({email:user.email,password});
+  if(verifyError)throw new Error("Your current password could not be verified. Please check it and try again.");
+  const {data,error}=await db.auth.updateUser({email});
+  if(error)throw error;
+  const pending=data?.user?.new_email||email;
+  status.textContent="Email change requested for "+pending+". Check your inbox (and spam folder) for confirmation links. Your sign-in email may not change until confirmation is complete.";
+  document.getElementById("travelerEmailCurrentPassword").value="";
+  document.getElementById("travelerNewEmail").value="";
+ }catch(err){status.textContent=err.message||"Could not request the email change. Please try again."}
+ finally{button.disabled=false;}
+});
+document.getElementById("travelerChangePasswordForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const status=document.getElementById("travelerPasswordStatus"),button=document.getElementById("travelerChangePasswordButton");
+ const current=document.getElementById("travelerCurrentPassword").value,next=document.getElementById("travelerNewPassword").value,confirmNext=document.getElementById("travelerConfirmNewPassword").value;
+ status.textContent="";
+ if(next.length<12){status.textContent="Choose a password with at least 12 characters.";return;}
+ if(next!==confirmNext){status.textContent="The new passwords do not match.";return;}
+ if(next===current){status.textContent="Choose a new password different from your current password.";return;}
+ const db=introClient();if(!db||!activeTripUserId){status.textContent="Please sign in again before changing your password.";return;}
+ button.disabled=true;button.textContent="Updating…";
+ try{
+   const {data:authData,error:authError}=await db.auth.getUser();if(authError||!authData.user?.email)throw new Error("Your session could not be verified. Please sign in again.");
+   const {error:verifyError}=await db.auth.signInWithPassword({email:authData.user.email,password:current});if(verifyError)throw new Error("Your current password was not accepted.");
+   const {error:updateError}=await db.auth.updateUser({password:next});if(updateError)throw updateError;
+   document.getElementById("travelerChangePasswordForm").reset();status.textContent="Your password has been updated successfully.";
+ }catch(err){status.textContent=err.message||"Could not update your password.";}
+ finally{button.disabled=false;button.textContent="Update password";}
+});
+function setTravelerSignedIn(user){
+ activeTripUserId=user.id;
+ document.querySelector(".traveler-intro")?.setAttribute("hidden","");
+ document.querySelector(".traveler-auth")?.setAttribute("hidden","");
+ document.getElementById("privacyNote")?.setAttribute("hidden","");
+ document.getElementById("travelerDashboard").hidden=false;
+ document.getElementById("travelerAccountEmail").value=user.email||"";
+ document.getElementById("dashboardGreeting").textContent="Welcome"+(user.user_metadata?.full_name?" back, "+user.user_metadata.full_name:" back")+". Your travel space is ready.";
+ form.hidden=true;
+ signin.closest(".tabs").hidden=true;
+ resetPassword.hidden=true;
+ resendConfirmation.hidden=true;
+ signout.hidden=false;
+ document.getElementById("formTitle").textContent="Your travel dashboard";
+ document.getElementById("formSub").textContent="You are signed in to your StayLatin traveler account.";
+ loadTravelerAvatar();
+ loadTravelerIntroduction();
+ loadTravelerJournal();
+ loadTravelerSavedPlaces();
+ loadTravelerIntroductionDirectory();
+ loadPrivateInbox();
+ loadTravelerLounge();
+}
+function setTravelerSignedOut(){
+ activeTripUserId=null;
+ document.querySelector(".traveler-intro")?.removeAttribute("hidden");
+ document.querySelector(".traveler-auth")?.removeAttribute("hidden");
+ document.getElementById("travelerDashboard").hidden=true;
+ document.getElementById("privacyNote")?.removeAttribute("hidden");
+ form.hidden=false;
+ signin.closest(".tabs").hidden=false;
+ resetPassword.hidden=false;
+ signout.hidden=true;
+ setMode("signin");
+}
+signin.addEventListener("click",()=>setMode("signin"));
+signup.addEventListener("click",()=>setMode("signup"));
+document.getElementById("dashSignout")?.addEventListener("click",async()=>{
+ try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
+ catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+});
+signout.addEventListener("click",async()=>{
+ try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
+ catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+});
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+ submit.disabled=true;
+ setTravelerStatus(mode==="signin"?"Signing you in securely…":"Creating your traveler account…");
+ try{
+   const db=introClient();
+   if(!db)throw new Error("StayLatin authentication is not configured. Please try again later.");
+   const email=document.getElementById("email").value.trim();
+   const pass=password.value;
+   let result;
+   if(mode==="signup"){
+     const fullName=document.getElementById("name").value.trim();
+     result=await db.auth.signUp({email,password:pass,options:{data:{full_name:fullName,intended_account_type:"traveler"},emailRedirectTo:"https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler-signin.html"}});
+     if(result.error)throw result.error;
+     if(result.data.session&&result.data.user){setTravelerSignedIn(result.data.user);setTravelerStatus("Your traveler account is ready.","success");}
+     else setTravelerStatus("Your account was created. Check your email to confirm your address, then sign in here.","success");
+   }else{
+     result=await db.auth.signInWithPassword({email,password:pass});
+     if(result.error)throw result.error;
+     const user=result.data.user;
+     const intended=user.user_metadata?.intended_account_type;
+     if(intended&&intended!=="traveler"){await db.auth.signOut();throw new Error("This account was registered for a different StayLatin area. Please use its dedicated sign-in page.");}
+     setTravelerSignedIn(user);
+     setTravelerStatus("Sign-in successful. You are now inside your traveler portal.","success");
+     requestAnimationFrame(()=>document.getElementById("travelerDashboard")?.scrollIntoView({behavior:"smooth",block:"start"}));
+   }
+ }catch(err){setTravelerStatus(err.message||"Could not complete sign-in. Please check your details and try again.","error");}
+ finally{submit.disabled=false;}
+});
+resetPassword.addEventListener("click",async()=>{
+ try{
+   const email=document.getElementById("email").value.trim();
+   if(!email)throw new Error("Enter your email address first.");
+   const db=introClient();if(!db)throw new Error("StayLatin authentication is not configured.");
+   const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:"https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler-dashboard.html?recovery=1"});
+   if(error)throw error;
+   setTravelerStatus("If an account exists for this address, a password-reset email has been requested.","success");
+ }catch(err){setTravelerStatus(err.message||"Could not request a password reset.","error");}
+});
+document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const next=document.getElementById("recoveryNewPassword").value;
+ const confirm=document.getElementById("recoveryConfirmPassword").value;
+ if(next!==confirm){setTravelerStatus("The passwords do not match.","error");return;}
+ try{const db=introClient();if(!db)throw new Error("StayLatin authentication is not configured.");const {error}=await db.auth.updateUser({password:next});if(error)throw error;history.replaceState({},document.title,location.pathname);setTravelerStatus("Your password has been updated. Sign in with your new password.","success");document.getElementById("passwordRecoveryForm").hidden=true;setMode("signin");}
+ catch(err){setTravelerStatus(err.message||"Could not update your password.","error");}
+});
+(async()=>{
+ try{
+   const db=introClient();
+   if(!db){setTravelerStatus("StayLatin authentication is not configured. Please try again later.","error");return;}
+   const recovery=new URLSearchParams(location.search).get("recovery")==="1"||new URLSearchParams(location.hash.slice(1)).get("type")==="recovery";
+   if(recovery){
+     document.body.classList.add("password-recovery-mode");
+     document.getElementById("passwordRecoveryForm").hidden=false;
+     document.getElementById("formTitle").textContent="Choose a new password";
+     document.getElementById("formSub").textContent="Enter and confirm your new password.";
+     form.hidden=true;signin.closest(".tabs").hidden=true;resetPassword.hidden=true;
+   }
+   const {data,error}=await db.auth.getSession();
+   if(error)throw error;
+   if(data.session?.user&&!recovery){setTravelerSignedIn(data.session.user);}
+   db.auth.onAuthStateChange((event,session)=>{
+     if(session?.user&&!recovery)setTravelerSignedIn(session.user);
+     else if(!session&&!recovery)setTravelerSignedOut();
+   });
+ }catch(err){setTravelerStatus(err.message||"Could not restore your traveler session. Please refresh and try again.","error");}
+})();
+</script>
+<script>
+/* Keep the active portal work area anchored after clicks, form submissions, chat actions, and async UI updates. */
+(function(){
+ if(window.__stayLatinKeepWorkArea)return;window.__stayLatinKeepWorkArea=true;
+ let pending=null;
+ function capture(el){
+  if(!el||!el.getBoundingClientRect)return;
+  if(el.matches&&el.matches('a[href]')&&el.target==='_blank')return;
+  const rect=el.getBoundingClientRect();
+  pending={el:el,top:rect.top,left:rect.left,startedAt:Date.now()};
+  [70,220,480,850].forEach(function(delay){setTimeout(function(){
+   const p=pending;if(!p||p.el!==el||!el.isConnected||Date.now()-p.startedAt>1200)return;
+   const now=el.getBoundingClientRect();const delta=now.top-p.top;
+   if(Math.abs(delta)>2)window.scrollBy({top:delta,left:0,behavior:'instant'});
+  },delay);});
+ }
+ document.addEventListener('click',function(event){
+  const target=event.target&&event.target.closest?event.target.closest('button,input[type="submit"],input[type="button"],[role="button"],a[href],summary'):null;
+  if(target)capture(target);
+ },true);
+ document.addEventListener('submit',function(event){
+  const form=event.target;if(!form||!form.getBoundingClientRect)return;
+  const active=form.querySelector('button[type="submit"],input[type="submit"]')||form;
+  capture(active);
+ },true);
+ document.addEventListener('change',function(event){
+  const target=event.target;if(!target||!target.matches||!target.matches('select,input[type="checkbox"],input[type="radio"]'))return;
+  capture(target);
+ },true);
+})();
+</script>
