@@ -937,6 +937,7 @@ document.getElementById("dashSignout")?.addEventListener("click",async()=>{
   if(session)throw new Error("Your session could not be cleared. Please try again.");
   setTravelerSignedOut();
   setTravelerStatus("You have securely signed out of StayLatin.","success");
+  if(window.parent&&window.parent!==window){window.parent.postMessage({type:"staylatin-signout"},window.location.origin);}
  }catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
  finally{if(button){button.disabled=false;button.textContent="Sign out";}}
 });
