@@ -37,6 +37,18 @@
     if(menu){menu.hidden=false;menu.classList.add("is-open");}
     if(btn)btn.setAttribute("aria-expanded","true");
   }
+
+  function ensureForeverFreeBanner(){
+    if(document.getElementById("staylatin-donation-tab")) return;
+    var banner=document.createElement("div");
+    banner.id="staylatin-donation-tab";
+    banner.setAttribute("role","note");
+    banner.setAttribute("aria-label","For travelers, Forever Free. Support StayLatin. PayPal coming soon.");
+    banner.setAttribute("title","For travelers, Forever Free");
+    banner.innerHTML='<span class="donation-heart" aria-hidden="true">♥</span><span class="donation-vertical">FOR TRAVELERS · FOREVER FREE</span><span class="donation-paypal">Support StayLatin <em>· PayPal Coming Soon</em></span>';
+    document.body.insertBefore(banner,document.body.firstChild);
+    document.body.classList.add("staylatin-has-forever-free-banner");
+  }
   function bind(){
     var btn=document.getElementById("language");
     var menu=document.getElementById("languageMenu");
@@ -59,6 +71,6 @@
     document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeLangMenu(); });
     applyLanguage();
   }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bind);
-  else bind();
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ensureForeverFreeBanner();bind();});
+  else {ensureForeverFreeBanner();bind();}
 })();
