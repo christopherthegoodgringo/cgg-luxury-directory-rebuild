@@ -174,7 +174,6 @@
   
   <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
     <span id="chatUnreadBadge" hidden style="background:#e8d2a2;color:var(--forest);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800"></span>
-    <button id="refreshChat" type="button" class="minor-action" style="width:auto;margin:0">Refresh messages ↻</button>
     <button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin:0">Enable chat notifications</button>
     <span id="chatNotificationStatus" style="font-size:11px;color:var(--muted)"></span>
   </div>
@@ -685,10 +684,9 @@ chatForm?.addEventListener("submit",async e=>{
  catch(e){setChatNotice("Could not send your message: "+(e&&e.message?e.message:"please check your connection and try again."),"error");}
  finally{chatBusy=false;sendChat.disabled=false;sendChat.textContent="Send message ↗";}
 });
-document.getElementById("refreshChat")?.addEventListener("click",loadTravelerChat);
 chatMessages?.addEventListener("scroll",()=>{if(chatMessages.scrollTop+chatMessages.clientHeight>=chatMessages.scrollHeight-12)resetChatUnread()});
 document.getElementById("chatTitle")?.addEventListener("click",resetChatUnread);
-function connectTravelerChat(session){currentTravelerSession=session||null;if(!chatMessages||!chatNotice||!chatForm)return;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(chatRefreshTimer){window.clearInterval(chatRefreshTimer);chatRefreshTimer=null;}if(!session){chatMessages.innerHTML='<div class="status show">Sign in to view lounge messages.</div>';setChatNotice("Sign in to join the Traveler Lounge.");return;}setChatNotice("Connecting to the Traveler Lounge…");loadTravelerChat();/* Realtime is primary; polling keeps the lounge fresh if a browser or network misses an event. */chatRefreshTimer=window.setInterval(()=>{if(!document.hidden&&currentTravelerSession)loadTravelerChat();},5000);chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_chat_messages"},()=>loadTravelerChat()).subscribe((status)=>{if(status==="SUBSCRIBED")setChatNotice("Connected. New messages appear automatically (live updates plus 5-second refresh).");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setChatNotice("Live updates are unavailable. Automatic refresh is checking for new posts every 5 seconds.","error");});}
+function connectTravelerChat(session){currentTravelerSession=session||null;if(!chatMessages||!chatNotice||!chatForm)return;if(chatSubscription&&client){client.removeChannel(chatSubscription);chatSubscription=null;}if(chatRefreshTimer){window.clearInterval(chatRefreshTimer);chatRefreshTimer=null;}if(!session){chatMessages.innerHTML='<div class="status show">Sign in to view lounge messages.</div>';setChatNotice("Sign in to join the Traveler Lounge.");return;}setChatNotice("Connecting to the Traveler Lounge…");loadTravelerChat();/* Subscribe to every new post so the lounge updates without a manual refresh. */chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_chat_messages"},()=>{if(currentTravelerSession)loadTravelerChat();}).subscribe((status)=>{if(status==="SUBSCRIBED")setChatNotice("Connected. New messages update automatically.");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setChatNotice("Live updates are temporarily unavailable. Reconnect or reopen the lounge to catch up.","error");});}
 async function loadDashboardStays(session){
  try{
   const {data:favs,error}=await client.from("staylatin_favorites").select("business_id").eq("user_id",session.user.id);
