@@ -3,108 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#183b30">
-<meta name="description" content="Discover Colombia's independent boutique hotels: characterful stays, thoughtful design, local hospitality, and places with a story.">
-<title>Colombia Uncovered | Independent Boutique Hotels</title>
-<style>
-:root{--forest:#183b30;--deep:#10271f;--gold:#c9a76a;--cream:#f7f5ef;--paper:#fffefa;--ink:#202b25;--muted:#68746d;--line:#e3e2d9;--serif:Georgia,'Times New Roman',serif;--sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.55}a{color:inherit}button,input,select{font:inherit}.wrap{width:min(1180px,calc(100% - 44px));margin-inline:auto}
-header{position:absolute;inset:0 0 auto;z-index:5;color:#fff;border-bottom:1px solid #ffffff2c}.nav{min-height:84px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;gap:13px;align-items:center;text-decoration:none}.mark{width:42px;height:42px;border:1px solid var(--gold);color:var(--gold);display:grid;place-items:center;font:19px var(--serif);border-radius:50%}.brand-name{font:19px var(--serif);letter-spacing:.03em}.brand-sub{display:block;font:9px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:#d8dfd8;margin-top:3px}.navlinks{display:flex;align-items:center;gap:28px;font-size:12px;letter-spacing:.04em}.navlinks a{text-decoration:none;color:#f0f0e9}.navlinks a:hover{color:var(--gold)}.navlinks .owner-link{border:1px solid #ffffff83;padding:11px 15px;border-radius:3px}
-.hero{min-height:700px;display:flex;align-items:center;position:relative;color:#fff;background:#243d31 url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2200&q=88') center 54%/cover no-repeat}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,32,24,.88),rgba(12,32,24,.63) 48%,rgba(12,32,24,.14)),linear-gradient(0deg,rgba(12,32,24,.25),transparent 40%)}.hero-inner{position:relative;padding:150px 0 115px;max-width:760px}.eyebrow{font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.25em;color:var(--gold)}h1,h2,h3,p{margin-top:0}.hero h1{font:400 clamp(48px,7vw,84px)/.99 var(--serif);letter-spacing:-.035em;margin:22px 0 24px}.hero h1 em{font-weight:400;color:#e0c58f}.hero-copy{max-width:550px;color:#e5e8e1;font-size:16px;line-height:1.8;margin-bottom:32px}.actions{display:flex;gap:12px;flex-wrap:wrap}.btn{display:inline-flex;justify-content:center;align-items:center;min-height:49px;padding:13px 21px;text-decoration:none;border:1px solid transparent;border-radius:2px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:750;cursor:pointer}.btn-gold{background:var(--gold);color:#1d2e24}.btn-gold:hover{background:#ddc28d}.btn-outline{border-color:#ffffff9c;color:#fff}.btn-outline:hover{background:#ffffff15}.hero-foot{margin-top:54px;display:flex;align-items:center;gap:12px;color:#e3e4dc;font-size:10px;letter-spacing:.13em;text-transform:uppercase}.hero-foot:before{content:"";width:35px;height:1px;background:var(--gold)}
-.intro{padding:90px 0 70px;text-align:center}.intro .eyebrow{color:#947541}.intro h2{font:400 clamp(34px,4vw,51px)/1.1 var(--serif);max-width:780px;margin:17px auto 20px}.intro p{max-width:680px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.9}.destinations{padding:20px 0 92px}.section-top{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:27px}.section-top h2{font:400 clamp(31px,4vw,43px)/1.1 var(--serif);margin:8px 0 0}.section-top p{color:var(--muted);max-width:390px;font-size:12px;margin:0}.destination-grid{display:grid;grid-template-columns:1.22fr 1fr 1fr;gap:15px}.destination{position:relative;min-height:300px;overflow:hidden;text-decoration:none;background:#32493d;color:white;isolation:isolate}.destination:first-child{min-height:420px;grid-row:span 2}.destination img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .7s}.destination:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,31,23,.88),transparent 72%);z-index:-1}.destination:hover img{transform:scale(1.045)}.destination-copy{position:absolute;left:24px;right:20px;bottom:24px}.destination .kicker{color:#e2c78e;font-size:9px;text-transform:uppercase;letter-spacing:.2em}.destination h3{font:400 30px/1.1 var(--serif);margin:8px 0}.destination p{font-size:11px;color:#e4e8e1;margin:0;max-width:300px}.destination .arrow{position:absolute;right:22px;bottom:25px;color:#e4c88e;font-size:20px}
-.promise{background:#eaece4;padding:80px 0}.promise-head{text-align:center;max-width:690px;margin:0 auto 38px}.promise-head h2{font:400 clamp(33px,4vw,46px)/1.1 var(--serif);margin:12px 0 14px}.promise-head p{font-size:13px;color:var(--muted);line-height:1.8}.promise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}.promise-item{padding:25px 25px 5px;border-top:1px solid #c9cfc4}.number{color:#9b7b42;font:italic 24px var(--serif)}.promise-item h3{font:400 24px var(--serif);margin:13px 0 9px}.promise-item p{font-size:12px;color:var(--muted);line-height:1.85;margin:0}
-.owner{padding:90px 0}.owner-panel{display:grid;grid-template-columns:1fr 1fr;background:var(--deep);color:#fff;min-height:370px}.owner-photo{min-height:360px;background:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85') center/cover}.owner-copy{padding:clamp(32px,5vw,62px);align-self:center}.owner-copy .eyebrow{display:block}.owner-copy h2{font:400 clamp(32px,4vw,45px)/1.08 var(--serif);margin:14px 0 17px}.owner-copy p{font-size:13px;color:#d3dbd3;line-height:1.9;max-width:470px}.owner-note{margin-top:22px;font-size:10px;color:#b8c4ba;line-height:1.7}
-footer{background:#0c2019;color:#e7e8df;padding:32px 0}.footer-row{display:flex;justify-content:space-between;align-items:center;gap:22px;flex-wrap:wrap}.footer-brand{font:19px var(--serif)}.footer-brand small{display:block;font:9px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#b5c1b7;margin-top:4px}.footer-copy{font-size:10px;color:#aebbb0}.footer-links{display:flex;gap:18px;font-size:10px}.footer-links a{text-decoration:none;color:#d9dfd8}.footer-links a:hover{color:var(--gold)}
-@media(max-width:780px){.nav{min-height:72px}.navlinks{gap:13px}.navlinks a:not(.owner-link){display:none}.brand-name{font-size:16px}.hero{min-height:650px;background-position:58% center}.hero-inner{padding:130px 0 90px}.destination-grid{grid-template-columns:1fr 1fr}.destination:first-child{grid-row:auto;min-height:330px;grid-column:span 2}.destination{min-height:280px}.promise-grid{grid-template-columns:1fr;gap:22px}.promise-item{padding:20px 8px 0}.owner-panel{grid-template-columns:1fr}.owner-photo{min-height:250px;order:0}.owner-copy{order:1}.section-top{align-items:start;flex-direction:column}.intro{padding:70px 0 55px}}
-@media(max-width:460px){.wrap{width:calc(100% - 30px)}.mark{width:36px;height:36px}.brand{gap:9px}.brand-name{font-size:14px}.brand-sub{font-size:8px}.navlinks .owner-link{padding:9px 10px;font-size:9px}.hero{min-height:630px}.hero h1{font-size:50px}.hero-copy{font-size:14px}.destination-grid{grid-template-columns:1fr}.destination:first-child{grid-column:auto;min-height:320px}.destination{min-height:260px}.footer-row{align-items:flex-start;flex-direction:column}}
-</style>
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0;url=https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/">
+<title>StayLatin</title>
+<link rel="canonical" href="https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/">
+<script>location.replace("https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/");</script>
 </head>
 <body>
-<header>
-  <div class="wrap nav">
-    <a class="brand" href="#top" aria-label="Colombia Uncovered home">
-      <span class="mark">CU</span>
-      <span><span class="brand-name">Colombia Uncovered</span><span class="brand-sub">Independent boutique stays</span></span>
-    </a>
-    <nav class="navlinks" aria-label="Main navigation">
-      <a href="stays.html">Discover stays</a>
-      <a href="memberships.html">Memberships</a>
-      <a href="#destinations">Destinations</a>
-      <a class="owner-link" href="#hoteliers">For hoteliers ↗</a>
-    </nav>
-  </div>
-</header>
-<main id="top">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap"><div class="hero-inner">
-      <div class="eyebrow">A more personal way to discover Colombia</div>
-      <h1 id="hero-title">Stay somewhere<br>with a <em>story.</em></h1>
-      <p class="hero-copy">Discover Colombia through its independent boutique hotels — intimate courtyards, thoughtful design, local character, and hosts who make a place memorable.</p>
-      <div class="actions"><a class="btn btn-gold" href="stays.html">Discover boutique stays</a><a class="btn btn-outline" href="#hoteliers">For hotel owners</a></div>
-      <div class="hero-foot">A considered collection of independent stays</div>
-    </div></div>
-  </section>
-  <section class="intro" id="our-approach">
-    <div class="wrap">
-      <div class="eyebrow">Not just a place to sleep</div>
-      <h2>For travelers who notice the little things.</h2>
-      <p>We are building a carefully curated guide to independent boutique hotels across Colombia. Think distinctive architecture, a sense of place, warm hospitality, and spaces chosen for their character rather than their size.</p>
-    </div>
-  </section>
-  <section class="destinations" id="destinations">
-    <div class="wrap">
-      <div class="section-top"><div><div class="eyebrow" style="color:#947541">Find your kind of Colombia</div><h2>Explore by destination</h2></div><p>From Caribbean light to quiet colonial streets, discover the places that make a stay feel personal.</p></div>
-      <div class="destination-grid">
-        <a class="destination" href="#hoteliers" aria-label="Explore boutique stays in Santa Marta">
-          <img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=1200&q=85" alt="Tropical Caribbean coastline" loading="lazy">
-          <div class="destination-copy"><div class="kicker">Caribbean coast</div><h3>Santa Marta</h3><p>Sea air, historic streets, and a relaxed tropical rhythm.</p></div><span class="arrow">↗</span>
-        </a>
-        <a class="destination" href="#hoteliers" aria-label="Explore boutique stays in Cartagena">
-          <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=85" alt="Colorful historic coastal architecture" loading="lazy">
-          <div class="destination-copy"><div class="kicker">Historic elegance</div><h3>Cartagena</h3><p>Color, courtyards, and Caribbean heritage.</p></div><span class="arrow">↗</span>
-        </a>
-        <a class="destination" href="stays.html" aria-label="Discover boutique stays in Villa de Leyva">
-          <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=900&q=85" alt="Timeless stone and colonial architecture" loading="lazy">
-          <div class="destination-copy"><div class="kicker">Slow travel</div><h3>Villa de Leyva</h3><p>Stone streets, mountain air, and unhurried days.</p></div><span class="arrow">↗</span>
-        </a>
-        <a class="destination" href="#hoteliers" aria-label="Explore boutique stays in Tunja">
-          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85" alt="Quiet, design-led interior" loading="lazy">
-          <div class="destination-copy"><div class="kicker">Andean character</div><h3>Tunja & Boyacá</h3><p>Local culture, highland landscapes, and history.</p></div><span class="arrow">↗</span>
-        </a>
-      </div>
-    </div>
-  </section>
-  <section class="promise">
-    <div class="wrap">
-      <div class="promise-head"><div class="eyebrow" style="color:#947541">Our point of view</div><h2>Small details. Strong sense of place.</h2><p>We believe the best boutique stays feel connected to where they are — and offer something more personal than a standard hotel experience.</p></div>
-      <div class="promise-grid">
-        <article class="promise-item"><div class="number">01</div><h3>Character over size</h3><p>Independent properties with distinctive architecture, considered interiors, and a personality of their own.</p></article>
-        <article class="promise-item"><div class="number">02</div><h3>Local by nature</h3><p>Places rooted in their community, with hospitality and recommendations that help guests experience the destination.</p></article>
-        <article class="promise-item"><div class="number">03</div><h3>Curated with care</h3><p>Our directory is being shaped around thoughtful presentation, accurate property details, and a clear path to contact each hotel.</p></article>
-      </div>
-    </div>
-  </section>
-  <section class="owner" id="hoteliers">
-    <div class="wrap">
-      <div class="owner-panel">
-        <div class="owner-photo" role="img" aria-label="Elegant boutique hotel pool and architecture"></div>
-        <div class="owner-copy">
-          <span class="eyebrow">For independent hoteliers</span>
-          <h2>Your hotel has a story. Let’s tell it well.</h2>
-          <p>Colombia Uncovered is being developed as a focused showcase for independent boutique hotels. We’re preparing a thoughtful listing experience for owners who want to present their property to travelers looking for something distinctive.</p>
-          <span class="btn btn-gold" aria-label="Hotel owner enquiries opening soon">Hotel owner enquiries opening soon</span>
-          <div class="owner-note">Hotel-owner onboarding details will be published here once the contact and listing process is connected.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-<footer>
-  <div class="wrap footer-row">
-    <div class="footer-brand">Colombia Uncovered<small>Independent boutique stays</small></div>
-    <div class="footer-copy">A curated guide to Colombia’s independent hospitality.</div>
-    <div class="footer-links"><a href="#destinations">Destinations</a><a href="#our-approach">Our approach</a><a href="#hoteliers">For hoteliers</a><a href="memberships.html">Memberships</a></div>
-  </div>
-</footer>
+<p>StayLatin has moved. <a href="https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/">Continue to StayLatin</a>.</p>
 </body>
 </html>
