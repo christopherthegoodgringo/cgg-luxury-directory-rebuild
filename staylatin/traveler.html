@@ -425,7 +425,7 @@ async function saveTravelerChatProfile(db,userId){
  if(saveError)throw saveError;
  setChatPrivacyStatus(!shareName&&!sharePhoto&&!sharePhotoDirectory?"Your name and photo are hidden from other travelers.":shareName&&sharePhoto?"Your display name and photo will appear beside your chat messages.":shareName?"Your display name will appear beside your chat messages.":sharePhoto?"Your profile photo will appear beside your chat messages.":sharePhotoDirectory?"Your profile photo is shared in the member directory only.":"Your photo privacy settings were saved.");
 }
-async const journalForm=document.getElementById("travelerJournalForm"),journalEntries=document.getElementById("travelerJournalEntries"),journalStatus=document.getElementById("journalStatus");
+const journalForm=document.getElementById("travelerJournalForm"),journalEntries=document.getElementById("travelerJournalEntries"),journalStatus=document.getElementById("journalStatus");
 function setJournalStatus(message,isError=false){if(!journalStatus)return;journalStatus.textContent=message;journalStatus.style.color=isError?"#9b392c":"var(--muted)";}
 function resetJournalForm(){journalForm?.reset();document.getElementById("journalEntryId").value="";document.getElementById("journalSaveButton").textContent="Save journal entry";document.getElementById("journalCancelEdit").hidden=true;}
 async function loadTravelerJournal(){
