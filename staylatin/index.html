@@ -304,6 +304,34 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .sl-brand,.sl-navlinks a{color:var(--forest)!important}
 .sl-navlinks a:hover,.sl-language{color:var(--green-mid)!important}
 .sl-mark{color:var(--green-bright)!important;border-color:var(--green-mid)!important}
+
+/* Card bodies: darkest green at highest tier → lightest at Basic */
+.stay-card.tier-premium{background:linear-gradient(180deg,#0c332a 0%,#0a2f27 100%)!important;border-color:#06241e!important;color:#e8f6ef!important}
+.stay-card.tier-featured{background:linear-gradient(180deg,#165a48 0%,#1a5c4a 100%)!important;border-color:#12483a!important;color:#eef8f3!important}
+.stay-card.tier-verified{background:linear-gradient(180deg,#3f9a78 0%,#4eaa86 100%)!important;border-color:#34866a!important;color:#0a2f27!important}
+.stay-card.tier-basic{background:linear-gradient(180deg,#d8eee4 0%,#eef6f2 100%)!important;border-color:#cfe0d7!important;color:#1a2e28!important}
+.stay-card.tier-premium .location,.stay-card.tier-featured .location{color:#a8d5c0!important}
+.stay-card.tier-verified .location{color:#0f3d32!important}
+.stay-card.tier-basic .location{color:#1f7a5c!important}
+.stay-card.tier-premium h3,.stay-card.tier-featured h3{color:#f3fbf7!important}
+.stay-card.tier-verified h3{color:#0a2f27!important}
+.stay-card.tier-basic h3{color:#0f3d32!important}
+.stay-card.tier-premium .stay-description,.stay-card.tier-premium p,
+.stay-card.tier-featured .stay-description,.stay-card.tier-featured p{color:#c5ddd2!important}
+.stay-card.tier-verified .stay-description,.stay-card.tier-verified p{color:#143d30!important}
+.stay-card.tier-basic .stay-description,.stay-card.tier-basic p{color:#5a7268!important}
+.stay-card.tier-premium .booking-note,.stay-card.tier-featured .booking-note{color:#9ecbb8!important}
+.stay-card.tier-verified .booking-note{color:#1a4a3a!important}
+.stay-card.tier-basic .booking-note{color:#5a7268!important}
+.stay-card.tier-premium .card-actions,.stay-card.tier-featured .card-actions{border-color:rgba(168,213,192,.25)}
+.stay-card.tier-premium .staylatin-booking,.stay-card.tier-featured .staylatin-booking{
+ background:rgba(232,246,239,.14)!important;color:#e8f6ef!important;border:1px solid rgba(168,213,192,.45)!important}
+.stay-card.tier-premium .staylatin-booking:hover,.stay-card.tier-featured .staylatin-booking:hover{
+ background:rgba(232,246,239,.24)!important}
+.stay-card.tier-verified .staylatin-booking{
+ background:#0f3d32!important;color:#e8f6ef!important;border:1px solid #0a2f27!important}
+.stay-card.tier-basic .staylatin-booking{
+ background:#1f7a5c!important;color:#fff!important;border:1px solid #1a5c4a!important}
 </style>
 
 </head>
