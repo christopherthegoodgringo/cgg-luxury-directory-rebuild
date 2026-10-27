@@ -213,11 +213,31 @@ body [role="button"][aria-disabled="true"] {
   0%, 100% { opacity: 1; background-position: 0% 50%; filter: saturate(1); }
   50% { opacity: .82; background-position: 65% 50%; filter: saturate(1.16) brightness(1.06); }
 }
+/* Keep the destructive action functional-looking, but match the same green/gold hover fade. */
+#deleteTravelerAccount.danger-action {
+  background: linear-gradient(115deg, #0f3d32 0%, #167b68 36%, #239b86 68%, #b9852f 100%) !important;
+  background-size: 220% 220% !important;
+  color: #fff !important;
+  border: 1px solid #d9b866 !important;
+  animation: stayLatinButtonGlow 4.2s ease-in-out infinite !important;
+}
+#deleteTravelerAccount.danger-action:hover {
+  background: linear-gradient(115deg, #0f3d32 0%, #167b68 36%, #239b86 68%, #b9852f 100%) !important;
+  background-size: 220% 220% !important;
+  background-position: 100% 50% !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  filter: saturate(1.18) brightness(1.08);
+  box-shadow: 0 6px 18px rgba(15, 61, 50, .3), 0 0 0 2px rgba(217, 184, 102, .2) !important;
+  transform: translateY(-1px);
+  animation-play-state: paused !important;
+}
 @media (prefers-reduced-motion: reduce) {
   body button, body input[type="button"], body input[type="submit"],
   body input[type="reset"], body [role="button"], body .btn,
-  body .tab, body .minor-action, body .action-button {
-    animation: none;
+  body .tab, body .minor-action, body .action-button,
+  #deleteTravelerAccount.danger-action {
+    animation: none !important;
     transition: none;
   }
 }
@@ -739,7 +759,33 @@ function setTravelerStatus(message,kind=""){
  statusBox.className="status show"+(kind?" "+kind:"");
  statusBox.textContent=message;
 }
-async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangeEmailForm")?.addEventListener("submit",async e=>{
+async function deleteOwnTravelerAccount(){
+ const db=introClient(),button=document.getElementById("deleteTravelerAccount");
+ if(!db){setTravelerStatus("StayLatin account service is unavailable. Refresh the page and try again.","error");return;}
+ if(!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}
+ if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;
+ const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');
+ if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}
+ if(button){button.disabled=true;button.textContent="Deleting account…";}
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError)throw userError;
+  if(!user||user.id!==activeTripUserId)throw new Error("Your sign-in session has expired. Sign in again before deleting your account.");
+  const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:user.id,mode:"self",confirmation}});
+  if(error)throw error;
+  if(!data?.success)throw new Error(data?.error||"The account was not deleted.");
+  try{await db.auth.signOut();}catch(_){}
+  activeTripUserId=null;
+  setTravelerStatus("Your StayLatin traveler account has been permanently deleted.","success");
+  window.alert("Your StayLatin traveler account has been permanently deleted.");
+  window.location.href="index.html#top";
+ }catch(err){
+  setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");
+ }finally{
+  if(button){button.disabled=false;button.textContent="Delete account";}
+ }
+}
+document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangeEmailForm")?.addEventListener("submit",async e=>{
  e.preventDefault();
  const form=e.currentTarget,button=document.getElementById("travelerChangeEmailButton"),status=document.getElementById("travelerEmailStatus");
  const email=document.getElementById("travelerNewEmail").value.trim().toLowerCase(),password=document.getElementById("travelerEmailCurrentPassword").value;
@@ -827,8 +873,22 @@ function setTravelerSignedOut(){
 signin.addEventListener("click",()=>setMode("signin"));
 signup.addEventListener("click",()=>setMode("signup"));
 document.getElementById("dashSignout")?.addEventListener("click",async()=>{
- try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
- catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+ const button=document.getElementById("dashSignout");
+ if(button){button.disabled=true;button.textContent="Signing out…";}
+ try{
+  const db=introClient();
+  if(!db)throw new Error("StayLatin sign-out is unavailable right now. Please refresh and try again.");
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError)throw userError;
+  if(!user){setTravelerSignedOut();setTravelerStatus("You are already signed out.","success");return;}
+  const {error}=await db.auth.signOut();
+  if(error)throw error;
+  const {data:{session}}=await db.auth.getSession();
+  if(session)throw new Error("Your session could not be cleared. Please try again.");
+  setTravelerSignedOut();
+  setTravelerStatus("You have securely signed out of StayLatin.","success");
+ }catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+ finally{if(button){button.disabled=false;button.textContent="Sign out";}}
 });
 signout.addEventListener("click",async()=>{
  try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
