@@ -84,3 +84,23 @@ body{
   .topbar .wrap,.sl-top-message-inner{align-items:flex-start;flex-direction:column;gap:3px}
 }
 @media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a.sl-nav-btn{font-size:10px;padding:8px 10px}}
+
+
+/* Shared StayLatin Forever Free banner on every page using shared chrome. */
+#staylatin-donation-tab{
+ position:fixed;top:0;left:0;right:0;width:100%;max-width:none;
+ transform:none;z-index:99999;box-sizing:border-box;
+ display:flex;flex-direction:row;align-items:center;justify-content:center;
+ gap:13px;padding:9px 16px;border:0;border-bottom:1px solid rgba(255,255,255,.72);
+ border-radius:0;background:linear-gradient(100deg,#ef5da8 0%,#a46ce8 32%,#4d9ee8 65%,#38b98b 100%);
+ color:#fff;text-decoration:none;white-space:normal;text-align:center;
+ box-shadow:0 3px 15px rgba(36,67,75,.2);cursor:default;
+ animation:staylatinDonationPulse 3.8s ease-in-out infinite;
+}
+#staylatin-donation-tab .donation-vertical{writing-mode:horizontal-tb;transform:none;font-size:11px;font-weight:850;letter-spacing:.075em;line-height:1.15;text-align:center;text-transform:uppercase}
+#staylatin-donation-tab .donation-heart{font-size:17px;line-height:1}
+#staylatin-donation-tab .donation-paypal{writing-mode:horizontal-tb;transform:none;flex:0 0 auto;border:1px solid rgba(255,255,255,.8);border-radius:7px;padding:5px 9px;background:rgba(15,55,67,.28);font-size:10px;font-weight:900;letter-spacing:.025em}
+#staylatin-donation-tab .donation-paypal em{font-style:normal;opacity:.92;font-size:9px}
+@keyframes staylatinDonationPulse{0%,100%{opacity:.82;box-shadow:0 2px 10px rgba(36,67,75,.12)}50%{opacity:1;box-shadow:0 3px 20px rgba(164,108,232,.34),0 0 10px rgba(239,93,168,.2)}}
+@media(max-width:560px){#staylatin-donation-tab{gap:7px;padding:7px 8px}#staylatin-donation-tab .donation-vertical{font-size:9px;letter-spacing:.025em}#staylatin-donation-tab .donation-heart{font-size:14px}#staylatin-donation-tab .donation-paypal{font-size:9px;padding:4px 6px}#staylatin-donation-tab .donation-paypal em{font-size:8px}}
+@media(prefers-reduced-motion:reduce){#staylatin-donation-tab{animation:none;opacity:1}}
