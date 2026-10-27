@@ -93,23 +93,27 @@
 #travelerLounge #sendChat:disabled{opacity:.6;cursor:wait}
 @media(max-width:560px){#travelerLounge .lounge-compose{grid-template-columns:minmax(0,1fr)!important}#travelerLounge #sendChat{width:100%!important}#travelerLounge .lounge-toolbar .minor-action{padding:9px 10px}}
 
-/* Password reset page: match the dedicated traveler sign-in page */
-body.password-recovery-mode .traveler-content{display:block;max-width:560px;margin:0 auto;padding:42px 0 28px}
+/* Password recovery: match traveler-signup.html's shared account panel */
+body.password-recovery-mode{background:radial-gradient(circle at 8% 5%,#f8d9c7 0,transparent 28%),radial-gradient(circle at 92% 8%,#cde9dc 0,transparent 30%),linear-gradient(135deg,#f7f4ec 0%,#f0f5ed 48%,#fff1e7 100%);min-height:100vh}
+body.password-recovery-mode .traveler-content{display:block!important;width:min(980px,calc(100% - 32px));max-width:none;margin:0 auto;padding:36px 0 72px}
 body.password-recovery-mode .traveler-intro,body.password-recovery-mode .traveler-dashboard,body.password-recovery-mode #traveler-memberships{display:none!important}
-body.password-recovery-mode .traveler-auth{display:block!important;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:clamp(24px,4vw,34px);box-shadow:0 8px 26px #173f350d}
-body.password-recovery-mode .traveler-auth>.kicker{display:block!important;color:var(--terra)!important;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px}
-body.password-recovery-mode .traveler-auth h2{display:block!important;font:500 38px/1.12 Georgia,serif!important;color:var(--forest);margin:0 0 10px!important}
-body.password-recovery-mode .traveler-auth .desc{display:block!important;color:var(--muted);font-size:14px;margin:0 0 20px!important}
+body.password-recovery-mode .traveler-auth{display:block!important;position:relative;overflow:hidden;width:min(520px,100%);margin:0 auto;background:var(--paper)!important;border:1px solid #d9e5d9!important;border-radius:24px!important;padding:clamp(28px,5vw,38px)!important;box-shadow:0 24px 60px #173f3518!important}
+body.password-recovery-mode .traveler-auth:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#1c6650,#57a878,#e7b85f,#dc805a,#9c7bd0)}
+body.password-recovery-mode .traveler-auth>.kicker{display:inline-flex!important;align-items:center;padding:7px 11px;margin:0 0 4px;border-radius:999px;background:linear-gradient(110deg,#e1f3e8,#fff0d9);color:#245448!important;font-size:11px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
+body.password-recovery-mode #formTitle{display:block!important;font:500 clamp(29px,5vw,38px)/1.12 Georgia,serif!important;color:var(--forest)!important;margin:15px 0 10px!important}
+body.password-recovery-mode #formSub{display:block!important;font-size:15px;color:var(--muted)!important;margin:0 0 20px!important}
 body.password-recovery-mode #authForm{display:none!important}
 body.password-recovery-mode #passwordRecoveryForm{display:block!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
-body.password-recovery-mode #passwordRecoveryForm h3{display:none}
-body.password-recovery-mode #passwordRecoveryForm>p{display:none!important}
-body.password-recovery-mode #passwordRecoveryForm .field label{font-size:11px;font-weight:800;color:#506056;letter-spacing:.02em}
-body.password-recovery-mode #passwordRecoveryForm .field input{width:100%;border:1px solid #dcd8cd;background:#fffefb;border-radius:6px;padding:12px;color:var(--ink);outline-color:var(--gold)}
-body.password-recovery-mode #passwordRecoveryForm .submit{width:100%;margin-top:6px;border:0;border-radius:7px;padding:12px 16px;background:var(--forest);color:#fff;font-weight:800}
-body.password-recovery-mode #status{display:block;margin-top:14px}
+body.password-recovery-mode #passwordRecoveryForm h3,body.password-recovery-mode #passwordRecoveryForm>p{display:none!important}
+body.password-recovery-mode #passwordRecoveryForm .field{margin-bottom:0}
+body.password-recovery-mode #passwordRecoveryForm .field label{display:block;font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--ink);margin:16px 0 6px}
+body.password-recovery-mode #passwordRecoveryForm .field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px;background:#fffefb;color:var(--ink);outline-color:#4a9b70}
+body.password-recovery-mode #passwordRecoveryForm .field input:focus{outline:3px solid #75b99a55;border-color:#4a9b70}
+body.password-recovery-mode #passwordRecoveryForm .submit{width:100%;margin-top:20px;border:0;border-radius:8px;padding:12px 16px;background:linear-gradient(100deg,#174c3c,#2c8061 60%,#4a9b70);box-shadow:0 8px 18px #24544825;color:#fff;font-weight:750}
+body.password-recovery-mode #status{display:block;margin-top:14px;padding:11px;border-radius:8px;background:#f1eee5;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+body.password-recovery-mode #status.error{background:#f9e9e5;color:#8b392a}
 body.password-recovery-mode #privacyNote{display:none!important}
-@media(max-width:560px){body.password-recovery-mode .traveler-content{width:calc(100% - 28px);padding:28px 0 20px}body.password-recovery-mode .traveler-auth{padding:23px!important}body.password-recovery-mode .traveler-auth h2{font-size:33px!important}}
+@media(max-width:520px){body.password-recovery-mode .traveler-content{width:calc(100% - 24px);padding:20px 0 42px}body.password-recovery-mode .traveler-auth{border-radius:19px!important;padding:27px 22px!important}}
 </style></head><body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a href="index.html#top">Home</a><a href="traveler-signup.html">Traveler Join / Sign in</a><span class="sl-nav-disabled">Business Join / Sign in</span><span class="sl-nav-disabled">Agent Join / Sign in</span><a href="admin-signup.html">Admin Join / Sign in</a></nav><a class="sl-language" href="index.html#top" aria-label="Language options">ES / EN</a></div></header>
