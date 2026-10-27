@@ -378,16 +378,32 @@ function addAIChatBubble(who,body,isUser=false){
  const bodyEl=document.createElement("div");bodyEl.style.cssText="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";bodyEl.textContent=body;
  row.append(label,bodyEl);aiChatMessages.appendChild(row);aiChatMessages.scrollTop=aiChatMessages.scrollHeight;
 }
-function aiReplyFor(p,msg){
- const m=msg.toLowerCase();
- if(/food|eat|restaurant|cafe|coffee|dish|meal|market/.test(m))return p.food;
- if(/budget|cheap|cost|money|price|afford|expensive/.test(m))return p.budget;
- if(/safe|safety|security|scam|alone|night/.test(m))return "For safety decisions, check current local guidance and advice from your accommodation or a trusted local source. Keep valuables secure, use reputable transport, and choose activities that fit your comfort level. I am an AI persona, not a live local source.";
- if(/plan|itinerary|where|destination|visit|trip|go to|recommend|place/.test(m))return p.tip+" For a trip idea, I'd start with this dream: "+p.dream;
- if(/meet|friend|buddy|together|hang out|real person/.test(m))return "Just to be transparent: I'm a fictional AI traveler persona, not a real person who can meet up. I can still help you brainstorm experiences and questions to ask real travelers.";
- if(/language|speak|spanish|translate/.test(m))return "This persona lists these languages: "+p.languages+". This demo chat does not translate reliably, but we can plan language-learning prompts or polite phrases to verify with a current source.";
- if(/who are you|about you|profile|tell me/.test(m))return "I'm "+p.name+", an AI traveler persona based in "+p.city+", "+p.country+". "+p.bio+" My interests are "+p.interests.join(", ")+". A fun fact: "+p.fact;
- return p.starter+" "+p.tip+" What matters most for your trip: budget, culture, food, nature, or a little of everything?";
+async function aiReplyFor(p,msg){
+ const m=String(msg||"").trim();
+ if(!m)return "Ask me anything about travel, culture, planning, or everyday questions. I'm an AI persona, so I'll be clear when I don't know something.";
+ // Use a configured OpenAI-compatible server endpoint when the site owner deploys one.
+ // Never put a private API key in this public GitHub Pages code.
+ const endpoint=window.STAYLATIN_AI_CHAT_ENDPOINT;
+ if(endpoint){
+  try{
+   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+   const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:m,persona:{name:p.name,city:p.city,country:p.country,style:p.style,languages:p.languages,bio:p.bio,interests:p.interests,dream:p.dream,tip:p.tip,food:p.food,budget:p.budget,fact:p.fact,starter:p.starter}}),signal:controller.signal});
+   clearTimeout(timer);
+   if(!response.ok)throw new Error("AI endpoint returned "+response.status);
+   const data=await response.json();
+   if(typeof data.reply==="string"&&data.reply.trim())return data.reply.trim();
+   throw new Error("AI endpoint response did not include reply text");
+  }catch(err){console.warn("StayLatin AI chat endpoint unavailable",err);return "I'm having trouble reaching the AI chat service right now. Please try again in a moment. You can still explore my profile for travel tips."}
+ }
+ // Honest local fallback; this is not a general-purpose AI model.
+ if(/food|eat|restaurant|cafe|coffee|dish|meal|market/.test(m.toLowerCase()))return p.food;
+ if(/budget|cheap|cost|money|price|afford|expensive/.test(m.toLowerCase()))return p.budget;
+ if(/safe|safety|security|scam|alone|night/.test(m.toLowerCase()))return "For safety decisions, check current local guidance and advice from your accommodation or a trusted local source. Keep valuables secure, use reputable transport, and choose activities that fit your comfort level. I'm an AI persona, not a live local source.";
+ if(/plan|itinerary|where|destination|visit|trip|go to|recommend|place/.test(m.toLowerCase()))return p.tip+" For a trip idea, I'd start with this dream: "+p.dream;
+ if(/meet|friend|buddy|together|hang out|real person/.test(m.toLowerCase()))return "Just to be transparent: I'm a fictional AI traveler persona, not a real person who can meet up. I can still help you brainstorm experiences and questions to ask real travelers.";
+ if(/language|speak|spanish|translate/.test(m.toLowerCase()))return "This persona lists these languages: "+p.languages+". This demo chat does not translate reliably, but we can plan language-learning prompts or polite phrases to verify with a current source.";
+ if(/who are you|about you|profile|tell me/.test(m.toLowerCase()))return "I'm "+p.name+", an AI traveler persona based in "+p.city+", "+p.country+". "+p.bio+" My interests are "+p.interests.join(", ")+". A fun fact: "+p.fact;
+ return "I'm currently in demo mode, so I can't reliably answer every possible question yet. To let me answer open-ended questions, StayLatin needs a secure AI service endpoint configured by the site owner.";
 }
 function openAITravelerChat(id){
  const list=window.STAYLATIN_AI_TRAVELERS||[];activeAITraveler=list.find(p=>p.id===id)||null;if(!activeAITraveler)return;
@@ -397,7 +413,7 @@ function openAITravelerChat(id){
  addAIChatBubble(activeAITraveler.name+" · AI","Hi! I'm an AI traveler persona who loves "+activeAITraveler.interests.join(", ").toLowerCase()+". "+activeAITraveler.starter,false);
  aiChatPanel.scrollIntoView({behavior:"smooth",block:"start"});aiChatInput?.focus();
 }
-aiChatForm?.addEventListener("submit",e=>{e.preventDefault();if(!activeAITraveler||!aiChatInput)return;const text=aiChatInput.value.trim();if(!text)return;addAIChatBubble("You",text,true);aiChatInput.value="";addAIChatBubble(activeAITraveler.name+" · AI",aiReplyFor(activeAITraveler,text),false)});
+aiChatForm?.addEventListener("submit",async e=>{e.preventDefault();if(!activeAITraveler||!aiChatInput)return;const text=aiChatInput.value.trim();if(!text)return;const persona=activeAITraveler;addAIChatBubble("You",text,true);aiChatInput.value="";const send=document.getElementById("sendAITravelerChat");if(send)send.disabled=true;const pending=document.createElement("div");pending.textContent=persona.name+" is thinking…";pending.style.cssText="font-size:11px;color:var(--muted);align-self:flex-start;padding:8px";aiChatMessages.appendChild(pending);try{const answer=await aiReplyFor(persona,text);pending.remove();addAIChatBubble(persona.name+" · AI",answer,false)}finally{pending.remove();if(send)send.disabled=false}});
 document.getElementById("closeAITravelerChat")?.addEventListener("click",()=>{aiChatPanel.hidden=true;activeAITraveler=null;});
 
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
