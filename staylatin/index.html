@@ -673,6 +673,31 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 }
 @media(prefers-reduced-motion:reduce){#staylatin-donation-tab{animation:none;opacity:1}}
 </style>
+
+<style id="staylatin-tier-and-action-icon-states">
+/* Basic and Verified tier stars stay still; only higher tiers use the spinning effect. */
+.stay-card.tier-basic .tier-star,
+.stay-card.tier-verified .tier-star{
+  animation:none!important;
+  filter:none!important;
+}
+/* Heart and bell are white by default and turn yellow when selected. */
+.stay-card .photo-actions .photo-act.sl-act-heart span,
+.stay-card .photo-actions .photo-act.sl-act-notify span{
+  color:#fff!important;
+  filter:grayscale(1) brightness(0) invert(1);
+  text-shadow:none!important;
+}
+.stay-card .photo-actions .photo-act.sl-act-heart.saved span,
+.stay-card .photo-actions .photo-act.sl-act-heart.is-on span,
+.stay-card .photo-actions .photo-act.sl-act-notify.is-on span,
+.stay-card .photo-actions .photo-act.sl-act-notify.saved span{
+  color:#ffd54a!important;
+  filter:none;
+  text-shadow:0 0 6px rgba(255,213,74,.55)!important;
+}
+</style>
+
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
