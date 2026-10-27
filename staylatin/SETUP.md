@@ -10,6 +10,7 @@ StayLatin is a separate travel directory for Latin America. Keep all StayLatin a
 - `staylatin-config.js` points to the dedicated project using its browser-safe publishable key.
 - Traveler sign-up profile trigger installed: new Auth users receive a `staylatin_profiles` row with the default traveler role.
 - Traveler member directory now supports consent-based profile photos; photos stay private unless the member separately opts in to directory sharing.
+- 25 clearly labeled fictional AI traveler personas have been added to the traveler directory with illustrated SVG cartoon portraits and complete travel profiles. “Chat with AI” uses curated persona-based demo responses, not a connected live language model; chats are not written to the private member inbox.
 - Private traveler-to-traveler messages are stored in `staylatin_traveler_private_messages`; RLS restricts message reads to the sender and recipient, with recipient-only read receipts. End-to-end testing with two traveler accounts is still required.
 - Latest security advisor check reports one warning: leaked-password protection is disabled. Enable it in Supabase Auth password settings before launch. Performance advisor also reports unindexed foreign keys and overlapping permissive policies; these are review items, not evidence of a data breach.
 - Business onboarding now writes to a dedicated private `staylatin_business_submissions` table; only the submitting owner can read their own submission through client policies.

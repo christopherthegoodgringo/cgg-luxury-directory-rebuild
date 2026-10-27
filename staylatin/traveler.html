@@ -142,6 +142,14 @@
   </form>
   <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-top:24px"><div><h4 style="font:500 22px Georgia,serif;color:var(--forest);margin:0">Meet other travelers</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Introductions shared by signed-in StayLatin members.</p></div><button id="refreshTravelerIntroductions" type="button" class="minor-action" style="width:auto;margin:0">Refresh directory</button></div>
   <div id="travelerIntroDirectory" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px"></div>
+
+  <section id="aiTravelerChatPanel" hidden style="margin-top:22px;border:1px solid #c8a86b;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8b6a2f;font-weight:900">AI TRAVEL COMPANION · FICTIONAL PERSONA</div><h4 id="aiTravelerChatTitle" style="font:500 24px Georgia,serif;color:var(--forest);margin:5px 0 0">Chat with an AI traveler</h4></div><button id="closeAITravelerChat" type="button" class="minor-action" style="width:auto;margin:0">Close chat</button></div>
+    <p id="aiTravelerChatBio" style="font-size:12px;color:var(--muted);margin:8px 0">This is an AI-generated character, not a real member.</p>
+    <div id="aiTravelerChatMessages" role="log" aria-live="polite" style="height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px;margin-top:10px;background:#fff;border:1px solid #dce8dd;border-radius:8px"></div>
+    <form id="aiTravelerChatForm" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:10px"><label for="aiTravelerChatInput" style="grid-column:1/-1;font-size:11px;font-weight:800;color:#506056">MESSAGE THE AI TRAVELER</label><textarea id="aiTravelerChatInput" maxlength="1000" rows="2" required placeholder="Ask for ideas about destinations, food, travel style, or planning…" style="width:100%;min-width:0;resize:vertical;border:1px solid #dcd8cd;border-radius:7px;padding:11px"></textarea><button id="sendAITravelerChat" type="submit" class="primary-action" style="width:auto;margin:0;padding:12px 16px">Send ↗</button></form>
+    <p style="font-size:10px;color:var(--muted);margin:8px 0 0">Demo chat: replies come from this persona’s profile and curated response rules. This is not connected to a live AI model, and chats are not saved to your private inbox.</p>
+  </section>
   <section id="privateMessagingPanel" aria-label="Private member messages" style="margin-top:22px;border:1px solid #dce8dd;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Only you and the selected member can read your conversation.</p></div><button id="refreshPrivateInbox" type="button" class="minor-action" style="width:auto;margin:0">Refresh inbox ↻</button></div>
     <div id="privateInboxList" style="display:grid;gap:8px;margin-top:12px"><div class="status">Loading private inbox…</div></div>
@@ -193,7 +201,7 @@
 </section>
 </main>
 <footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/index.html#top"><span class="brandmark">✳</span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português soon</span></div></div></footer>
-<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js"></script><script>
 const avatarInput=document.getElementById("travelerAvatarInput"),avatarPreview=document.getElementById("travelerAvatarPreview"),avatarPlaceholder=document.getElementById("travelerAvatarPlaceholder"),avatarStatus=document.getElementById("travelerAvatarStatus"),avatarHint=document.getElementById("travelerAvatarHint"),avatarOverlay=document.getElementById("travelerAvatarOverlay");
 function avatarStorageKey(){return "staylatin-avatar-"+(activeTripUserId||"guest")}
 function loadTravelerAvatar(){try{const saved=localStorage.getItem(avatarStorageKey());if(saved){avatarPreview.src=saved;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";avatarStatus.textContent=""}else{avatarPreview.removeAttribute("src");avatarPreview.style.display="none";avatarPlaceholder.style.display="grid";avatarHint.textContent="Hover over the photo to add or update it.";avatarOverlay.textContent="Add photo";avatarStatus.textContent=""}}catch(e){avatarStatus.textContent="Could not load the profile photo from this browser."}}
@@ -340,16 +348,58 @@ async function loadTravelerIntroductionDirectory(){
    ? [["Home country",ownIntro.show_home_country?ownIntro.home_country:""],["Favorite destinations",ownIntro.show_favorite_destinations?ownIntro.favorite_destinations:""],["Languages",ownIntro.show_languages_spoken?ownIntro.languages_spoken:""],["Travel interests",ownIntro.show_travel_interests?ownIntro.travel_interests:""]]
    : [["Home country",ownIntro.home_country],["Favorite destinations",ownIntro.favorite_destinations],["Languages",ownIntro.languages_spoken],["Travel interests",ownIntro.travel_interests]];
  const ownCard='<article style="background:linear-gradient(135deg,#f1f7ef,#fffdf8);border:2px solid #c8a86b;border-radius:11px;padding:15px;order:-1"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(ownPhotoUrl,ownName)+'<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8b6a2f;font-weight:900;margin-bottom:4px">YOUR PROFILE · FIRST</div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(ownName)+'</h5><div style="font-size:10px;color:var(--muted)">'+(ownVisible?"Visible to signed-in members":"Private preview · only you can see this profile")+'</div></div></div>'+(ownIntro.show_introduction&&ownIntro.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(ownIntro.introduction)+'</p>':'')+memberDetails(ownIntro,ownFields)+'<button type="button" id="editOwnMemberProfile" class="primary-action" style="width:100%;margin-top:14px">Edit my profile ↗</button></article>';
+
+ const aiProfiles=Array.isArray(window.STAYLATIN_AI_TRAVELERS)?window.STAYLATIN_AI_TRAVELERS:[];
+ const aiCards=aiProfiles.map(p=>{
+   const name=introEscape(p.name),loc=introEscape(p.city+", "+p.country);
+   const photo='<img src="'+introEscape(p.avatar)+'" alt="Cartoon portrait of '+name+'" loading="lazy" style="width:78px;height:78px;flex:0 0 78px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">';
+   const tags=p.interests.map(t=>'<span style="display:inline-block;background:#e7f0e9;color:#245448;border-radius:999px;padding:4px 8px;margin:3px 3px 0 0;font-size:10px;font-weight:750">'+introEscape(t)+'</span>').join("");
+   const rows=[["Age",String(p.age)],["Travel style",p.style],["Languages",p.languages],["Dream trip",p.dream],["Favorite advice",p.tip],["Food tip",p.food],["Budget tip",p.budget],["Fun fact",p.fact],["Open to","Destination chats, trip planning ideas, and travel inspiration"]].map(x=>'<div style="font-size:11px;margin-top:7px"><b style="color:var(--forest)">'+introEscape(x[0])+':</b> '+introEscape(x[1])+'</div>').join("");
+   return '<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px;position:relative"><div style="display:flex;align-items:center;gap:12px;margin:0 0 10px">'+photo+'<div><div style="display:inline-block;background:#f5e9c9;border:1px solid #e7d39c;color:#805d18;border-radius:999px;padding:3px 7px;font-size:9px;letter-spacing:.04em;font-weight:900;margin-bottom:5px">AI TRAVELER</div><h5 style="font:500 19px Georgia,serif;color:var(--forest);margin:0 0 4px">'+name+'</h5><div style="font-size:11px;color:var(--muted)">'+p.flag+' '+loc+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">'+introEscape(p.style)+' · Age '+p.age+'</div></div></div><p style="font-size:12px;line-height:1.5;margin:0 0 8px">'+introEscape(p.bio)+'</p><div>'+tags+'</div><details style="margin-top:9px;border-top:1px solid #e5e0d5;padding-top:9px"><summary style="cursor:pointer;font-size:11px;font-weight:850;color:var(--forest)">Complete AI profile</summary>'+rows+'</details><button type="button" data-ai-chat-id="'+introEscape(p.id)+'" class="primary-action" style="width:100%;margin-top:12px">Chat with AI ✦</button><div style="font-size:9px;color:var(--muted);margin-top:6px">Fictional AI persona · not a real member</div></article>';
+ }).join("");
  const otherCards=otherRows.map(r=>{
    const name=r.display_name||"StayLatin traveler";
    return '<article style="background:#fffdf8;border:1px solid #dce8dd;border-radius:11px;padding:15px">'+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+memberPhoto(photoById[r.user_id],name)+'<div><h5 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 4px">'+introEscape(name)+'</h5><div style="font-size:10px;color:var(--muted)">StayLatin member</div></div></div>'+(r.introduction?'<p style="font-size:13px;margin:0 0 10px">'+introEscape(r.introduction)+'</p>':'')+memberDetails(r,[["Home country",r.home_country],["Favorite destinations",r.favorite_destinations],["Languages",r.languages_spoken],["Travel interests",r.travel_interests]])+'<button type="button" data-private-message="'+introEscape(r.user_id)+'" data-private-name="'+introEscape(name)+'" class="primary-action" style="width:100%;margin-top:14px">Message privately ↗</button></article>';
  }).join("");
- box.innerHTML=ownCard+otherCards;
+ box.innerHTML=ownCard+otherCards+aiCards;
  document.getElementById("editOwnMemberProfile")?.addEventListener("click",()=>document.getElementById("travelerIntroForm")?.scrollIntoView({behavior:"smooth",block:"start"}));
  box.querySelectorAll("[data-private-message]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.privateMessage,button.dataset.privateName)));
+ box.querySelectorAll("[data-ai-chat-id]").forEach(button=>button.addEventListener("click",()=>openAITravelerChat(button.dataset.aiChatId)));
  if(!otherRows.length)box.insertAdjacentHTML("beforeend",'<div class="status" style="grid-column:1/-1">Your profile is shown first. No other members have shared introductions yet.</div>');
  await loadPrivateInbox();
 }
+
+let activeAITraveler=null;
+const aiChatPanel=document.getElementById("aiTravelerChatPanel"),aiChatMessages=document.getElementById("aiTravelerChatMessages"),aiChatInput=document.getElementById("aiTravelerChatInput"),aiChatForm=document.getElementById("aiTravelerChatForm");
+function addAIChatBubble(who,body,isUser=false){
+ if(!aiChatMessages)return;
+ const row=document.createElement("article");row.style.cssText="align-self:"+(isUser?"flex-end":"flex-start")+";max-width:90%;border:1px solid "+(isUser?"#d4e7d7":"#e5e0d5")+";border-radius:10px;padding:9px 12px;background:"+(isUser?"#edf6ee":"#fffdf8");
+ const label=document.createElement("div");label.style.cssText="font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px";label.textContent=who;
+ const bodyEl=document.createElement("div");bodyEl.style.cssText="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";bodyEl.textContent=body;
+ row.append(label,bodyEl);aiChatMessages.appendChild(row);aiChatMessages.scrollTop=aiChatMessages.scrollHeight;
+}
+function aiReplyFor(p,msg){
+ const m=msg.toLowerCase();
+ if(/food|eat|restaurant|cafe|coffee|dish|meal|market/.test(m))return p.food;
+ if(/budget|cheap|cost|money|price|afford|expensive/.test(m))return p.budget;
+ if(/safe|safety|security|scam|alone|night/.test(m))return "For safety decisions, check current local guidance and advice from your accommodation or a trusted local source. Keep valuables secure, use reputable transport, and choose activities that fit your comfort level. I am an AI persona, not a live local source.";
+ if(/plan|itinerary|where|destination|visit|trip|go to|recommend|place/.test(m))return p.tip+" For a trip idea, I'd start with this dream: "+p.dream;
+ if(/meet|friend|buddy|together|hang out|real person/.test(m))return "Just to be transparent: I'm a fictional AI traveler persona, not a real person who can meet up. I can still help you brainstorm experiences and questions to ask real travelers.";
+ if(/language|speak|spanish|translate/.test(m))return "This persona lists these languages: "+p.languages+". This demo chat does not translate reliably, but we can plan language-learning prompts or polite phrases to verify with a current source.";
+ if(/who are you|about you|profile|tell me/.test(m))return "I'm "+p.name+", an AI traveler persona based in "+p.city+", "+p.country+". "+p.bio+" My interests are "+p.interests.join(", ")+". A fun fact: "+p.fact;
+ return p.starter+" "+p.tip+" What matters most for your trip: budget, culture, food, nature, or a little of everything?";
+}
+function openAITravelerChat(id){
+ const list=window.STAYLATIN_AI_TRAVELERS||[];activeAITraveler=list.find(p=>p.id===id)||null;if(!activeAITraveler)return;
+ aiChatPanel.hidden=false;aiChatMessages.innerHTML="";
+ document.getElementById("aiTravelerChatTitle").textContent="Chat with "+activeAITraveler.name;
+ document.getElementById("aiTravelerChatBio").textContent=activeAITraveler.flag+" "+activeAITraveler.city+", "+activeAITraveler.country+" · Fictional AI-generated character, not a real member.";
+ addAIChatBubble(activeAITraveler.name+" · AI","Hi! I'm an AI traveler persona who loves "+activeAITraveler.interests.join(", ").toLowerCase()+". "+activeAITraveler.starter,false);
+ aiChatPanel.scrollIntoView({behavior:"smooth",block:"start"});aiChatInput?.focus();
+}
+aiChatForm?.addEventListener("submit",e=>{e.preventDefault();if(!activeAITraveler||!aiChatInput)return;const text=aiChatInput.value.trim();if(!text)return;addAIChatBubble("You",text,true);aiChatInput.value="";addAIChatBubble(activeAITraveler.name+" · AI",aiReplyFor(activeAITraveler,text),false)});
+document.getElementById("closeAITravelerChat")?.addEventListener("click",()=>{aiChatPanel.hidden=true;activeAITraveler=null;});
+
 document.getElementById("travelerIntroForm").addEventListener("submit",saveTravelerIntroduction);
 document.getElementById("refreshTravelerIntroductions").addEventListener("click",loadTravelerIntroductionDirectory);
 
