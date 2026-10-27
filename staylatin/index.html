@@ -855,10 +855,10 @@ function render(){
   // Temporarily show only the approved Expedia and Trip.com booking options.
   if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
   if(s.expedia)links.push(link(withAffiliate(s.expedia,"expedia"),"Book Expedia"));
-  if(!links.length)links.push('<span class="booking-note">Contact the property directly for booking information.</span>');
+
   const layout=links.length>1?"multiple":"single";
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
-  const note=s.note||(links.length>1?"Official website and available booking partners":"Official property website");
+
   // Clearly mark this as sample copy until verified traveler testimonials and scores are sourced.
   const reviewTexts=[
    'A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting in '+s.city.split(",")[0]+'.',
@@ -900,7 +900,7 @@ function render(){
    +'<button class="photo-act sl-act-price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price"><span aria-hidden="true">$</span></button>'
    +'<button class="photo-act sl-act-notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify"><span aria-hidden="true">🔔</span></button>'
    +'</div>';
-  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div>'+ownerClaim+'</div></article>';
+  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'</div>'+ownerClaim+'</div></article>';
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
  const viewBtn=document.getElementById("viewMoreBtn");
