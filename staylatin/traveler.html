@@ -125,7 +125,18 @@ body.password-recovery-mode #privacyNote{display:none!important}
 <section id="travelerDashboard" class="traveler-dashboard" hidden aria-live="polite"><div class="dashboard-topline"><div><div class="kicker" style="color:var(--terra)">Your StayLatin space</div><h2>Your travel dashboard</h2><p id="dashboardGreeting">Your travel space is ready.</p></div><div class="account-actions"><button id="dashSignout" type="button" class="minor-action">Sign out</button><button id="deleteTravelerAccount" type="button" class="minor-action danger-action">Delete account</button></div></div><div class="dashboard-stats"><div class="dashboard-stat"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted)">YOUR MEMBERSHIP</div><strong style="display:block;margin-top:7px">Free traveler</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">Free to use</div></div></div>
 
 
-<section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+<section id="travelerAccountSecurity" aria-labelledby="travelerAccountSecurityTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+<h3 id="travelerAccountSecurityTitle" style="font:500 25px Georgia,serif;color:var(--forest);margin:0 0 6px">Account &amp; password</h3>
+<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Your sign-in email is shown below. Change your password here while signed in. Your existing password is never displayed.</p>
+<label for="travelerAccountEmail" style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">ACCOUNT EMAIL</label>
+<input id="travelerAccountEmail" type="email" readonly aria-readonly="true" style="width:100%;max-width:520px;padding:11px;border:1px solid #dce3dc;border-radius:8px;background:#f5f7f3;color:var(--forest);margin-bottom:18px">
+<form id="travelerChangePasswordForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW PASSWORD<input id="travelerNewPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
+</form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
+</section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
   <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Share a little about yourself and discover travelers with similar interests. Every detail has its own visibility switch. Only details you choose to share are copied to the member directory; private details remain in your own profile.</p>
@@ -537,12 +548,31 @@ function setTravelerStatus(message,kind=""){
  statusBox.className="status show"+(kind?" "+kind:"");
  statusBox.textContent=message;
 }
-async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);function setTravelerSignedIn(user){
+async function deleteOwnTravelerAccount(){const db=introClient();if(!db||!activeTripUserId){setTravelerStatus("Please sign in again before deleting your account.","error");return;}if(!window.confirm("Permanently delete your StayLatin traveler account? This cannot be undone."))return;const confirmation=window.prompt('To confirm permanent deletion, type DELETE in capital letters:');if(confirmation!=="DELETE"){setTravelerStatus("Account deletion cancelled. Nothing was deleted.");return;}const button=document.getElementById("deleteTravelerAccount");if(button){button.disabled=true;button.textContent="Deleting account…";}try{const {data,error}=await db.functions.invoke("delete-traveler-account",{body:{targetUserId:activeTripUserId,mode:"self",confirmation}});if(error)throw error;if(!data?.success)throw new Error(data?.error||"The account was not deleted.");try{await db.auth.signOut();}catch(_){}window.alert("Your StayLatin traveler account has been permanently deleted.");window.location.href="index.html#top";}catch(err){setTravelerStatus(err.message||"Could not delete your account. Please try again.","error");if(button){button.disabled=false;button.textContent="Delete account";}}}document.getElementById("deleteTravelerAccount")?.addEventListener("click",deleteOwnTravelerAccount);document.getElementById("travelerChangePasswordForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const status=document.getElementById("travelerPasswordStatus"),button=document.getElementById("travelerChangePasswordButton");
+ const current=document.getElementById("travelerCurrentPassword").value,next=document.getElementById("travelerNewPassword").value,confirmNext=document.getElementById("travelerConfirmNewPassword").value;
+ status.textContent="";
+ if(next.length<12){status.textContent="Choose a password with at least 12 characters.";return;}
+ if(next!==confirmNext){status.textContent="The new passwords do not match.";return;}
+ if(next===current){status.textContent="Choose a new password different from your current password.";return;}
+ const db=introClient();if(!db||!activeTripUserId){status.textContent="Please sign in again before changing your password.";return;}
+ button.disabled=true;button.textContent="Updating…";
+ try{
+   const {data:authData,error:authError}=await db.auth.getUser();if(authError||!authData.user?.email)throw new Error("Your session could not be verified. Please sign in again.");
+   const {error:verifyError}=await db.auth.signInWithPassword({email:authData.user.email,password:current});if(verifyError)throw new Error("Your current password was not accepted.");
+   const {error:updateError}=await db.auth.updateUser({password:next});if(updateError)throw updateError;
+   document.getElementById("travelerChangePasswordForm").reset();status.textContent="Your password has been updated successfully.";
+ }catch(err){status.textContent=err.message||"Could not update your password.";}
+ finally{button.disabled=false;button.textContent="Update password";}
+});
+function setTravelerSignedIn(user){
  activeTripUserId=user.id;
  document.querySelector(".traveler-intro")?.setAttribute("hidden","");
  document.querySelector(".traveler-auth")?.setAttribute("hidden","");
  document.getElementById("privacyNote")?.setAttribute("hidden","");
  document.getElementById("travelerDashboard").hidden=false;
+ document.getElementById("travelerAccountEmail").value=user.email||"";
  document.getElementById("dashboardGreeting").textContent="Welcome"+(user.user_metadata?.full_name?" back, "+user.user_metadata.full_name:" back")+". Your travel space is ready.";
  form.hidden=true;
  signin.closest(".tabs").hidden=true;
