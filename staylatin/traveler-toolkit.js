@@ -111,8 +111,76 @@ function bindForms(){
  $("swapCurrency").addEventListener("click",()=>{const a=$("currencyFrom").value;$("currencyFrom").value=$("currencyTo").value;$("currencyTo").value=a;renderCurrency();});
  $("refreshRates").addEventListener("click",async()=>{try{localStorage.removeItem("staylatin-fx-cache")}catch(_){}await loadRates();});
 }
+
+const vaultBucket="staylatin-important-documents";
+const vaultCategories=[
+ ["passport","Passport"],["visa","Visa / entry permit"],["photo-id","Photo ID / driving permit"],
+ ["insurance","Travel insurance"],["tickets","Flight / transport tickets"],["accommodation","Hotel / accommodation confirmation"],
+ ["health","Health / prescription documents"],["emergency","Emergency information"],["other","Other important document"]
+];
+function vaultCategoryName(key){const row=vaultCategories.find(x=>x[0]===key);return row?row[1]:"Important document";}
+function safeVaultLabel(name){return String(name||"Important document").replace(/[^a-zA-Z0-9 _-]/g,"").trim().replace(/\s+/g,"-").slice(0,70)||"Important-document";}
+async function loadDocumentVault(){
+ const box=$("documentVaultItems");if(!box)return;
+ const id=getUserId(),client=await db();
+ if(!id||!client){box.innerHTML='<p class="tool-empty">Sign in to access your private document vault.</p>';status("vaultStatus","Sign in to upload and view private document photos.",true);return;}
+ box.innerHTML='<p class="tool-empty">Loading your private document photos…</p>';
+ try{
+  const groups=await Promise.all(vaultCategories.map(async ([category,label])=>{
+   const result=await client.storage.from(vaultBucket).list(id+"/"+category,{limit:100,sortBy:{column:"created_at",order:"desc"}});
+   if(result.error)throw result.error;
+   return (result.data||[]).filter(item=>item.name&&!item.name.startsWith(".")).map(item=>({category,label,item,path:id+"/"+category+"/"+item.name}));
+  }));
+  const items=groups.flat().sort((a,b)=>String(b.item.created_at||"").localeCompare(String(a.item.created_at||"")));
+  const rendered=await Promise.all(items.map(async row=>{
+   const signed=await client.storage.from(vaultBucket).createSignedUrl(row.path,900);
+   const url=signed.data&&signed.data.signedUrl;
+   const raw=row.item.name.replace(/^\d+_/,"").replace(/\.[^.]+$/,"").replace(/-/g," ");
+   const label=raw||row.label;
+   return '<article class="tool-item vault-item"><div class="vault-preview">'+(url?'<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><img src="'+escapeHtml(url)+'" alt="Private photo: '+escapeHtml(label)+'" loading="lazy"></a>':'')+'<div><b>'+escapeHtml(label)+'</b><p>'+escapeHtml(row.label)+' · Private photo</p></div></div><button type="button" class="tool-small danger" data-vault-delete="'+escapeHtml(row.path)+'">Delete</button></article>';
+  }));
+  box.innerHTML=rendered.join("")||'<p class="tool-empty">No photos saved yet. Upload your first document photo above.</p>';
+  status("vaultStatus",items.length+" private photo"+(items.length===1?"":"s")+" in your vault. Photo links expire after 15 minutes.");
+ }catch(err){
+  box.innerHTML='<p class="tool-empty">Your document vault could not load. Please try again.</p>';
+  status("vaultStatus","Vault access failed. Check that you are signed in and try again.",true);
+ }
+}
+function bindDocumentVault(){
+ const form=$("documentVaultForm"),list=$("documentVaultItems");if(!form||!list)return;
+ form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const id=getUserId(),client=await db(),file=$("vaultPhoto").files&&$("vaultPhoto").files[0],label=$("vaultLabel").value.trim(),category=$("vaultCategory").value;
+  if(!id||!client){status("vaultStatus","Please sign in before uploading private document photos.",true);return;}
+  if(!file){status("vaultStatus","Choose a photo to upload.",true);return;}
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){status("vaultStatus","Please use a JPG, PNG, or WEBP image.",true);return;}
+  if(file.size>5*1024*1024){status("vaultStatus","That photo is over 5 MB. Choose a smaller image.",true);return;}
+  const button=$("vaultUploadButton");button.disabled=true;status("vaultStatus","Uploading your private photo…");
+  const ext=file.type==="image/jpeg"?"jpg":file.type==="image/png"?"png":"webp";
+  const path=id+"/"+category+"/"+Date.now()+"_"+safeVaultLabel(label)+"."+ext;
+  try{
+   const result=await client.storage.from(vaultBucket).upload(path,file,{contentType:file.type,upsert:false,cacheControl:"3600"});
+   if(result.error)throw result.error;
+   form.reset();await loadDocumentVault();
+   status("vaultStatus","Photo uploaded to your private document vault.");
+  }catch(err){status("vaultStatus","Upload failed. Please try again. "+(err&&err.message?err.message:""),true);}
+  finally{button.disabled=false;}
+ });
+ list.addEventListener("click",async e=>{
+  const button=e.target.closest("[data-vault-delete]");if(!button)return;
+  const id=getUserId(),client=await db();if(!id||!client)return;
+  const path=button.dataset.vaultDelete||"";
+  if(!path.startsWith(id+"/")){status("vaultStatus","That file does not belong to your account.",true);return;}
+  if(!confirm("Delete this document photo from your private vault?"))return;
+  button.disabled=true;
+  const result=await client.storage.from(vaultBucket).remove([path]);
+  if(result.error){button.disabled=false;status("vaultStatus","Could not delete this photo. Please try again.",true);return;}
+  await loadDocumentVault();
+ });
+}
+
 function init(){
- bindForms();loadAll().then(()=>{loadRates();const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
+ bindForms();bindDocumentVault();loadDocumentVault();loadAll().then(()=>{loadRates();const s=state.currency_preferences;$("currencyAmount").value=s.amount||"1";if(s.from)$("currencyFrom").value=s.from;if(s.to)$("currencyTo").value=s.to;renderCurrency();});
  bindJournal();
  const dash=$("travelerDashboard");
  if(dash&&typeof MutationObserver!=="undefined"){new MutationObserver(()=>{if(!dash.hidden){loadAll();loadJournal();}}).observe(dash,{attributes:true,attributeFilter:["hidden"]});}
