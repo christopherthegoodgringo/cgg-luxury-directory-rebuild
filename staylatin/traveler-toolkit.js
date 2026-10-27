@@ -31,6 +31,8 @@ async function loadAll(){
   }catch(_){}
  }
  normalizeTrips();
+ state.documents_checklist.items=defaults.documents_checklist.items.map(item=>{const old=(state.documents_checklist.items||[]).find(saved=>String(saved[0]).trim().toLowerCase()===item[0].trim().toLowerCase());return old||clone(item);}).concat((state.documents_checklist.items||[]).filter(saved=>!defaults.documents_checklist.items.some(item=>item[0].trim().toLowerCase()===String(saved[0]).trim().toLowerCase())));
+ writeLocal();
  renderAll();
 }
 function newTripId(){return "trip-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);}
