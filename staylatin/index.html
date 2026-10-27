@@ -628,6 +628,43 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
   .listing-grid .stay-card.tier-basic .photo>.pill .tier-star{animation:none!important}
 }
 </style>
+<style id="staylatin-donation-tab-style">
+/* Slim colorful donation tab; payment is intentionally unavailable until PayPal is configured. */
+#staylatin-donation-tab{
+ position:fixed;right:0;top:44%;z-index:1000;
+ width:42px;display:flex;flex-direction:column;align-items:center;gap:10px;
+ padding:13px 7px 12px;border:1px solid rgba(255,255,255,.75);
+ border-right:0;border-radius:13px 0 0 13px;
+ background:linear-gradient(180deg,#ef5da8 0%,#a46ce8 34%,#4d9ee8 66%,#38b98b 100%);
+ color:#fff;text-decoration:none;box-shadow:0 5px 22px rgba(36,67,75,.25);
+ animation:staylatinDonationPulse 3.8s ease-in-out infinite;
+}
+#staylatin-donation-tab .donation-vertical{
+ writing-mode:vertical-rl;transform:rotate(180deg);
+ font-size:11px;font-weight:850;letter-spacing:.075em;line-height:1.1;
+ text-align:center;text-transform:uppercase;
+}
+#staylatin-donation-tab .donation-heart{font-size:18px;line-height:1}
+#staylatin-donation-tab .donation-paypal{
+ writing-mode:vertical-rl;transform:rotate(180deg);
+ border:1px solid rgba(255,255,255,.8);border-radius:7px;
+ padding:7px 4px;background:rgba(15,55,67,.35);
+ font-size:10px;font-weight:900;letter-spacing:.04em;
+}
+#staylatin-donation-tab .donation-paypal em{font-style:normal;opacity:.9;font-size:9px}
+#staylatin-donation-tab:hover{animation-play-state:paused;filter:saturate(1.12)}
+@keyframes staylatinDonationPulse{
+ 0%,100%{opacity:.76;box-shadow:0 4px 14px rgba(36,67,75,.16)}
+ 50%{opacity:1;box-shadow:0 5px 24px rgba(164,108,232,.42),0 0 12px rgba(239,93,168,.25)}
+}
+@media(max-width:560px){
+ #staylatin-donation-tab{top:39%;width:35px;padding:11px 5px;border-radius:10px 0 0 10px;gap:8px}
+ #staylatin-donation-tab .donation-vertical{font-size:9px}
+ #staylatin-donation-tab .donation-heart{font-size:15px}
+ #staylatin-donation-tab .donation-paypal{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){#staylatin-donation-tab{animation:none;opacity:1}}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
@@ -1027,5 +1064,10 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 })();
 </script>
 
+<a id="staylatin-donation-tab" href="#staylatin-donation-coming-soon" role="note" aria-label="Support StayLatin. Donations via PayPal coming soon." title="Help us expand traveler resources and keep StayLatin free for everyone">
+ <span class="donation-heart" aria-hidden="true">♥</span>
+ <span class="donation-vertical">Help Keep StayLatin Free Forever</span>
+ <span class="donation-paypal">PayPal <em>Coming Soon</em></span>
+</a>
 </body>
 </html>
