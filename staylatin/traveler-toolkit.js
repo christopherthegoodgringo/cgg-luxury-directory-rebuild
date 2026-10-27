@@ -75,7 +75,7 @@ const currencyNames={USD:"US Dollar",EUR:"Euro",COP:"Colombian Peso",MXN:"Mexica
 function renderCurrencySelectors(){
  const list=Object.keys(rates||{}).sort();if(!list.length)return;
  const options=list.map(c=>'<option value="'+c+'">'+c+' — '+escapeHtml(currencyNames[c]||c)+'</option>').join("");
- [["currencyFrom",state.currency_preferences.from||"USD"],["currencyTo",state.currency_preferences.to||"COP"],["budgetCurrency",state.budget_tracker.currency||"USD"],["expenseCurrency","USD"]].forEach(([id,fallback])=>{
+ [["currencyFrom",state.currency_preferences.from||"USD"],["currencyTo",state.currency_preferences.to||"COP"]].forEach(([id,fallback])=>{
   const el=$(id);if(!el)return;
   const old=el.value||fallback;
   el.innerHTML=options;
