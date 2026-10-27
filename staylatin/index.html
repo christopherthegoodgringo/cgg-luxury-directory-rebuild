@@ -853,17 +853,15 @@ function render(){
  grid.innerHTML=visible.length?visible.map(s=>{
   const links=[];
   const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
-  // Keep the requested order consistent on every card: Airbnb, Trip.com, Expedia, direct website.
+  // Booking cards use third-party booking partners only; never expose a property's direct website booking link.
   if(s.airbnb)links.push(link(s.airbnb,"Book Airbnb","airbnb-booking"));
   if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
   if(s.expedia)links.push(link(withAffiliate(s.expedia,"expedia"),"Book Expedia"));
-  // Always place Hostelworld immediately before the direct property website button when both exist.
   if(s.hostelworld)links.push(link(s.hostelworld,"Book Hostelworld","hostelworld-booking"));
-  if(s.website)links.push(link(s.website,s.bookingLabel==="View hostel listing"?"Book direct":(s.bookingLabel||"Book direct")));
   if(!links.length)links.push('<span class="booking-note">Contact the property directly for booking information.</span>');
   const layout=links.length>1?"multiple":"single";
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
-  const note=s.note||(links.length>1?"Official website and available booking partners":"Official property website");
+  const note=s.note||(links.length>0?"Compare rates with available booking partners":"Booking links will be added when a partner listing is verified.");
   // Clearly mark this as sample copy until verified traveler testimonials and scores are sourced.
   const reviewTexts=[
    'A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting in '+s.city.split(",")[0]+'.',
