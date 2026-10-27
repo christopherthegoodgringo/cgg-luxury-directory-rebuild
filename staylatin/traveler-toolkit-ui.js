@@ -16,4 +16,29 @@
 <section id="travelerJournal" class="journal-card"><div class="kicker" style="color:var(--terra)">Your private memories</div><h3>9. My Travel Journal</h3><p>Write and revisit personal memories. Entries are private unless you deliberately choose Shared entry. This is separate from public reviews and introductions.</p><form id="travelerJournalForm" class="tool-fields"><input id="journalEntryId" type="hidden"><label>ENTRY TITLE<input id="journalTitle" maxlength="120" required></label><label>DESTINATION<input id="journalDestination" maxlength="120"></label><label>DATE<input id="journalDate" type="date"></label><label>VISIBILITY<select id="journalVisibility"><option value="private">Private entry</option><option value="shared">Shared entry</option></select></label><label class="wide">YOUR MEMORY<textarea id="journalBody" maxlength="10000" rows="5" required></textarea></label><div class="wide tool-actions"><button id="journalSaveButton" class="tool-button">Save journal entry</button><button id="journalCancelEdit" class="tool-button secondary" type="button" hidden>Cancel edit</button></div></form><p id="journalStatus" class="tool-status" role="status"></p><div id="travelerJournalEntries" class="tool-list"></div></section>`;
  const anchor=document.getElementById("travelerIntroductions");
  if(anchor)anchor.insertAdjacentHTML("beforebegin",markup);
+ /* Every toolkit section starts collapsed on each portal visit and can be opened independently. */
+ const collapseStyle=document.createElement("style");
+ collapseStyle.textContent=".tool-card>h4,.journal-card>h3{display:flex;align-items:center;justify-content:space-between;gap:12px}.tool-collapse-toggle{flex:0 0 auto;border:1px solid #cfe0d7;border-radius:999px;background:#edf5ec;color:#173f35;padding:7px 11px;font:700 11px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap}.tool-collapse-toggle:hover{background:#dcecdf}.tool-card-body,.journal-card-body{min-width:0}.tool-card.is-collapsed .tool-card-body,.journal-card.is-collapsed .journal-card-body{display:none}.tool-card.is-collapsed,.journal-card.is-collapsed{min-height:0}.tool-card.is-collapsed{height:auto}.tool-card.is-collapsed>h4{margin-bottom:0}.journal-card.is-collapsed>h3{margin-bottom:0}@media(prefers-reduced-motion:no-preference){.tool-collapse-toggle{transition:background .2s ease}}";
+ document.head.appendChild(collapseStyle);
+ function makeCollapsible(section,headingSelector){
+   if(!section||section.dataset.collapsibleReady==="1")return;
+   const heading=section.querySelector(":scope > "+headingSelector);if(!heading)return;
+   const body=document.createElement("div");
+   body.className=section.classList.contains("journal-card")?"journal-card-body":"tool-card-body";
+   while(heading.nextSibling){body.appendChild(heading.nextSibling);}
+   const button=document.createElement("button");
+   button.type="button";button.className="tool-collapse-toggle";
+   button.textContent="＋ Expand";button.setAttribute("aria-expanded","false");
+   button.setAttribute("aria-label","Expand "+heading.textContent.trim());
+   heading.appendChild(button);section.appendChild(body);
+   section.classList.add("is-collapsed");section.dataset.collapsibleReady="1";
+   button.addEventListener("click",function(){
+     const collapsed=section.classList.toggle("is-collapsed");
+     button.textContent=collapsed?"＋ Expand":"− Collapse";
+     button.setAttribute("aria-expanded",String(!collapsed));
+     button.setAttribute("aria-label",(collapsed?"Expand ":"Collapse ")+heading.childNodes[0].textContent.trim());
+   });
+ }
+ document.querySelectorAll("#travelerToolkit .tool-card").forEach(section=>makeCollapsible(section,"h4"));
+ makeCollapsible(document.getElementById("travelerJournal"),"h3");
 })();
