@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-label="StayLatin">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e5c889"/>
+      <stop offset="100%" stop-color="#c8a86b"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0,0)">
+    <circle cx="32" cy="32" r="30" fill="#173f35"/>
+    <circle cx="32" cy="32" r="28.25" fill="none" stroke="url(#gold)" stroke-width="2.2"/>
+    <g fill="#c86d4a">
+      <path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/>
+      <path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/>
+      <path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/>
+      <path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/>
+    </g>
+    <g fill="#e5c889" opacity=".95">
+      <path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/>
+      <path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/>
+      <path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/>
+      <path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/>
+    </g>
+    <circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/>
+    <circle cx="32" cy="32" r="2.3" fill="#c8a86b"/>
+  </g>
+  <text x="78" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#173f35" letter-spacing="-0.8">StayLatin</text>
+</svg>
