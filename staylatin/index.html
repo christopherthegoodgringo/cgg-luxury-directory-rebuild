@@ -762,6 +762,17 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .sl-admin-dropdown a{display:block!important;width:100%;padding:10px 12px;border-radius:8px;color:#e8f6ef!important;background:transparent!important;font-size:12px;font-weight:800;text-decoration:none!important;white-space:nowrap;line-height:1.4;opacity:1!important;visibility:visible!important}
 .sl-admin-dropdown a:hover,.sl-admin-dropdown a:focus-visible{background:rgba(31,122,92,.72)!important;color:#fff!important;filter:none!important;outline:none;transform:none}
 @media(max-width:850px){.sl-admin-menu{margin-left:0}.sl-admin-dropdown{left:0;right:auto}}
+
+/* Final admin menu override: keep every destination visible and use the same green hover as homepage buttons. */
+.sl-global-header,.sl-mainnav,.sl-navlinks,.sl-admin-menu{overflow:visible!important}
+.sl-admin-menu{position:relative!important;isolation:isolate}
+.sl-admin-dropdown{display:none;position:absolute!important;top:calc(100% + 5px)!important;right:0!important;left:auto!important;min-width:230px!important;max-width:min(300px,90vw)!important;padding:7px!important;z-index:99999!important;background:#0f3d32!important;border:1px solid #1f7a5c!important;border-radius:12px!important;visibility:visible!important;opacity:1!important}
+.sl-admin-dropdown:not([hidden]){display:block!important}
+.sl-admin-dropdown[hidden]{display:none!important}
+.sl-admin-dropdown a,.sl-navlinks .sl-admin-dropdown a,.sl-admin-menu .sl-admin-dropdown a{display:block!important;visibility:visible!important;opacity:1!important;color:#f7fbf8!important;background:transparent!important;padding:11px 13px!important;border:0!important;border-radius:8px!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important;text-decoration:none!important;white-space:normal!important;transform:none!important;box-shadow:none!important}
+.sl-admin-dropdown a:hover,.sl-admin-dropdown a:focus,.sl-navlinks .sl-admin-dropdown a:hover,.sl-admin-menu .sl-admin-dropdown a:hover{background:#1f7a5c!important;color:#fff!important;filter:none!important;outline:none!important;transform:none!important}
+.sl-admin-toggle,.sl-admin-toggle:hover,.sl-admin-toggle:focus-visible{background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;border-color:#0f3d32!important;outline:none!important;filter:brightness(1.05)}
+@media(max-width:850px){.sl-admin-dropdown{left:0!important;right:auto!important}}
 </style>
 <script id="staylatin-admin-dropdown-script">
 (function(){var button=document.getElementById("stayLatinAdminToggle"),menu=document.getElementById("stayLatinAdminDropdown");if(!button||!menu)return;function close(){menu.hidden=true;button.setAttribute("aria-expanded","false")}button.addEventListener("click",function(e){e.stopPropagation();menu.hidden=!menu.hidden;button.setAttribute("aria-expanded",String(!menu.hidden))});document.addEventListener("click",function(e){if(!menu.contains(e.target)&&e.target!==button)close()});document.addEventListener("keydown",function(e){if(e.key==="Escape"){close();button.focus()}});})();
