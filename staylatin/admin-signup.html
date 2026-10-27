@@ -16,6 +16,18 @@
 @media(max-width:560px){.sl-top-message-inner{align-items:flex-start;flex-direction:column;gap:4px}.sl-top-message-inner>span:last-child{font-size:10px}}
 </style>
 <link rel="stylesheet" href="shared-chrome.css">
+
+<style id="staylatin-admin-account-popup-style">
+html,body{min-height:0!important;height:auto!important;margin:0!important}
+body{min-height:0!important;height:auto!important;background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transparent 28%),radial-gradient(ellipse at 100% 28%,rgba(47,143,107,.12),transparent 30%),#eef6f2!important;color:#1a2e28;font:15px/1.5 Inter,ui-sans-serif,system-ui,sans-serif;padding:20px 14px!important;box-sizing:border-box}
+body>.topbar,body>header,body>footer{display:none!important}
+main.wrap{width:min(440px,100%)!important;margin:0 auto!important;padding:0!important}
+.panel{width:100%!important;box-sizing:border-box;background:#f7fbf8!important;border:1px solid #cfe0d7!important;border-radius:18px!important;padding:clamp(22px,5vw,32px)!important;box-shadow:0 18px 50px rgba(15,61,50,.14)!important;overflow-wrap:anywhere}
+h1{font:600 30px/1.15 Georgia,serif!important;color:#0f3d32!important;margin:0 0 10px!important}
+.panel .kicker{color:#2f8f6b;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+input,button,select{max-width:100%;box-sizing:border-box}
+@media(max-width:420px){body{padding:10px!important}.panel{padding:22px 18px!important}h1{font-size:27px!important}}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
@@ -44,5 +56,19 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="account-auth.js"></script>
 <script src="shared-chrome.js"></script>
+
+<script id="staylatin-admin-account-switch">
+(function(){
+ document.addEventListener("click",function(event){
+  var link=event.target.closest&&event.target.closest(".account-instruction a");
+  if(!link)return;
+  event.preventDefault();event.stopPropagation();
+  if(event.stopImmediatePropagation)event.stopImmediatePropagation();
+  var destination=new URL(link.getAttribute("href"),window.location.href);
+  try{if(window.parent!==window){window.parent.postMessage({type:"staylatin-account-switch",url:destination.href},window.location.origin);return;}}catch(e){}
+  window.location.replace(destination.href);
+ },true);
+})();
+</script>
 </body>
 </html>
