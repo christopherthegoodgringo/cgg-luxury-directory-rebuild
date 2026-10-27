@@ -747,7 +747,7 @@ async function loadPrivateConversation(silent=false){
   if(privateMessages)privateMessages.innerHTML='<div class="status error">Could not load this conversation. Please refresh and try again.</div>';
  }
 }
-const privateMessageForm=document.getElementById("privateMessageForm"),privateMessageInput=document.getElementById("privateMessageInput"),privateMessageSend=document.getElementById("sendPrivateMessage"),privateMessageNotice=document.getElementById("privateMessageNotice");
+
 privateMessageForm?.addEventListener("submit",async event=>{
  event.preventDefault();
  const body=(privateMessageInput?.value||"").trim(),db=introClient();
