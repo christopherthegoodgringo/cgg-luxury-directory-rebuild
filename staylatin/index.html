@@ -981,9 +981,9 @@ function render(){
   const act=b.dataset.act,item=stays.find(x=>x.id===Number(b.dataset.id));if(!item)return;
   const A=window.StayLatinListingActions;
   if(act==="map"){
-    if(A&&A.toggleMapPin){await A.toggleMapPin(item);render();}
     const q=encodeURIComponent([item.name,item.city].filter(Boolean).join(", "));
-    window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank","noopener,noreferrer");
+    const mapWindow=window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank","noopener,noreferrer");
+    if(A&&A.toggleMapPin){await A.toggleMapPin(item);render();}
     if(A&&A.toast)A.toast("Map action saved for "+item.name+".");
     return;
   }
