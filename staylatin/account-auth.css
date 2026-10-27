@@ -3,7 +3,7 @@
 body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transparent 28%),radial-gradient(ellipse at 100% 28%,rgba(47,143,107,.12),transparent 30%),var(--cream);min-height:100vh}
 .nav{padding:22px 0}.nav>a:last-child{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border-radius:999px;background:#fffdf8d9;border:1px solid #d9e4d8;box-shadow:0 4px 14px #173f3510}
 .panel{position:relative;overflow:hidden;border:1px solid #d9e5d9;border-radius:24px;box-shadow:0 24px 60px #173f3518}
-.panel:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#1c6650,#57a878,#e7b85f,#dc805a,#9c7bd0)}
+.panel:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#064e3b 0%,#087f5b 20%,#16a765 42%,#39c777 64%,#7be0a2 82%,#b9f6ca 100%)}
 .kicker{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:linear-gradient(110deg,#e1f3e8,#fff0d9);color:#245448;font-size:11px;letter-spacing:.1em}
 h1{margin-top:15px}
 .primary{background:linear-gradient(100deg,#174c3c,#2c8061 60%,#4a9b70);box-shadow:0 8px 18px #24544825;transition:transform .15s,filter .15s}
