@@ -173,7 +173,7 @@ body.password-recovery-mode #privacyNote{display:none!important}
     <p style="font-size:10px;color:var(--muted);margin:8px 0 0">Demo chat: replies come from this persona’s profile and curated response rules. This is not connected to a live AI model, and chats are not saved to your private inbox.</p>
   </section>
   <section id="privateMessagingPanel" aria-label="Private member messages" style="margin-top:22px;border:1px solid #dce8dd;border-radius:12px;padding:16px;background:linear-gradient(135deg,#f1f7ef,#fffdf8)">
-     <div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Messages and inbox update automatically. Only you and the selected member can read your conversation.</p></div>
+     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><h4 style="font:500 24px Georgia,serif;color:var(--forest);margin:0">Private messages</h4><p style="font-size:12px;color:var(--muted);margin:4px 0 0">Messages and inbox update automatically. Only you and the selected member can read your conversation.</p></div><button id="chatWithAdminButton" type="button" class="primary" style="border:0;border-radius:7px;padding:11px 15px;font-weight:800;cursor:pointer;white-space:nowrap">✉ Chat with StayLatin Admin</button></div>
     <div id="privateInboxList" style="display:grid;gap:8px;margin-top:12px"><div class="status">Loading private inbox…</div></div>
     <div id="privateConversation" hidden style="margin-top:16px;border-top:1px solid #dce8dd;padding-top:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h5 id="privateConversationTitle" style="font:500 20px Georgia,serif;color:var(--forest);margin:0">Conversation</h5><button id="closePrivateConversation" type="button" class="minor-action" style="width:auto;margin:0">Close</button></div>
@@ -479,7 +479,13 @@ async function loadPrivateInbox(){
  box.innerHTML=partners.map(m=>{const name=names[m.partner]||"StayLatin Team";const photo=photos[m.partner]?'<img src="'+introEscape(photos[m.partner])+'" alt="'+introEscape(name)+' profile photo" style="width:46px;height:46px;flex:0 0 46px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<span aria-hidden="true" style="width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:20px">✳</span>';return '<button type="button" data-inbox-partner="'+introEscape(m.partner)+'" data-inbox-name="'+introEscape(name)+'" style="display:flex;align-items:center;gap:11px;text-align:left;border:1px solid #dce8dd;border-radius:9px;background:#fff;padding:11px 13px;cursor:pointer;width:100%">'+photo+'<span style="min-width:0;flex:1"><strong style="display:block;color:var(--forest);font-size:13px">'+introEscape(name)+'</strong><span style="display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px">'+introEscape(m.body)+'</span></span><span style="flex:0 0 auto;color:var(--terra);font-size:10px;font-weight:800">'+(m.unread?"NEW":"Open ↗")+'</span></button>'}).join("");
  box.querySelectorAll("[data-inbox-partner]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.inboxPartner,button.dataset.inboxName)));
 }
-async function openPrivateConversation(userId,displayName){
+async const STAYLATIN_ADMIN_CONTACT_ID="d6530e9c-d8c1-4209-a446-9a03741d90e7";
+document.getElementById("chatWithAdminButton")?.addEventListener("click",()=>{
+ if(!activeTripUserId){setPrivateNotice("Please sign in to chat with the StayLatin admin.",true);return;}
+ if(activeTripUserId===STAYLATIN_ADMIN_CONTACT_ID){setPrivateNotice("You are signed in as the administrator account.",true);return;}
+ openPrivateConversation(STAYLATIN_ADMIN_CONTACT_ID,"StayLatin Admin");
+});
+function openPrivateConversation(userId,displayName){
  if(!activeTripUserId||!userId||userId===activeTripUserId)return;
  activePrivateRecipient=userId;activePrivateName=displayName||"StayLatin traveler";
  privateConversation.hidden=false;document.getElementById("privateConversationTitle").textContent="Private conversation with "+activePrivateName;
