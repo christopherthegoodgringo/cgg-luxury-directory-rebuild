@@ -122,7 +122,8 @@ body.portal-direct #privacyNote{display:none!important}
 body.portal-direct #travelerDashboard{display:block!important}
 body.portal-direct .traveler-content{grid-template-columns:1fr}
 
-</style><style id="staylatin-donation-glow-style">
+</style><style id="staylatin-hide-flashing-banner">#staylatin-donation-tab,.staylatin-has-forever-free-banner #staylatin-donation-tab{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}</style>
+<style id="staylatin-donation-glow-style">
 #travelerDonationCta.staylatin-donation-glow{animation:staylatinGreenFade 12s ease-in-out infinite;transition:box-shadow 1s ease}
 #travelerDonationCta.staylatin-donation-glow::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(190,255,195,.38),transparent 42%),radial-gradient(ellipse at 85% 80%,rgba(0,70,45,.36),transparent 46%);opacity:.8;animation:staylatinGreenGlow 8s ease-in-out infinite alternate}
 #travelerDonationCta.staylatin-donation-glow>div[aria-hidden="true"]{color:#e5ffe533!important}
