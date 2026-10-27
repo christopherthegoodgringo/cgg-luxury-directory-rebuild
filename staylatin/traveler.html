@@ -250,6 +250,16 @@ body [role="button"][aria-disabled="true"] {
   }
 }
 </style>
+
+<style id="traveler-booking-button-theme">
+.traveler-booking-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.traveler-booking-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;box-sizing:border-box;border:1px solid #1b6c55;border-radius:8px;padding:10px 14px;background:linear-gradient(135deg,#164d3e,#1f7c61);color:#fff!important;text-align:center;text-decoration:none!important;font-size:12px;font-weight:850;letter-spacing:.01em;box-shadow:0 4px 12px rgba(22,61,44,.14);animation:travelerBookingFade 2.2s ease-in-out infinite;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.traveler-booking-button:hover,.traveler-booking-button:focus-visible{background:linear-gradient(135deg,#164d3e,#1f7c61);color:#fff!important;transform:translateY(-2px);box-shadow:0 7px 16px rgba(22,61,44,.24);filter:brightness(1.08);animation-play-state:paused;outline:2px solid #d9ad55;outline-offset:2px}
+@keyframes travelerBookingFade{0%,100%{opacity:.72;filter:brightness(.96)}50%{opacity:1;filter:brightness(1.06)}}
+@media(max-width:520px){.traveler-booking-buttons{display:grid;grid-template-columns:1fr}.traveler-booking-button{width:100%}}
+@media(prefers-reduced-motion:reduce){.traveler-booking-button{animation:none;opacity:1}}
+</style>
+
 </head><body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
 <header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><div class="sl-lang-wrap"><button type="button" class="sl-language" id="language" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">EN ▾</button><ul class="sl-lang-menu" id="languageMenu" role="listbox" hidden><li role="option" data-lang="en" tabindex="-1">English</li><li role="option" data-lang="es" tabindex="-1">Español</li><li role="option" data-lang="pt" tabindex="-1">Português</li></ul></div></div></header>
@@ -1099,9 +1109,9 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
       '<div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">♥ SAVED FAVORITE</div>'+
       '<h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4>'+
       '<div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+
-      '<a href="'+esc(expedia)+'" target="_blank" rel="noopener noreferrer sponsored" style="display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#173f35;color:#fff;padding:9px 13px;font-size:12px;font-weight:800">Book on Expedia ↗</a>'+
-      '<a href="'+esc(trip)+'" target="_blank" rel="noopener noreferrer sponsored" style="display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#d9ad55;color:#173f35;padding:9px 13px;font-size:12px;font-weight:800">Book on Trip.com ↗</a>'+
+      '<div class="traveler-booking-buttons">'+
+      '<a class="traveler-booking-button" href="'+esc(expedia)+'" target="_blank" rel="noopener noreferrer sponsored" aria-label="Book this stay on Expedia">Book on Expedia ↗</a>'+
+      '<a class="traveler-booking-button" href="'+esc(trip)+'" target="_blank" rel="noopener noreferrer sponsored" aria-label="Book this stay on Trip.com">Book on Trip.com ↗</a>'+
       '</div></div></article>';
   }
   function render(){
