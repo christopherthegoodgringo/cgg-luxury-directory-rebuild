@@ -4,22 +4,59 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Privacy Policy — StayLatin</title>
 <meta name="description" content="How StayLatin collects, uses, and protects your information.">
-<link rel="stylesheet" href="account-auth.css">
 <style>
-body{margin:0;background:#f7f4ec;color:#173f35;font:16px/1.55 Inter,system-ui,sans-serif}
+:root{--cream:#f7f4ec;--forest:#173f35;--ink:#173f35;--muted:#5b6a61;--paper:#fffdf8;--line:#e5e0d5;--terra:#c86d4a;--gold:#c8a86b;--green-deep:#0f3d32;--green-mid:#1f7a5c;--green-bright:#2f8f6b}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,sans-serif}a{color:inherit;text-decoration:none}
 .wrap{width:min(760px,calc(100% - 40px));margin:40px auto 60px}
-h1{font:600 36px/1.15 Georgia,serif;margin:0 0 8px}
-.meta{color:#5b6a61;font-size:13px;margin-bottom:28px}
-h2{font:600 22px Georgia,serif;margin:28px 0 10px}
+.legal-wrap{width:min(760px,calc(100% - 40px));margin:40px auto 60px}
+h1{font:600 36px/1.15 Georgia,serif;margin:0 0 8px;color:var(--forest)}
+.meta{color:var(--muted);font-size:13px;margin-bottom:28px}
+h2{font:600 22px Georgia,serif;margin:28px 0 10px;color:var(--forest)}
 p,li{color:#334b40;font-size:15px}
 ul{padding-left:1.2em}
-a{color:#1f7a5c;font-weight:700}
 .legal-nav{margin:28px 0 0;display:flex;gap:16px;flex-wrap:wrap}
+.legal-nav a{color:#1f7a5c;font-weight:700}
+.notice{background:#e5f3ec;border:1px solid #6b9e86;border-radius:12px;padding:14px 16px;font-size:14px}
+.topbar{height:42px;background:var(--forest);color:#f8f4e9;font-size:12px;letter-spacing:.04em}
+.topbar .wrap,.topbar .sl-shell{width:min(1120px,calc(100% - 32px));margin:auto;height:100%;display:flex;align-items:center;justify-content:space-between}
+.top-extra{color:#e0e9e1}
+.sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}
+.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}
+.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}
+.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}
+.sl-mark{width:37px;height:37px;border:none;border-radius:50%;display:inline-grid;place-items:center;padding:0;overflow:hidden;flex:none;line-height:0;background:transparent}
+.sl-mark svg{display:block;width:37px;height:37px}
+.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}
+.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}
+.sl-navlinks a:hover{color:#c86d4a}
+.sl-navlinks a.sl-nav-btn,.sl-navlinks .sl-nav-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:9px 12px;border-radius:999px;border:1px solid #0f3d32;background:linear-gradient(135deg,#0f3d32,#1f7a5c);color:#fff!important;font-size:11px;font-weight:850;letter-spacing:.01em;text-decoration:none;white-space:nowrap;box-shadow:0 4px 12px rgba(15,61,50,.18);animation:stayBtnFade 2.2s ease-in-out infinite;transition:transform .15s ease,filter .15s ease}
+.sl-nav-btn:hover{filter:brightness(1.08);transform:translateY(-1px);animation-play-state:paused}
+.sl-lang-wrap{position:relative;display:inline-flex;align-items:center;z-index:50}
+.sl-language,#language{display:inline-flex!important;align-items:center;justify-content:center;gap:6px;padding:9px 14px!important;border-radius:999px!important;border:1px solid #0f3d32!important;background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;font-size:11px!important;font-weight:850!important;cursor:pointer;animation:stayBtnFade 2.2s ease-in-out infinite!important}
+.sl-language:hover{filter:brightness(1.08);animation-play-state:paused!important}
+.sl-lang-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:168px;margin:0;padding:8px;list-style:none;background:linear-gradient(160deg,#0f3d32,#164a3d);border:1px solid #1f7a5c;border-radius:14px;box-shadow:0 14px 32px rgba(10,40,30,.35);color:#fff}
+.sl-lang-menu[hidden]{display:none!important}
+.sl-lang-menu li{padding:11px 12px;border-radius:10px;font-size:13px;font-weight:750;color:#e8f6ef;cursor:pointer}
+.sl-lang-menu li:hover{background:rgba(255,255,255,.12)}
+.sl-lang-menu li[aria-selected="true"]{background:#1f7a5c;color:#fff}
+@keyframes stayBtnFade{0%,100%{opacity:.82;filter:brightness(.95)}50%{opacity:1;filter:brightness(1.08)}}
+.footer{background:#112e27;color:#e5e9e1;padding:38px 0 22px;margin-top:55px}
+.footer .wrap{width:min(1120px,calc(100% - 32px));margin:auto}
+.footer-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;padding-bottom:28px}
+.footer .brand{display:flex;align-items:center;gap:10px;color:#fff8e8;font:700 24px Georgia,serif;text-decoration:none}
+.footer .brandmark{display:inline-grid;line-height:0}
+.footer p{font-size:13px;color:#b8c7bd;max-width:360px}
+.footer-disclosure{font-size:12px;color:#aab9af;max-width:420px;margin:12px 0 0;line-height:1.45}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;align-items:flex-start}
+.footer-links a{color:#e8f6ef;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.copyright{border-top:1px solid #ffffff24;padding-top:18px;color:#aab9af;font-size:11px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:850px){.sl-mainnav{flex-wrap:wrap}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start}}
 </style>
 </head>
 <body>
-<main class="wrap">
-<p><a href="index.html#top">← Back to StayLatin</a></p>
+<div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
+<header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html#top" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><div class="sl-lang-wrap"><button type="button" class="sl-language" id="language" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">EN ▾</button><ul class="sl-lang-menu" id="languageMenu" role="listbox" hidden><li role="option" data-lang="en" tabindex="-1">English</li><li role="option" data-lang="es" tabindex="-1">Español</li><li role="option" data-lang="pt" tabindex="-1">Português</li></ul></div></div></header>
+<main class="legal-wrap">
 <h1>Privacy Policy</h1>
 <p class="meta">Last updated: October 27, 2026 · Applies to StayLatin websites and account tools.</p>
 <p>StayLatin (“we,” “us”) helps travelers discover independent stays across Latin America. This policy explains what information we collect, why we collect it, and the choices you have.</p>
@@ -67,5 +104,34 @@ a{color:#1f7a5c;font-weight:700}
 <p>Questions about privacy: use the contact options on StayLatin or email the site operator listed on your account materials. Controller: StayLatin / Christopher the Good Gringo project.</p>
 <div class="legal-nav"><a href="terms.html">Terms of Use</a><a href="index.html#top">Home</a></div>
 </main>
+<footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="index.html#top"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p><p class="footer-disclosure">StayLatin is a stay discovery directory. We do not process lodging payments. Third-party booking sites and properties set their own terms. Public listings may be references, not claimed partners.</p></div><div class="footer-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português</span></div></div></footer>
+
+<script>
+(function(){
+ const languageOrder=["en","es","pt"];
+ const languageLabels={en:"EN",es:"ES",pt:"PT"};
+ const languageNames={en:"English",es:"Español",pt:"Português"};
+ let language="en";
+ try{const s=localStorage.getItem("staylatin-lang");if(languageOrder.includes(s))language=s;}catch(e){}
+ const btn=document.getElementById("language");
+ const menu=document.getElementById("languageMenu");
+ function apply(){
+  document.documentElement.lang=language;
+  if(btn){btn.textContent=(languageLabels[language]||"EN")+" ▾";btn.setAttribute("aria-label","Language: "+(languageNames[language]||language));}
+  if(menu)menu.querySelectorAll("[data-lang]").forEach(li=>li.setAttribute("aria-selected",li.getAttribute("data-lang")===language?"true":"false"));
+  try{localStorage.setItem("staylatin-lang",language);}catch(e){}
+ }
+ function close(){if(menu){menu.hidden=true;menu.classList.remove("is-open");}if(btn)btn.setAttribute("aria-expanded","false");}
+ function open(){if(menu){menu.hidden=false;menu.classList.add("is-open");}if(btn)btn.setAttribute("aria-expanded","true");}
+ if(btn&&menu){
+  btn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();menu.hidden?open():close();});
+  menu.addEventListener("click",e=>{e.stopPropagation();const li=e.target.closest("[data-lang]");if(!li)return;language=li.getAttribute("data-lang");close();apply();});
+  document.addEventListener("click",e=>{if(!e.target.closest(".sl-lang-wrap"))close();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+ }
+ apply();
+})();
+</script>
+
 </body>
 </html>
