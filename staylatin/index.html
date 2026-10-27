@@ -193,7 +193,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .photo{height:205px!important;min-height:205px!important;flex:0 0 205px!important;overflow:hidden;position:relative;background-color:#c5d0c4;background-size:cover;background-position:center}
 .photo .property-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
 .photo .pill{z-index:2}
-.stay-card .heart,.stay-card .share{position:absolute;top:12px;z-index:3;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.96);border-radius:50%;color:#fff!important;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 5px 16px rgba(19,35,54,.32);background:linear-gradient(135deg,#1a5c45 0%,#2f8f6b 100%);animation:softGreenPulse 5.5s ease-in-out infinite;transition:transform .18s ease,filter .18s ease}
+.stay-card .heart,.stay-card .share{position:absolute;top:12px;z-index:3;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.96);border-radius:50%;color:#fff!important;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 5px 16px rgba(19,35,54,.32);background:linear-gradient(135deg,#1a5c45 0%,#2f8f6b 100%);animation:stayBtnFade 5.5s ease-in-out infinite;transition:transform .18s ease,filter .18s ease}
 .stay-card .heart{right:12px;font-size:24px;text-shadow:0 1px 2px rgba(10,40,30,.35)}
 .stay-card .heart.saved{background:linear-gradient(135deg,#0f4a36 0%,#1f7a58 100%);color:#fff!important}
 .stay-card .share{right:61px;font-size:21px}
@@ -334,6 +334,33 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
  background:#d8eee4;color:#5a7268!important;border-color:#b7d9c8;box-shadow:none;cursor:not-allowed;pointer-events:none
 }
 @media(max-width:480px){.sl-navlinks a.sl-nav-btn{font-size:10px;padding:8px 10px}}
+
+/* Slow fade across all homepage buttons */
+@keyframes stayBtnFade{
+ 0%,100%{opacity:.72;filter:brightness(.96)}
+ 50%{opacity:1;filter:brightness(1.06)}
+}
+.btn,.btn-primary,.btn-quiet,
+.sl-nav-btn,.sl-language,
+.chip,.view-more-btn,
+.staylatin-booking,
+.listing-grid .share,.listing-grid .heart,
+.business-cta .btn,.team-access .btn,
+.preview-link,.text-link,.card-bottom-link,.partner-links a{
+ animation:stayBtnFade 5.5s ease-in-out infinite!important
+}
+.btn:hover,.btn-primary:hover,.btn-quiet:hover,
+.sl-nav-btn:hover,.sl-language:hover,
+.chip:hover,.chip.active,.view-more-btn:hover,
+.staylatin-booking:hover,
+.listing-grid .share:hover,.listing-grid .heart:hover,
+.business-cta .btn:hover,.team-access .btn:hover{
+ animation-play-state:paused!important;opacity:1!important;filter:none!important
+}
+@media(prefers-reduced-motion:reduce){
+ .btn,.btn-primary,.btn-quiet,.sl-nav-btn,.sl-language,.chip,.view-more-btn,.staylatin-booking,
+ .listing-grid .share,.listing-grid .heart,.business-cta .btn,.team-access .btn,.preview-link,.text-link,.card-bottom-link,.partner-links a{animation:none!important;opacity:1!important}
+}
 </style>
 
 </head>
