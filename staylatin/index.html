@@ -21,7 +21,14 @@
 
 
 /* Shared homepage header: use on every StayLatin page */
-.sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:1.5px solid #c8a86b;border-radius:50%;display:grid;place-items:center;color:#c86d4a;font:20px Georgia,serif;flex:none}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}button.sl-language{cursor:pointer;font:inherit}button.sl-language:hover{filter:brightness(1.05)}.sl-language{font-size:11px;font-weight:850;white-space:nowrap;text-decoration:none;color:#173f35;background:#fffdf8;border:1px solid #e5e0d5;border-radius:999px;padding:9px 12px}@media(max-width:850px){.sl-mainnav{align-items:flex-start;flex-wrap:wrap;gap:12px}.sl-brand{font-size:25px}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start;gap:10px 16px}.sl-language{margin-left:auto}.sl-tagline .sl-shell{align-items:flex-start;flex-direction:column;gap:3px}}@media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a{font-size:11px}}
+.sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:1.5px solid #c8a86b;border-radius:50%;display:grid;place-items:center;color:#c86d4a;font:20px Georgia,serif;flex:none}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}button.sl-language{cursor:pointer;font:inherit}
+.sl-lang-wrap{position:relative;display:inline-flex;align-items:center}
+.sl-lang-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:40;min-width:148px;margin:0;padding:6px;list-style:none;background:#fffdf8;border:1px solid #e5e0d5;border-radius:14px;box-shadow:0 10px 28px rgba(23,63,53,.14)}
+.sl-lang-menu[hidden]{display:none!important}
+.sl-lang-menu li{padding:10px 12px;border-radius:10px;font-size:13px;font-weight:700;color:#173f35;cursor:pointer}
+.sl-lang-menu li:hover,.sl-lang-menu li:focus{background:#e5f3ec;outline:none}
+.sl-lang-menu li[aria-selected="true"]{background:#173f35;color:#fffdf8}
+button.sl-language:hover{filter:brightness(1.05)}.sl-language{font-size:11px;font-weight:850;white-space:nowrap;text-decoration:none;color:#173f35;background:#fffdf8;border:1px solid #e5e0d5;border-radius:999px;padding:9px 12px}@media(max-width:850px){.sl-mainnav{align-items:flex-start;flex-wrap:wrap;gap:12px}.sl-brand{font-size:25px}.sl-navlinks{order:3;flex-basis:100%;justify-content:flex-start;gap:10px 16px}.sl-language{margin-left:auto}.sl-tagline .sl-shell{align-items:flex-start;flex-direction:column;gap:3px}}@media(max-width:480px){.sl-shell{width:calc(100% - 24px)}.sl-navlinks a{font-size:11px}}
 </style>
 
 <style id="signup-action-nav-style">
@@ -366,7 +373,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
-<header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html#top" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><button type="button" class="sl-language" id="language" aria-label="Change language">EN</button></div></header>
+<header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark">✳</span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html#top" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><div class="sl-lang-wrap"><button type="button" class="sl-language" id="language" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">EN ▾</button><ul class="sl-lang-menu" id="languageMenu" role="listbox" hidden><li role="option" data-lang="en" tabindex="-1">English</li><li role="option" data-lang="es" tabindex="-1">Español</li><li role="option" data-lang="pt" tabindex="-1">Português</li></ul></div></div></header>
 <main id="top">
 <section class="hero wrap">
 <div class="hero-panel"><div class="hero-copy"><div class="eyebrow" data-en="A more personal way to travel" data-es="Una forma más personal de viajar" data-pt="Uma forma mais pessoal de viajar">A more personal way to travel</div><h1 data-en="Find your place in Latin America." data-es="Encuentra tu lugar en Latinoamérica." data-pt="Encontre seu lugar na América Latina.">Find your place in Latin America.</h1><p data-en="Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in." data-es="Hoteles boutique con carácter, hostales acogedores y bases para largas estancias — para viajeros que quieren conectar, no solo registrarse." data-pt="Hotéis boutique com personalidade, hostels acolhedores e bases para longas estadias — para viajantes que querem se conectar, não só fazer check-in.">Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in.</p></div></div>
@@ -499,17 +506,39 @@ document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("clic
 document.getElementById("destination").addEventListener("input",()=>{showAllListings=false;render()});document.getElementById("style").addEventListener("change",()=>{showAllListings=false;render()});document.getElementById("vibe").addEventListener("change",()=>{showAllListings=false;render()});
 const languageOrder=["en","es","pt"];
 const languageLabels={en:"EN",es:"ES",pt:"PT"};
+const languageNames={en:"English",es:"Español",pt:"Português"};
 try{const savedLang=localStorage.getItem("staylatin-lang");if(languageOrder.includes(savedLang))language=savedLang;}catch(e){}
 function applyLanguage(){
  document.documentElement.lang=language;
  document.querySelectorAll("[data-en]").forEach(el=>{const val=el.getAttribute("data-"+language);if(val!==null)el.textContent=val});
  document.querySelectorAll("[data-en-placeholder]").forEach(el=>{const val=el.getAttribute("data-"+language+"-placeholder");if(val!==null)el.placeholder=val});
  const languageButton=document.getElementById("language");
- if(languageButton){languageButton.textContent=languageLabels[language]||language.toUpperCase();languageButton.setAttribute("aria-label","Language: "+(languageLabels[language]||language));}
+ if(languageButton){languageButton.textContent=(languageLabels[language]||language.toUpperCase())+" ▾";languageButton.setAttribute("aria-label","Language: "+(languageNames[language]||language));}
+ const menu=document.getElementById("languageMenu");
+ if(menu){menu.querySelectorAll("[data-lang]").forEach(li=>{li.setAttribute("aria-selected",li.getAttribute("data-lang")===language?"true":"false");});}
  try{localStorage.setItem("staylatin-lang",language);}catch(e){}
 }
+function closeLangMenu(){
+ const languageButton=document.getElementById("language");
+ const menu=document.getElementById("languageMenu");
+ if(menu)menu.hidden=true;
+ if(languageButton)languageButton.setAttribute("aria-expanded","false");
+}
+function openLangMenu(){
+ const languageButton=document.getElementById("language");
+ const menu=document.getElementById("languageMenu");
+ if(menu)menu.hidden=false;
+ if(languageButton)languageButton.setAttribute("aria-expanded","true");
+}
 const languageButton=document.getElementById("language");
-if(languageButton)languageButton.addEventListener("click",()=>{const i=languageOrder.indexOf(language);language=languageOrder[(i+1)%languageOrder.length];applyLanguage();render();});
+const languageMenu=document.getElementById("languageMenu");
+if(languageButton&&languageMenu){
+ languageButton.addEventListener("click",(e)=>{e.stopPropagation();if(languageMenu.hidden)openLangMenu();else closeLangMenu();});
+ languageMenu.addEventListener("click",(e)=>{const li=e.target.closest("[data-lang]");if(!li)return;language=li.getAttribute("data-lang");closeLangMenu();applyLanguage();render();});
+ document.addEventListener("click",()=>closeLangMenu());
+ document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeLangMenu();});
+}
+applyLanguage();render();});
 applyLanguage();
 const yearElement=document.getElementById("year");
 if(yearElement)yearElement.textContent=new Date().getFullYear();
