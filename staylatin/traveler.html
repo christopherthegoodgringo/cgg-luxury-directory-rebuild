@@ -198,6 +198,22 @@ body.portal-direct .traveler-content{grid-template-columns:1fr}
 <label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">PERSONAL NOTE<textarea id="savedPlaceNote" maxlength="2000" rows="2" placeholder="Why I saved this place…" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
 <div style="grid-column:1/-1"><button type="submit" id="savedPlaceSubmit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save place</button></div></form>
 <p id="savedPlacesStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p><div id="travelerSavedPlacesList" style="display:grid;gap:9px"><div class="status">Your saved places will appear here.</div></div>
+</section><section id="travelerListingCollections" aria-labelledby="travelerListingCollectionsTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+<div class="kicker" style="color:var(--terra)">From homepage listing cards</div>
+<h3 id="travelerListingCollectionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Saved from StayLatin</h3>
+<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Hearts, trip boards, compare pins, been-here marks, map pins, and listing alerts from the homepage. Guest saves stay on this device; signed-in travelers sync to your profile.</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px" id="listingActionTabs" role="tablist">
+<button type="button" class="tab active" data-listing-tab="favorites" style="width:auto;margin:0">Favorites ♥</button>
+<button type="button" class="tab" data-listing-tab="trips" style="width:auto;margin:0">Trip boards ✈</button>
+<button type="button" class="tab" data-listing-tab="compare" style="width:auto;margin:0">Compare ⧉</button>
+<button type="button" class="tab" data-listing-tab="been" style="width:auto;margin:0">Been here ✓</button>
+<button type="button" class="tab" data-listing-tab="map" style="width:auto;margin:0">Map pins 📌</button>
+<button type="button" class="tab" data-listing-tab="alerts" style="width:auto;margin:0">Alerts 🔔</button>
+<button type="button" class="tab" data-listing-tab="invites" style="width:auto;margin:0">Invites ✉</button>
+</div>
+<p id="listingActionsStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
+<div id="travelerListingActionsPanel" style="display:grid;gap:9px"><div class="status">Your saved listing actions will appear here.</div></div>
+<p style="margin:12px 0 0;font-size:12px;color:var(--muted)"><a href="index.html#stays" style="color:var(--forest);font-weight:750">Browse stays on the homepage ↗</a></p>
 </section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
@@ -285,7 +301,7 @@ body.portal-direct .traveler-content{grid-template-columns:1fr}
 
 </main>
 <footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="index.html#top"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p><p class="footer-disclosure">StayLatin is a stay discovery directory. We do not process lodging payments. Third-party booking sites and properties set their own terms. Public listings may be references, not claimed partners.</p></div><div class="footer-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português</span></div></div></footer>
-<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js"></script><script>
+<script src="staylatin-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js"></script><script src="listing-actions.js"></script><script>
 const avatarInput=document.getElementById("travelerAvatarInput"),avatarPreview=document.getElementById("travelerAvatarPreview"),avatarPlaceholder=document.getElementById("travelerAvatarPlaceholder"),avatarStatus=document.getElementById("travelerAvatarStatus"),avatarHint=document.getElementById("travelerAvatarHint"),avatarOverlay=document.getElementById("travelerAvatarOverlay");
 function avatarStorageKey(){return "staylatin-avatar-"+(activeTripUserId||"guest")}
 async function loadTravelerAvatar(){try{const db=introClient();let saved=null;if(db&&activeTripUserId){const {data:profile,error}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",activeTripUserId).maybeSingle();if(error)throw error;if(profile?.avatar_path){const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(profile.avatar_path,3600);if(signedError)throw signedError;if(signed?.signedUrl)saved=signed.signedUrl;}}if(!saved){try{saved=localStorage.getItem(avatarStorageKey())}catch(e){}}if(saved){avatarPreview.src=saved;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";avatarStatus.textContent=""}else{avatarPreview.removeAttribute("src");avatarPreview.style.display="none";avatarPlaceholder.style.display="grid";avatarHint.textContent="Hover over the photo to add or update it.";avatarOverlay.textContent="Add photo";avatarStatus.textContent=""}}catch(e){avatarStatus.textContent="Could not load your saved profile photo from StayLatin. "+(e.message||"Please refresh and try again.");}}
@@ -752,6 +768,8 @@ function setTravelerSignedIn(user){
  loadTravelerIntroduction();
  loadTravelerJournal();
  loadTravelerSavedPlaces();
+ if(typeof loadTravelerListingActions==="function")loadTravelerListingActions();
+ else if(typeof renderTravelerListingActions==="function")renderTravelerListingActions();
  loadTravelerIntroductionDirectory();
  loadPrivateInbox();
  loadTravelerLounge();
@@ -881,4 +899,83 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
 })();
 </script>
 
+
+<script>
+(function(){
+  const A=window.StayLatinListingActions;
+  if(!A)return;
+  let activeListingTab="favorites";
+  const panel=document.getElementById("travelerListingActionsPanel");
+  const statusEl=document.getElementById("listingActionsStatus");
+  function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+  function card(item,extra){
+    return '<article style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:10px;padding:12px;background:#fff"><div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+esc(item.tier||item.type||"Stay")+'</div><h4 style="font:500 19px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4><div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+(extra||"")+(item.website?'<div style="margin-top:6px"><a href="'+esc(item.website)+'" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--forest);font-weight:700">Open website ↗</a></div>':'')+'</div><a class="minor-action" href="index.html#stay-'+esc(item.id)+'" style="width:auto;margin:0">View on homepage</a></article>';
+  }
+  function empty(msg){return '<div class="status">'+esc(msg)+'</div>';}
+  window.renderTravelerListingActions=function(){
+    if(!panel)return;
+    if(activeListingTab==="favorites"){
+      const ids=A.getFavorites();
+      const details=A.getFavoriteDetails?A.getFavoriteDetails():[];
+      const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
+      panel.innerHTML=ids.length?ids.map(id=>card(byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"})).join(""):empty("No hearted stays yet. Tap ♥ on a homepage listing.");
+      if(statusEl)statusEl.textContent=ids.length+" favorite"+(ids.length===1?"":"s")+" saved.";
+      return;
+    }
+    if(activeListingTab==="trips"){
+      const trips=A.getTrips();const boards=Object.keys(trips);
+      if(!boards.length){panel.innerHTML=empty("No trip boards yet. Tap ✈ on a listing and name a board.");if(statusEl)statusEl.textContent="";return;}
+      panel.innerHTML=boards.map(board=>{
+        const rows=trips[board]||[];
+        return '<div style="border:1px solid #dce8dd;border-radius:10px;padding:12px;background:#fff"><h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 8px">'+esc(board)+' <span style="font-size:12px;color:var(--muted);font-weight:600">('+rows.length+')</span></h4>'+(rows.length?rows.map(r=>card(r)).join(""):empty("Empty board"))+'</div>';
+      }).join("");
+      if(statusEl)statusEl.textContent=boards.length+" trip board"+(boards.length===1?"":"s")+".";
+      return;
+    }
+    if(activeListingTab==="compare"){
+      const rows=A.getCompare();
+      panel.innerHTML=rows.length?('<p style="font-size:12px;color:var(--muted);margin:0 0 8px">Up to 3 stays · '+rows.length+'/3</p>'+rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px"><b>Type:</b> '+esc(r.type||"—")+' · <b>Vibe:</b> '+esc(r.vibe||"—")+'</div>')).join("")):empty("No compare pins yet. Tap ⧉ on up to 3 listings.");
+      if(statusEl)statusEl.textContent=rows.length?"Compare pins ready.":"";
+      return;
+    }
+    if(activeListingTab==="been"){
+      const rows=A.getBeen();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,r.visited_at?'<div style="font-size:12px;margin-top:6px">Visited: '+esc(r.visited_at)+'</div>':'')).join(""):empty("No Been here marks yet. Tap ✓ after you visit a stay.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" stay"+(rows.length===1?"":"s")+" in your journal marks.":"";
+      return;
+    }
+    if(activeListingTab==="map"){
+      const rows=A.getMapPins();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Map shortlist · city/country pin</div>')).join(""):empty("No map pins yet. Tap 📌 on a listing.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" map pin"+(rows.length===1?"":"s")+".":"";
+      return;
+    }
+    if(activeListingTab==="alerts"){
+      const rows=A.getAlerts();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Watching for listing updates</div>')).join(""):empty("No alerts yet. Tap 🔔 to watch a listing.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" alert"+(rows.length===1?"":"s")+".":"";
+      return;
+    }
+    if(activeListingTab==="invites"){
+      const rows=A.getInvites();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">'+(r.invited_at?("Invited "+esc(new Date(r.invited_at).toLocaleString())):"Invite ready")+(r.link?' · <a href="'+esc(r.link)+'">Open link</a>':'')+'</div>')).join(""):empty("No invites yet. Tap ✉ on a listing to invite a friend.");
+      if(statusEl)statusEl.textContent=rows.length?"Recent invite actions.":"";
+    }
+  };
+  document.getElementById("listingActionTabs")?.addEventListener("click",e=>{
+    const btn=e.target.closest("[data-listing-tab]");if(!btn)return;
+    activeListingTab=btn.dataset.listingTab;
+    document.querySelectorAll("#listingActionTabs [data-listing-tab]").forEach(b=>b.classList.toggle("active",b===btn));
+    renderTravelerListingActions();
+  });
+  window.loadTravelerListingActions=async function(){
+    try{await A.syncOnSignIn();}catch(_){}
+    renderTravelerListingActions();
+  };
+  renderTravelerListingActions();
+})();
+</script>
+
 <script src="shared-chrome.js"></script>
+</body>
+</html>

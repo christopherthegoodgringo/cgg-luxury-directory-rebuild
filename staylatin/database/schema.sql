@@ -253,3 +253,7 @@ for select to authenticated using ((select auth.jwt())->'app_metadata'->>'role' 
 -- Add reviewed grants for anon/authenticated only after confirming the project's Data API settings.
 -- Add server-side profile creation, updated_at triggers, secure owner-edit/moderation endpoints,
 -- Storage bucket policies, and provider webhook verification in later migrations.
+
+-- Additional traveler listing-card actions (homepage stays keyed by text listing_key):
+-- see migrations/20261027090000_traveler_listing_actions.sql
+-- Table: public.staylatin_traveler_listing_actions
