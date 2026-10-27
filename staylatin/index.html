@@ -1154,7 +1154,9 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   var close=document.getElementById("staylatin-account-close");
   var previousOverflow="";
   window.addEventListener("message",function(event){
-    if(event.origin!==window.location.origin||!event.data||event.data.type!=="staylatin-account-switch")return;
+    if(event.origin!==window.location.origin||!event.data)return;
+    if(event.data.type==="staylatin-login-success"){closeAccount();return;}
+    if(event.data.type!=="staylatin-account-switch")return;
     try{
       var target=new URL(event.data.url,window.location.href);
       if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/traveler-(signin|signup)\.html$/.test(target.pathname))return;
