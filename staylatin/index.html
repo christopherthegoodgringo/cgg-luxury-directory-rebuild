@@ -961,10 +961,12 @@ function render(){
  grid.querySelectorAll("[data-share]").forEach(b=>b.addEventListener("click",async e=>{
   e.preventDefault();e.stopPropagation();
   const item=stays.find(x=>x.id===Number(b.dataset.share));if(!item)return;
-  const shareUrl=new URL(window.location.href);shareUrl.hash="stay-"+item.id;
-  const link=shareUrl.toString();
-  const shareText=item.name+" — "+item.city+" | StayLatin";
-  const markCopied=()=>{b.innerHTML="<span aria-hidden=\"true\">&#10003;</span>";b.setAttribute("aria-label","Link copied");setTimeout(()=>{b.innerHTML="<span aria-hidden=\"true\">&#8599;</span>";b.setAttribute("aria-label","Share "+item.name);},1600);};
+  let shareUrl=new URL(window.location.href);shareUrl.hash="stay-"+item.id;
+  let link=shareUrl.toString();
+  let shareText=item.name+" — "+item.city+" | StayLatin";
+  const A=window.StayLatinListingActions;
+  if(A&&A.inviteFriend){try{const savedShare=await A.inviteFriend(item);if(savedShare.link)link=savedShare.link;if(savedShare.text)shareText=savedShare.text;}catch(err){}}
+  const markCopied=()=>{b.innerHTML="<span aria-hidden=\"true\">&#10003;</span>";b.setAttribute("aria-label","Link copied and saved");setTimeout(()=>{b.innerHTML="<span aria-hidden=\"true\">&#8599;</span>";b.setAttribute("aria-label","Share "+item.name);},1600);};
   if(navigator.share){try{await navigator.share({title:item.name+" | StayLatin",text:shareText,url:link});markCopied();return;}catch(err){if(err&&err.name==="AbortError")return;}}
   try{
     if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(shareText+"\n"+link);markCopied();return;}
@@ -979,17 +981,18 @@ function render(){
   const act=b.dataset.act,item=stays.find(x=>x.id===Number(b.dataset.id));if(!item)return;
   const A=window.StayLatinListingActions;
   if(act==="map"){
+    if(A&&A.toggleMapPin){await A.toggleMapPin(item);render();}
     const q=encodeURIComponent([item.name,item.city].filter(Boolean).join(", "));
     window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank","noopener,noreferrer");
-    if(A&&A.toast)A.toast("Opening map for "+item.name+".");
+    if(A&&A.toast)A.toast("Map action saved for "+item.name+".");
     return;
   }
   if(act==="price"){
+    if(A&&A.savePriceCheck)await A.savePriceCheck(item);
     const card=b.closest(".stay-card");
     const actions=card&&card.querySelector(".card-actions");
     if(actions){actions.scrollIntoView({behavior:"smooth",block:"nearest"});actions.classList.add("price-highlight");setTimeout(()=>actions.classList.remove("price-highlight"),1800);}
-    if(A&&A.toast)A.toast("Current rates: check the booking buttons on this card.");
-    else window.alert("Current rates: check the booking buttons on this card.");
+    if(!A||!A.savePriceCheck)window.alert("Current rates: check the booking buttons on this card.");
     return;
   }
   if(act==="notify"){
