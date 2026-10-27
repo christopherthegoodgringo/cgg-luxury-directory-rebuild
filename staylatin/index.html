@@ -307,16 +307,534 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 
 <style id="staylatin-sample-review-card">
 .stay-review{margin:0 0 8px;padding:6px 10px;min-height:0;display:flex;flex-direction:column;gap:4px;border:1px solid rgba(89,96,77,.2);border-radius:8px;background:rgba(255,255,255,.56);box-shadow:none}
-.stay-review-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:0;margin:0}
+.stay-review-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0}
 .stay-reviewer{font-size:11px;font-weight:800;color:#0f3d32;white-space:nowrap}
 .stay-stars{display:flex;gap:2px;line-height:1;font-size:14px}
 .stay-stars .star.on{color:#ffd54a!important;text-shadow:0 0 4px rgba(255,213,74,.4)}
 .stay-stars .star.off{color:#c5d0c4!important}
 .stay-review-text{margin:0;font-size:12px;line-height:1.25;color:#45534a;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;min-height:0}
-.stay-review-head,.stay-review-label,.stay-review-score,.stay-review-note{display:none!important}
-@media(max-width:560px){.stay-review{min-height:0;padding:6px 9px}}
+@media(max-width:560px){.stay-review{padding:6px 9px}}
 </style>
 <style id="staylatin-review-stars-yellow">
-.stay-review-stars,.stay-stars .star.on{color:#ffd54a!important}
-.stay-review-stars .empty-star,.stay-stars .star.off{color:#c5d0c4!important}
+.stay-stars .star.on,.stay-review-stars{color:#ffd54a!important}
+.stay-stars .star.off,.stay-review-stars .empty-star{color:#c5d0c4!important}
 </style>
+
+<style id="staylatin-green-scheme">
+/* Homepage: all-green palette with distinct shades for tiers and accents */
+body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transparent 28%),radial-gradient(ellipse at 100% 28%,rgba(47,143,107,.12),transparent 30%),var(--cream)!important}
+.topbar{background:var(--green-deep)!important;color:#e8f6ef!important}
+.topbar a,.top-extra span{color:var(--green-soft)!important}
+.eyebrow{color:var(--green-soft)!important}
+.listings{background:var(--green-mist)!important}
+.category:hover{border-color:var(--green-mid)!important}
+.business-cta{background:linear-gradient(135deg,var(--green-deep),var(--forest2))!important}
+.business-cta .btn{background:var(--green-soft)!important;color:var(--green-deep)!important}
+.view-more-btn{background:linear-gradient(110deg,var(--forest),var(--green-mid))!important;border-color:var(--green-mid)!important;box-shadow:0 10px 25px rgba(15,61,50,.24)!important}
+.view-more-btn:hover{background:linear-gradient(110deg,var(--green-mid),var(--green-bright))!important;box-shadow:0 12px 28px rgba(47,143,107,.28)!important}
+.footer{background:var(--green-deep)!important}
+.team-access{background:var(--green-mist)!important;border-color:var(--line)!important}
+.stay-card .heart,.stay-card .share,.photo-actions .photo-act{background:linear-gradient(135deg,var(--forest) 0%,var(--green-bright) 100%)!important}
+.stay-card .heart.saved,.photo-actions .photo-act.is-on,.photo-actions .photo-act.saved{background:linear-gradient(135deg,var(--green-deep) 0%,var(--green-mid) 100%)!important}
+/* Tier pills: four clear green shades */
+.stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#1f7a5c,#3aad7a)!important;color:#f3fbf7!important;border-color:#1f7a5c!important}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#6bb89a,#a8d5c0)!important;color:#0f3d32!important;border-color:#6bb89a!important}
+.stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#d8eee4,#eef6f2)!important;color:#1a5c4a!important;border-color:#a8d5c0!important}
+/* Stars stay green-tint instead of rainbow */
+.stay-card.tier-premium .tier-star,.stay-card.tier-featured .tier-star,.stay-card.tier-verified .tier-star{
+ background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;
+ color:#b8f0d0!important;-webkit-text-fill-color:#b8f0d0!important;
+ filter:drop-shadow(0 0 4px rgba(58,173,122,.55))!important;
+ animation:tierStarSpin 3.5s linear infinite,tierStarGlow 3.4s ease-in-out infinite!important}
+.stay-card.tier-basic .tier-star{color:#2f8f6b!important;-webkit-text-fill-color:#2f8f6b!important;filter:none!important;animation:none!important}
+.tier-preview .preview-scene,.preview-basic .preview-scene,.preview-verified .preview-scene,.preview-featured .preview-scene,.preview-premium .preview-scene{
+ background:linear-gradient(135deg,var(--green-soft),var(--green-mid) 52%,var(--green-deep))!important}
+.preview-premium .preview-scene{background:linear-gradient(135deg,#1a5c4a,#0a2f27)!important}
+.preview-featured .preview-scene{background:linear-gradient(135deg,#3aad7a,#1f7a5c)!important}
+.preview-verified .preview-scene{background:linear-gradient(135deg,#a8d5c0,#6bb89a)!important}
+.preview-basic .preview-scene{background:linear-gradient(135deg,#eef6f2,#a8d5c0)!important}
+.preview-featured .preview-status,.preview-premium .preview-status{color:var(--forest)!important}
+.preview-featured .preview-status:before,.preview-premium .preview-status:before{background:var(--green-mid)!important}
+.stay-review-stars{color:#ffd54a!important}
+.stay-review-score{color:var(--forest)!important}
+.sl-global-header,.sl-mainnav{background:var(--paper)!important;border-bottom:1px solid var(--line)!important}
+.sl-brand,.sl-navlinks a.sl-nav-home{color:var(--forest)!important}
+.sl-navlinks a.sl-nav-home:hover,.sl-language:hover{color:var(--green-mid)!important}
+.sl-mark{color:var(--green-bright)!important;border-color:var(--green-mid)!important}
+
+
+/* Uniform card background for every tier. Lettering/buttons unchanged. */
+.listing-grid .stay-card,
+.listing-grid .stay-card.tier-premium,
+.listing-grid .stay-card.tier-featured,
+.listing-grid .stay-card.tier-verified,
+.listing-grid .stay-card.tier-basic{
+ background:#e5f3ec!important;
+ background-image:none!important;
+ border:1px solid #6b9e86!important;
+ box-shadow:0 5px 20px #193a2c06!important}
+.listing-grid .stay-card .stay-body{background:transparent!important}
+
+/* Header Join / Sign in actions as compact green buttons */
+.sl-navlinks{gap:clamp(8px,1.2vw,12px)!important}
+.sl-navlinks a.sl-nav-home{font-size:13px;font-weight:800;color:#173f35;text-decoration:none;padding:8px 4px;white-space:nowrap}
+.sl-navlinks a.sl-nav-home:hover{color:#1f7a5c}
+.sl-navlinks a.sl-nav-btn,.sl-navlinks .sl-nav-btn{
+ display:inline-flex;align-items:center;justify-content:center;gap:4px;
+ padding:9px 12px;border-radius:999px;border:1px solid #0f3d32;
+ background:linear-gradient(135deg,#0f3d32,#1f7a5c);color:#fff!important;
+ font-size:11px;font-weight:850;letter-spacing:.01em;text-decoration:none;white-space:nowrap;
+ box-shadow:0 4px 12px rgba(15,61,50,.18);transition:transform .15s ease,filter .15s ease,background .15s ease
+}
+.sl-navlinks a.sl-nav-btn:hover{filter:brightness(1.08);transform:translateY(-1px);color:#fff!important}
+.sl-navlinks .sl-nav-btn.is-disabled,.sl-navlinks span.sl-nav-btn{
+ background:#d8eee4;color:#5a7268!important;border-color:#b7d9c8;box-shadow:none;cursor:not-allowed;pointer-events:none
+}
+@media(max-width:480px){.sl-navlinks a.sl-nav-btn{font-size:10px;padding:8px 10px}}
+
+/* Slow fade across all homepage buttons */
+@keyframes stayBtnFade{
+ 0%,100%{opacity:.72;filter:brightness(.96)}
+ 50%{opacity:1;filter:brightness(1.06)}
+}
+.btn,.btn-primary,.btn-quiet,
+.sl-nav-btn,.sl-language,
+.chip,.view-more-btn,
+.staylatin-booking,
+.listing-grid .share,.listing-grid .heart,.listing-grid .photo-act,
+.business-cta .btn,.team-access .btn,
+.preview-link,.text-link,.card-bottom-link,.partner-links a{
+ animation:stayBtnFade 2.2s ease-in-out infinite!important
+}
+.btn:hover,.btn-primary:hover,.btn-quiet:hover,
+.sl-nav-btn:hover,.sl-language:hover,
+.chip:hover,.chip.active,.view-more-btn:hover,
+.staylatin-booking:hover,
+.listing-grid .share:hover,.listing-grid .heart:hover,.listing-grid .photo-act:hover,
+.business-cta .btn:hover,.team-access .btn:hover{
+ animation-play-state:paused!important;opacity:1!important;filter:none!important
+}
+@media(prefers-reduced-motion:reduce){
+ .btn,.btn-primary,.btn-quiet,.sl-nav-btn,.sl-language,.chip,.view-more-btn,.staylatin-booking,
+ .listing-grid .share,.listing-grid .heart,.listing-grid .photo-act,.business-cta .btn,.team-access .btn,.preview-link,.text-link,.card-bottom-link,.partner-links a{animation:none!important;opacity:1!important}
+}
+</style>
+
+
+<style id="staylatin-card-actions-col">
+/* One column, far right of photo — green buttons, white icons */
+.stay-card .photo{overflow:hidden;position:relative}
+.stay-card .photo-actions{
+  position:absolute!important;top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  z-index:40!important;display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+  align-items:center;justify-content:flex-start;gap:7px;width:36px;max-width:36px;max-height:none;
+  margin:0;padding:0;background:transparent!important;border-radius:0;pointer-events:none;
+  backdrop-filter:none!important;box-shadow:none!important
+}
+.stay-card .photo-actions .photo-act{
+  pointer-events:auto;position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;
+  width:32px!important;height:32px!important;min-width:32px;min-height:32px;
+  display:inline-flex!important;align-items:center;justify-content:center;
+  visibility:visible!important;opacity:1!important;flex:0 0 32px;margin:0;padding:0;
+  border:2px solid #fff!important;border-radius:50%!important;
+  color:#fff!important;font-weight:900;font-size:16px;line-height:1;
+  background:linear-gradient(135deg,#0f3d32 0%,#1f7a5c 100%)!important;
+  box-shadow:0 4px 12px rgba(15,61,50,.35)!important;animation:none!important;cursor:pointer
+}
+.stay-card .photo-actions .photo-act span{display:block;color:#fff!important;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.stay-card .photo-actions .photo-act.sl-act-notify span{color:#fff!important}
+.stay-card .photo-actions .photo-act.sl-act-notify.is-on span,
+.stay-card .photo-actions .photo-act.sl-act-notify.saved span{color:#ffd54a!important;text-shadow:0 0 6px rgba(255,213,74,.55)}
+
+.stay-card .photo-actions .photo-act.sl-act-heart{font-size:18px}
+.stay-card .photo-actions .photo-act.sl-act-heart.saved,
+.stay-card .photo-actions .photo-act.sl-act-heart.is-on,
+.stay-card .photo-actions .photo-act.sl-act-notify.is-on{
+  background:linear-gradient(135deg,#0a2f27 0%,#167b68 100%)!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35),0 4px 12px rgba(15,61,50,.35)!important
+}
+.stay-card .photo-actions .photo-act:hover{transform:translateY(-1px) scale(1.05);filter:brightness(1.08)}
+@media(max-width:560px){
+  .stay-card .photo-actions{top:8px;right:8px;gap:6px;width:34px;max-width:34px}
+  .stay-card .photo-actions .photo-act{width:32px!important;height:32px!important;min-width:32px;min-height:32px;flex-basis:32px;font-size:14px}
+}
+</style>
+
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
+<header class="sl-global-header"><div class="sl-shell sl-mainnav"><a class="sl-brand" href="index.html#top" aria-label="StayLatin home"><span class="sl-mark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span><span>StayLatin</span></a><nav class="sl-navlinks" aria-label="Main navigation"><a class="sl-nav-home" href="index.html#top" data-en="Home" data-es="Inicio" data-pt="Início">Home</a><a class="sl-nav-btn" href="traveler-signup.html" data-en="Traveler Join / Sign in" data-es="Viajero Unirse / Entrar" data-pt="Viajante Entrar / Criar conta">Traveler Join / Sign in</a><a class="sl-nav-btn" href="business-signup.html" data-en="Business Join / Sign in" data-es="Negocio Unirse / Entrar" data-pt="Negócio Entrar / Criar conta">Business Join / Sign in</a><a class="sl-nav-btn" href="agent-signup.html" data-en="Agent Join / Sign in" data-es="Agente Unirse / Entrar" data-pt="Agente Entrar / Criar conta">Agent Join / Sign in</a><a class="sl-nav-btn" href="admin-signup.html" data-en="Admin Join / Sign in" data-es="Admin Unirse / Entrar" data-pt="Admin Entrar / Criar conta">Admin Join / Sign in</a></nav><div class="sl-lang-wrap"><button type="button" class="sl-language" id="language" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">EN ▾</button><ul class="sl-lang-menu" id="languageMenu" role="listbox" hidden><li role="option" data-lang="en" tabindex="-1">English</li><li role="option" data-lang="es" tabindex="-1">Español</li><li role="option" data-lang="pt" tabindex="-1">Português</li></ul></div></div></header>
+<main id="top">
+<section class="hero wrap">
+<div class="hero-panel"><div class="hero-copy"><div class="eyebrow" data-en="A more personal way to travel" data-es="Una forma más personal de viajar" data-pt="Uma forma mais pessoal de viajar">A more personal way to travel</div><h1 data-en="Find your place in Latin America." data-es="Encuentra tu lugar en Latinoamérica." data-pt="Encontre seu lugar na América Latina.">Find your place in Latin America.</h1><p data-en="Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in." data-es="Hoteles boutique con carácter, hostales acogedores y bases para largas estancias — para viajeros que quieren conectar, no solo registrarse." data-pt="Hotéis boutique com personalidade, hostels acolhedores e bases para longas estadias — para viajantes que querem se conectar, não só fazer check-in.">Characterful boutique stays, welcoming hostels and long-stay bases — picked for travelers who want to feel connected, not just checked in.</p></div></div>
+<form class="searchbox" id="searchForm">
+<div class="field"><label for="destination" data-en="Where to?" data-es="¿A dónde?" data-pt="Para onde?">Where to?</label><input id="destination" placeholder="City or country" data-en-placeholder="City or country" data-es-placeholder="Ciudad o país" data-pt-placeholder="Cidade ou país"></div>
+<div class="field"><label for="style" data-en="Stay style" data-es="Tipo de estancia" data-pt="Tipo de estadia">Stay style</label><select id="style"><option value="all" data-en="All stays" data-es="Todas las estancias" data-pt="Todas as estadias">All stays</option><option value="Boutique hotel" data-en="Boutique hotels" data-es="Hoteles boutique" data-pt="Hotéis boutique">Boutique hotels</option><option value="Hostel" data-en="Hostels" data-es="Hostales" data-pt="Hostels">Hostels</option><option value="Long-stay base" data-en="Long-stay bases" data-es="Largas estancias" data-pt="Longas estadias">Long-stay bases</option></select></div>
+<div class="field"><label for="vibe" data-en="Travel mood" data-es="Tu estilo" data-pt="Estilo de viagem">Travel mood</label><select id="vibe"><option value="all" data-en="Any kind of trip" data-es="Cualquier viaje" data-pt="Qualquer tipo de viagem">Any kind of trip</option><option value="Culture" data-en="Culture & city life" data-es="Cultura y ciudad" data-pt="Cultura e cidade">Culture & city life</option><option value="Nature" data-en="Nature & slow travel" data-es="Naturaleza y calma" data-pt="Natureza e viagem lenta">Nature & slow travel</option><option value="Work" data-en="Work & longer stays" data-es="Trabajo y largas estancias" data-pt="Trabalho e longas estadias">Work & longer stays</option></select></div>
+<button class="btn btn-primary" type="submit" data-en="Search stays" data-es="Buscar" data-pt="Buscar estadias">Search stays</button>
+</form>
+</section>
+<section class="section listings" id="stays"><div class="wrap"><div class="section-head"><div><div class="kicker" data-en="A few places to begin" data-es="Unos lugares para empezar" data-pt="Alguns lugares para começar">A few places to begin</div><h2 data-en="Places with a sense of place." data-es="Lugares con identidad." data-pt="Lugares com identidade.">Places with a sense of place.</h2></div><p data-en="Explore real independent properties using photography from their official websites. These are public directory references, not claimed or verified StayLatin partners." data-es="Explora alojamientos independientes reales con fotografías de sus sitios oficiales. Son referencias públicas del directorio, no socios reclamados ni verificados por StayLatin." data-pt="Explore propriedades independentes reais com fotos dos sites oficiais. São referências públicas do diretório, não parceiros reivindicados ou verificados pela StayLatin.">Explore real independent properties using photography from their official websites. These are public directory references, not claimed or verified StayLatin partners.</p></div>
+
+<div class="listing-grid" id="listingGrid" aria-live="polite"><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/4.jpg')"><img class="property-photo" src="images/4.jpg" alt="Photo of Casa Zarah" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A small independent retreat in Santa Marta with distinctive design and a central location.</p><div class="location">Santa Marta, Colombia</div><h3>Casa Zarah</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://www.almahoteles.com/casazarah" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/9.jpg')"><img class="property-photo" src="images/9.jpg" alt="Photo of Casa Bugambilia" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A historic boutique stay in Santa Marta’s center, with stylish suites and a rooftop terrace with pool.</p><div class="location">Santa Marta, Colombia</div><h3>Casa Bugambilia</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://www.almahoteles.com/casabugambilia" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/10.jpg')"><img class="property-photo" src="images/10.jpg" alt="Photo of Casa Gaitana" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A boutique hotel in a historic home with Colombian architectural heritage and a courtyard pool.</p><div class="location">Santa Marta, Colombia</div><h3>Casa Gaitana</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://www.almahoteles.com/casagaitana" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/11.jpg')"><img class="property-photo" src="images/11.jpg" alt="Photo of Casa Charlotte" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A design-led boutique hotel in a restored historic building, blending contemporary comfort with original character.</p><div class="location">Santa Marta, Colombia</div><h3>Casa Charlotte</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://www.almahoteles.com/casacharlotte" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/12.jpg')"><img class="property-photo" src="images/12.jpg" alt="Photo of Casa de Isabella, a Kali Hotel" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A colonial boutique hotel in the historic center with a tropical courtyard, plunge pool and individually styled rooms.</p><div class="location">Santa Marta, Colombia</div><h3>Casa de Isabella, a Kali Hotel</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://kalihotels.com/en/casa-isabella/" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/13.jpg')"><img class="property-photo" src="images/13.jpg" alt="Photo of Mirador San Vicente — Conexión Rural Boyacense" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A rural-style hostel near Tunja offering a quieter Boyacá stay, kitchen facilities and a countryside atmosphere.</p><div class="location">Tunja, Colombia</div><h3>Mirador San Vicente — Conexión Rural Boyacense</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://www.hostelworld.com/es/albergues/p/339016/mirador-san-vicente-conexion-rural-boyacense/" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/14.jpg')"><img class="property-photo" src="images/14.jpg" alt="Photo of Hotel Aristo Gold Apartahotel" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A Tunja apartahotel with apartment-style rooms and kitchenettes, suitable for family stays and longer visits.</p><div class="location">Tunja, Colombia</div><h3>Hotel Aristo Gold Apartahotel</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://hotelaristogold.com/apartahotel/" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article><article class="stay-card tier-premium"><div class="photo" style="background-image:url('images/15.jpg')"><img class="property-photo" src="images/15.jpg" alt="Photo of Hotel Parque Santander" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80';"><span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>Premium</span></span></div><div class="stay-body"><p class="stay-description">A centrally located Tunja hotel with private bathrooms, Wi-Fi, breakfast service and a convenient historic-center base.</p><div class="location">Tunja, Colombia</div><h3>Hotel Parque Santander</h3><div class="card-actions"><div class="booking-buttons single"><a class="staylatin-booking" href="https://hoteltunja.com/" target="_blank" rel="noopener noreferrer">View property</a></div><span class="booking-note">Public property listing</span></div></div></article></div>
+<div class="view-more-wrap" id="viewMoreWrap" hidden><button class="view-more-btn" type="button" id="viewMoreBtn">Load more</button></div>
+</div></section>
+
+
+
+
+
+
+
+</main>
+<footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="index.html#top"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p><p class="footer-disclosure">StayLatin is a stay discovery directory. We do not process lodging payments. Third-party booking sites and properties set their own terms. Public listings may be references, not claimed partners.</p></div><div class="footer-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português</span></div></div></footer>
+<script src="staylatin-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="listing-actions.js"></script>
+<script>
+const stays=[
+ {id:4,name:"Casa Zarah",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Nature",desc:"A small independent retreat in Santa Marta with distinctive design and a central location.",image:"images/4.jpg",images:["images/4.jpg","https://images.trvl-media.com/lodging/114000000/113180000/113174800/113174713/f8118fb9.jpg?h=800&impolicy=fcrop&quality=medium&w=1200","https://cf.bstatic.com/xdata/images/hotel/max1024x768/653556545.jpg?k=22157b4e8a0bd3eb2b02fafa2372a9f9a1b9d56ad0f80d038561ce53f10d104b&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/656164952.jpg?hp=1&k=f10d17b1df3ed221b5b48d4077bf764275e8fed6d141ca53d5743ff8f0db1657&o=","https://images.unsplash.com/photo-1501117716987-c8e1ecb210d3?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://images.trvl-media.com/lodging/114000000/113180000/113174800/113174713/f8118fb9.jpg?h=800&impolicy=fcrop&quality=medium&w=1200",imageFallbacks:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/653556545.jpg?k=22157b4e8a0bd3eb2b02fafa2372a9f9a1b9d56ad0f80d038561ce53f10d104b&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/656164952.jpg?hp=1&k=f10d17b1df3ed221b5b48d4077bf764275e8fed6d141ca53d5743ff8f0db1657&o="],tag:"Premium",tier:"Premium",tierFeature:"Direct link to the property’s official website",website:"https://www.almahoteles.com/casazarah",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Casa-Zarah-Alma-Hotels.h125694943.Hotel-Information",airbnb:"https://www.airbnb.com/rooms/1511859638663763173",rating:5,review:"Warm boutique feel, great location, and staff who actually remember your name.                  ",reviewer:"Maya R."},
+ {id:9,name:"Casa Bugambilia",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A historic boutique stay in Santa Marta’s center, with stylish suites and a rooftop terrace with pool.",image:"images/9.jpg",images:["images/9.jpg","https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80"],tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://www.almahoteles.com/casabugambilia",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Casa-Bugambilia-Alma-Hotels.h125768174.Hotel-Information",airbnb:"https://es.airbnb.com/rooms/45927004",bookingLabel:"Book direct",note:"Official website and available booking partners",rating:4,review:"Rooftop pool views were lovely; rooms stylish though street noise can run late.                 ",reviewer:"Luis C."},
+ {id:10,name:"Casa Gaitana",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A boutique hotel in a historic home with more than 300 years of Colombian architectural heritage and a courtyard pool.",image:"images/10.jpg",images:["images/10.jpg","https://cf.bstatic.com/xdata/images/hotel/max1024x768/452592748.jpg?k=de3988b42c6f10a90feaf0d54bbd85b837c1027a43712570ea5c77448e462a19&o=","https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1501117716987-c8e1ecb210d3?auto=format&fit=crop&w=1200&q=80"],imageFallbacks:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/452592748.jpg?k=de3988b42c6f10a90feaf0d54bbd85b837c1027a43712570ea5c77448e462a19&o="],tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://www.almahoteles.com/casagaitana",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Vrbo-Property.h120626192.Hotel-Information",airbnb:"https://es.airbnb.com/rooms/1511845185614313207",bookingLabel:"Book direct",note:"Official website and available booking partners",rating:5,review:"Historic courtyard calm, beautiful details, and a pool that makes mornings easy.                ",reviewer:"Sofia A."},
+ {id:11,name:"Casa Charlotte",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A design-led boutique hotel in a restored historic building, blending contemporary comfort with original architectural character.",image:"images/11.jpg",images:["images/11.jpg","https://static.wixstatic.com/media/3dfff6_3cd1908b10d64b918e9e3d647f45c948~mv2.jpg/v1/fill/w_1256%2Ch_798%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Grupo%20Alma-07_edited.jpg","https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1584132967334-10e028bd69f1?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://static.wixstatic.com/media/3dfff6_3cd1908b10d64b918e9e3d647f45c948~mv2.jpg/v1/fill/w_1256%2Ch_798%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Grupo%20Alma-07_edited.jpg",tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://www.almahoteles.com/casacharlotte",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Casa-Charlotte-Alma-Hotels.h99271122.Hotel-Information",airbnb:"https://www.airbnb.com/rooms/1511848212728582848",bookingLabel:"Book direct",note:"Official website and available booking partners",rating:4,review:"Design-forward rooms with character; breakfast solid and staff quick to help.                   ",reviewer:"Jordan P."},
+ {id:12,name:"Casa de Isabella, a Kali Hotel",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A colonial boutique hotel in the historic center with a tropical courtyard, plunge pool and individually styled rooms.",image:"images/12.jpg",images:["images/12.jpg","https://images.trvl-media.com/lodging/5000000/4600000/4598300/4598220/12e81823.jpg?h=800&impolicy=fcrop&quality=medium&w=1200","https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://images.trvl-media.com/lodging/5000000/4600000/4598300/4598220/12e81823.jpg?h=800&impolicy=fcrop&quality=medium&w=1200",tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://kalihotels.com/en/casa-isabella/",trip:"https://www.trip.com/hotels/santa-marta-hotel-detail-8387989/casa-de-isabella-a-kali-hotel/",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Casa-De-Isabella.h4598220.Hotel-Information",bookingLabel:"Book direct",note:"Official website and available booking partners",rating:5,review:"Colonial charm, plunge pool oasis, and rooms that feel thoughtfully put together.               ",reviewer:"Elena V."},
+ {id:13,name:"Mirador San Vicente — Conexión Rural Boyacense",city:"Tunja, Colombia",country:"Colombia",type:"Hostel",vibe:"Nature",desc:"A rural-style hostel near Tunja offering a quieter Boyacá stay, kitchen facilities and a countryside atmosphere.",image:"images/13.jpg",images:["images/13.jpg","https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80"],tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"",expedia:"https://www.expedia.com/Tunja-Hotels-Vrbo-Property.h128898077.Hotel-Information?rfrr=HOT.HIS.question.link.click",hostelworld:"https://www.hostelworld.com/es/albergues/p/339016/mirador-san-vicente-conexion-rural-boyacense/",bookingLabel:"Book Hostelworld",note:"Hostelworld, Expedia and Airbnb listings",rating:3,review:"Quiet rural vibe and kitchen access; expect a simple hostel base, not luxury.                   ",reviewer:"Chris T."},
+ {id:14,name:"Hotel Aristo Gold Apartahotel",city:"Tunja, Colombia",country:"Colombia",type:"Long-stay base",vibe:"Work",desc:"A Tunja apartahotel with apartment-style rooms and kitchenettes, suitable for family stays and longer visits.",image:"images/14.jpg",images:["images/14.jpg","https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80"],tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://hotelaristogold.com/apartahotel/",bookingLabel:"Book direct",note:"Official property website",rating:4,review:"Apartment-style rooms work well for longer stays; kitchenettes were a big help.                 ",reviewer:"Ana M."},
+ {id:15,name:"Hotel Parque Santander",city:"Tunja, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A centrally located Tunja hotel with private bathrooms, Wi-Fi, breakfast service and a convenient historic-center base.",image:"images/15.jpg",images:["images/15.jpg","https://cf.bstatic.com/xdata/images/hotel/max1024x768/121077546.jpg?hp=1&k=eee3891013db1e3d8008efbd24d2a2cd4a2bd7c784bbfcadd070ec5e99d1db0e&o=","https://images.trvl-media.com/lodging/11000000/10550000/10546600/10546540/ba434713.jpg?impolicy=resizecrop&ra=fill&rh=575&rw=575","https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://cf.bstatic.com/xdata/images/hotel/max1024x768/121077546.jpg?hp=1&k=eee3891013db1e3d8008efbd24d2a2cd4a2bd7c784bbfcadd070ec5e99d1db0e&o=",imageFallbacks:["https://images.trvl-media.com/lodging/11000000/10550000/10546600/10546540/ba434713.jpg?impolicy=resizecrop&ra=fill&rh=575&rw=575"],tag:"Premium",tier:"Premium",tierFeature:"Premium directory placement",website:"https://hoteltunja.com/",trip:"https://www.trip.com/hotels/tunja-hotel-detail-4388750/santander-park/",expedia:"https://www.expedia.com/Tunja-Hotels-Hotel-Parque-Santander-Tunja.h10546540.Hotel-Information",airbnb:"https://www.airbnb.com/rooms/818023852389193748",bookingLabel:"Book direct",note:"Official website and available booking partners",rating:4,review:"Central Tunja base with reliable Wi-Fi and an easy walk to the historic square.                 ",reviewer:"Diego L."},
+ {id:3,name:"Casa Antonieta",city:"Oaxaca, Mexico",country:"Mexico",type:"Boutique hotel",vibe:"Culture",desc:"A boutique stay in Oaxaca Centro blending traditional-home character with thoughtful contemporary design.",image:"https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80",images:["https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1501117716987-c8e1ecb210d3?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"],tag:"Featured",tier:"Featured",tierFeature:"Featured placement in eligible results",website:"https://www.casaantonieta.com/casa-antonieta-english",trip:"https://www.trip.com/hotels/oaxaca-de-juarez-hotel-detail-22149874/casa-antonieta/",expedia:"https://www.expedia.com/Oaxaca-Hotels-Casa-Antonieta.h33143808.Hotel-Information",rating:5,review:"Oaxaca Centro gem—thoughtful design, quiet nights, and walking distance to food.                ",reviewer:"Priya S."},
+ {id:2,name:"Casona del Porvenir",city:"Cartagena, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"An intimate 13-room historic-centre hotel with a courtyard pool and personalized hospitality.",image:"images/2.jpg",images:["images/2.jpg","https://webbox.imgix.net/images/hhgiyjerfztpxftr/4e983fec-f99b-4411-b210-24df5224f02f.jpg?auto=format%2Ccompress&crop=entropy&fit=crop&q=85&w=1200","https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://webbox.imgix.net/images/hhgiyjerfztpxftr/4e983fec-f99b-4411-b210-24df5224f02f.jpg?auto=format%2Ccompress&crop=entropy&fit=crop&q=85&w=1200",tag:"Verified",tier:"Verified",tierFeature:"Property review + up to 5 approved photos",website:"https://www.casonadelporvenir.com/",trip:"https://www.trip.com/hotels/cartagena-hotel-detail-104393611/hotel-casona-del-porvenir/",expedia:"https://www.expedia.com/Cartagena-Hotels-Hotel-Boutique-Casona-Del-Porvenir.h83964782.Hotel-Information",airbnb:"https://www.airbnb.com/rooms/889788861984508051",rating:5,review:"Intimate historic-centre stay; courtyard pool and personal hospitality stood out.               ",reviewer:"Marco N."},
+ {id:1,name:"Casa Noa Colonial Rooms",city:"Cartagena, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"A self-service stay in Cartagena’s historic center, close to the Clock Tower and the city’s historic streets.",image:"images/1.jpg",images:["images/1.jpg","https://www.casanoa.co/wp-content/uploads/2024/01/MG_7392-1-300x200.jpg","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://www.casanoa.co/wp-content/uploads/2024/01/MG_7392-1-300x200.jpg",tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://www.casanoa.co/",trip:"https://www.trip.com/hotels/cartagena-hotel-detail-115748837/casa-noa-colonial-rooms/",expedia:"https://www.expedia.com/Cartagena-Hotels-Casa-Noa-Selfservice-By-SOHO.h101144043.Hotel-Information",rating:3,review:"Handy Clock Tower location; self-service style suits independent travelers most.                ",reviewer:"Kate H."},
+ {id:5,name:"Casa Lecanda Boutique Hotel",city:"Mérida, Mexico",country:"Mexico",type:"Boutique hotel",vibe:"Culture",desc:"A restored adults-only boutique stay near Paseo de Montejo, with garden courtyards and an outdoor pool.",image:"images/5.jpg",images:["images/5.jpg","https://www.casalecanda.com/storage/cms/home/01KY46QD99FKV92X0F7XD5NJ8Y.png","https://media.admagazine.com/photos/618a8332fb71c632cb925225/master/w_1600%2Cc_limit/39603.jpg","https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://www.casalecanda.com/storage/cms/home/01KY46QD99FKV92X0F7XD5NJ8Y.png",imageFallbacks:["https://media.admagazine.com/photos/618a8332fb71c632cb925225/master/w_1600%2Cc_limit/39603.jpg"],tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://casalecanda.com/",trip:"https://www.trip.com/hotels/merida-hotel-detail-756765/casa-lecanda-boutique-hotel/",expedia:"https://www.expedia.com/Merida-Hotels-Casa-Lecanda-Boutique-Hotel.h4680502.Hotel-Information",rating:4,review:"Garden courtyards and pool near Montejo; adults-only calm after busy Merida days.               ",reviewer:"Noah B."},
+ {id:6,name:"Casa Legado",city:"Bogotá, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Culture",desc:"An intimate design-led guesthouse in Bogotá’s Chapinero neighborhood, with a garden, lounge and shared kitchen.",image:"images/6.jpg",images:["images/6.jpg","https://casalegadobogota.com/wp-content/uploads/2024/11/Jardin-desde-arriba-605x465.jpg","https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://casalegadobogota.com/wp-content/uploads/2024/11/Jardin-desde-arriba-605x465.jpg",tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://casalegadobogota.com/",trip:"https://www.trip.com/hotels/bogota-hotel-detail-11005302/casa-legado/",expedia:"https://www.expedia.com/Bogota-Hotels-Casa-Legado.h19797910.Hotel-Information",rating:4,review:"Chapinero garden guesthouse charm; lounge and kitchen make longer visits easier.                ",reviewer:"Camila G."},
+ {id:7,name:"Casa Los Cántaros",city:"Oaxaca, Mexico",country:"Mexico",type:"Boutique hotel",vibe:"Culture",desc:"A colonial-style hotel in Oaxaca’s Reforma district with warm rooms, suites, a leafy courtyard and an on-site restaurant.",image:"images/7.jpg",images:["images/7.jpg","https://h-img1.cloudbeds.com/uploads/265960/los_cantaros-139_gallery~~650327fd6a007.jpg","https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://h-img1.cloudbeds.com/uploads/265960/los_cantaros-139_gallery~~650327fd6a007.jpg",tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://hotelcasaloscantaros.com/",trip:"https://www.trip.com/hotels/oaxaca-de-juarez-hotel-detail-4168400/casa-los-cantaros-hotel-boutique/",expedia:"https://www.expedia.com/Oaxaca-Hotels-Hotel-Boutique-Casa-Los-Cantaros.h6659715.Hotel-Information",rating:4,review:"Leafy Reforma courtyard and warm rooms; restaurant on-site made evenings simple.                ",reviewer:"Ivy W."},
+ {id:8,name:"Mezcal Boutique Hotel",city:"Cancún, Mexico",country:"Mexico",type:"Boutique hotel",vibe:"Nature",desc:"A relaxed downtown Cancún stay with a garden setting, outdoor pool, spa services and easy access to local dining.",image:"images/8.jpg",images:["images/8.jpg","https://www.mezcalboutiquehotel.com/assets/img/albercacenote.jpg","https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"],imageFallback:"https://www.mezcalboutiquehotel.com/assets/img/albercacenote.jpg",tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://www.mezcalboutiquehotel.com/en/",trip:"https://us.trip.com/hotels/cancun-hotel-detail-2560655/mezcal-hotel-and-hostel/",rating:3,review:"Downtown Cancun garden pool stay; convenient, though not a beachfront property.                 ",reviewer:"Omar F."}
+];
+let activeType="all",language="en",saved=[],showAllListings=false;
+function refreshSavedFromStore(){
+  if(window.StayLatinListingActions){saved=StayLatinListingActions.getFavorites();}
+  else{try{saved=JSON.parse(localStorage.getItem("staylatin-saved")||"[]");if(!Array.isArray(saved))saved=[];}catch(e){saved=[];}}
+}
+refreshSavedFromStore();
+const grid=document.getElementById("listingGrid");
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function tierBenefits(tier){return ""}
+function handleStayImageError(img){
+ const photo=img.closest?img.closest(".photo"):img.parentElement;
+ let candidates=[];
+ try{candidates=JSON.parse(img.dataset.fallbacks||"[]")}catch(e){}
+ if(img.dataset.fallback)candidates.unshift(img.dataset.fallback);
+ let tried=[];
+ try{tried=JSON.parse(img.dataset.triedSources||"[]")}catch(e){}
+ const current=img.getAttribute("src")||"";
+ if(current&&!tried.includes(current))tried.push(current);
+ const next=candidates.find(url=>url&&!tried.includes(url));
+ if(next){tried.push(next);img.dataset.triedSources=JSON.stringify(tried);img.src=next;if(photo)photo.style.backgroundImage="url('"+next+"')";return;}
+ // Last-resort image keeps a visible photograph instead of an empty card when a property host blocks hotlinking.
+ const lastResort="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80";
+ if(!img.dataset.lastResortTried&&current!==lastResort){
+  img.dataset.lastResortTried="1";
+  img.dataset.triedSources=JSON.stringify(tried);
+  img.onerror=function(){this.onerror=null;this.style.display="none";const p=this.closest?this.closest(".photo"):this.parentElement;if(p)p.classList.add("image-failed");};
+  img.src=lastResort;
+  if(photo)photo.style.backgroundImage="url('"+lastResort+"')";
+  return;
+ }
+ img.style.display="none";if(photo)photo.classList.add("image-failed");
+}
+
+const STAY_CAROUSEL_MS=5500;
+let stayCarouselTimers=[];
+function stopStayCarousels(){
+ stayCarouselTimers.forEach(t=>clearInterval(t));
+ stayCarouselTimers=[];
+}
+function initStayCarousels(){
+ stopStayCarousels();
+ const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ if(reduce)return;
+ grid.querySelectorAll("[data-carousel]").forEach(photo=>{
+  const slides=[...photo.querySelectorAll(".photo-slide")];
+  const dots=[...photo.querySelectorAll(".photo-dot")];
+  if(slides.length<2)return;
+  let i=0;
+  const show=()=>{
+   slides.forEach((el,idx)=>el.classList.toggle("is-active",idx===i));
+   dots.forEach((el,idx)=>el.classList.toggle("is-active",idx===i));
+  };
+  const tick=()=>{i=(i+1)%slides.length;show();};
+  let timer=setInterval(tick,STAY_CAROUSEL_MS);
+  stayCarouselTimers.push(timer);
+  photo.addEventListener("mouseenter",()=>{clearInterval(timer);timer=null;});
+  photo.addEventListener("mouseleave",()=>{if(timer)return;timer=setInterval(tick,STAY_CAROUSEL_MS);stayCarouselTimers.push(timer);});
+ });
+}
+
+function render(){
+ const q=document.getElementById("destination").value.trim().toLowerCase();
+ const type=document.getElementById("style").value;
+ const vibe=document.getElementById("vibe").value;
+ const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
+ const found=stays.filter(s=>(activeType==="all"||s.type===activeType)&&(type==="all"||s.type===type)&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
+ const visible=showAllListings?found:found.slice(0,8);
+ grid.innerHTML=visible.length?visible.map(s=>{
+  const links=[];
+  const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
+  // Keep the requested order consistent on every card: Airbnb, Trip.com, Expedia, direct website.
+  if(s.airbnb)links.push(link(s.airbnb,"Book Airbnb","airbnb-booking"));
+  if(s.trip)links.push(link(s.trip,"Book Trip.com","trip-booking"));
+  if(s.expedia)links.push(link(s.expedia,"Book Expedia"));
+  // Always place Hostelworld immediately before the direct property website button when both exist.
+  if(s.hostelworld)links.push(link(s.hostelworld,"Book Hostelworld","hostelworld-booking"));
+  if(s.website)links.push(link(s.website,s.bookingLabel==="View hostel listing"?"Book direct":(s.bookingLabel||"Book direct")));
+  if(!links.length)links.push('<span class="booking-note">Contact the property directly for booking information.</span>');
+  const layout=links.length>1?"multiple":"single";
+  const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
+  const note=s.note||(links.length>1?"Official website and available booking partners":"Official property website");
+  // Clearly mark this as sample copy until verified traveler testimonials and scores are sourced.
+  const reviewTexts=[
+   'A characterful '+s.type.toLowerCase()+' with a local feel and memorable setting in '+s.city.split(",")[0]+'.',
+   'A useful base for exploring the neighborhood, local food and nearby highlights in '+s.city.split(",")[0]+'.',
+   'The kind of stay to consider for travelers who value atmosphere and a sense of place.',
+   'A potential fit for a slower trip, with time to discover the destination beyond the usual stops.',
+   'Worth comparing for a trip to '+s.city.split(",")[0]+' alongside location, amenities and direct-booking details.'
+  ];
+  const rating=Math.max(1,Math.min(5,Number(s.rating)||3));
+  const reviewText=((s.review||"Sample traveler note for this stay.").slice(0,96)).padEnd(96," ");
+  const reviewer=s.reviewer||"Traveler";
+  const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=rating?' on':' off')+'" aria-hidden="true">★</span>').join("");
+  const reviewBlock='<div class="stay-review"><div class="stay-review-top"><div class="stay-stars" role="img" aria-label="'+rating+' out of 5 stars">'+stars+'</div><div class="stay-reviewer">'+esc(reviewer)+'</div></div><p class="stay-review-text">'+esc(reviewText)+'</p></div>';
+  const gallery=(Array.isArray(s.images)&&s.images.length?s.images:[s.image,s.imageFallback].concat(s.imageFallbacks||[])).filter(Boolean).filter((u,i,a)=>a.indexOf(u)===i).slice(0,5);
+  while(gallery.length<5){gallery.push("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80");}
+  const photoSrc=gallery[0]||'';
+  const photoBg=photoSrc?(' style="background-image:url(\''+esc(photoSrc)+'\')"'):'';
+  const slidesHtml=gallery.map((src,i)=>'<img class="property-photo photo-slide'+(i===0?' is-active':'')+'" onerror="handleStayImageError(this)" src="'+esc(src)+'" data-fallback="'+esc(s.imageFallback||"")+'" data-fallbacks="'+esc(JSON.stringify(s.imageFallbacks||[]))+'" alt="Photo '+(i+1)+' of '+esc(s.name)+'" loading="'+(i===0?'eager':'lazy')+'" decoding="async">').join('');
+  const dotsHtml='<div class="photo-dots" aria-hidden="true">'+gallery.map((_,i)=>'<span class="photo-dot'+(i===0?' is-active':'')+'"></span>').join('')+'</div>';
+    const st=(window.StayLatinListingActions&&StayLatinListingActions.stateFor(s.id))||{favorite:saved.includes(s.id),trip:false,compare:false,been:false,map:false,alert:false};
+  const acts=''
+   +'<div class="photo-actions" role="toolbar" aria-label="Listing actions">'
+   +'<button class="photo-act sl-act-heart '+(st.favorite?'saved is-on':'')+'" type="button" aria-label="Favorite '+esc(s.name)+'" data-save="'+s.id+'" title="Heart"><span aria-hidden="true">♥</span></button>'
+   +'<button class="photo-act sl-act-share" type="button" aria-label="Share '+esc(s.name)+'" data-share="'+s.id+'" title="Share"><span aria-hidden="true">↗</span></button>'
+   +'<button class="photo-act sl-act-map" type="button" aria-label="Map '+esc(s.name)+'" data-act="map" data-id="'+s.id+'" title="Map"><span aria-hidden="true">⌖</span></button>'
+   +'<button class="photo-act sl-act-price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price"><span aria-hidden="true">$</span></button>'
+   +'<button class="photo-act sl-act-notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify"><span aria-hidden="true">🔔</span></button>'
+   +'</div>';
+  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+'<span class="pill"><span class="tier-star" aria-hidden="true">★</span><span>'+esc(s.tag)+'</span>'+'</span>'+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,160))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'<span class="booking-note">'+esc(note)+'</span></div></div></article>';
+ }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
+ const viewWrap=document.getElementById("viewMoreWrap");
+ const viewBtn=document.getElementById("viewMoreBtn");
+ viewWrap.hidden=found.length<=8;
+ viewBtn.textContent=({en:showAllListings?"Show fewer":"Load more",es:showAllListings?"Ver menos":"Cargar más",pt:showAllListings?"Ver menos":"Carregar mais"})[language]||(showAllListings?"Show fewer":"Load more");
+ refreshSavedFromStore();
+ grid.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",async e=>{
+  e.preventDefault();e.stopPropagation();
+  const item=stays.find(x=>x.id===Number(b.dataset.save));if(!item)return;
+  if(window.StayLatinListingActions){await StayLatinListingActions.toggleFavorite(item);refreshSavedFromStore();render();return;}
+  const id=Number(b.dataset.save);saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];localStorage.setItem("staylatin-saved",JSON.stringify(saved));render();
+ }));
+ grid.querySelectorAll("[data-share]").forEach(b=>b.addEventListener("click",async e=>{
+  e.preventDefault();e.stopPropagation();
+  const item=stays.find(x=>x.id===Number(b.dataset.share));if(!item)return;
+  const shareUrl=new URL(window.location.href);shareUrl.hash="stay-"+item.id;
+  const link=shareUrl.toString();
+  const shareText=item.name+" — "+item.city+" | StayLatin";
+  const markCopied=()=>{b.innerHTML="<span aria-hidden=\"true\">&#10003;</span>";b.setAttribute("aria-label","Link copied");setTimeout(()=>{b.innerHTML="<span aria-hidden=\"true\">&#8599;</span>";b.setAttribute("aria-label","Share "+item.name);},1600);};
+  if(navigator.share){try{await navigator.share({title:item.name+" | StayLatin",text:shareText,url:link});markCopied();return;}catch(err){if(err&&err.name==="AbortError")return;}}
+  try{
+    if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(shareText+"\n"+link);markCopied();return;}
+  }catch(err){}
+  try{
+    const ta=document.createElement("textarea");ta.value=shareText+"\n"+link;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);markCopied();return;
+  }catch(err){}
+  window.prompt("Copy this listing link to share:",shareText+"\n"+link);
+ }));
+ grid.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",async e=>{
+  e.preventDefault();e.stopPropagation();
+  const act=b.dataset.act,item=stays.find(x=>x.id===Number(b.dataset.id));if(!item)return;
+  const A=window.StayLatinListingActions;
+  if(act==="map"){
+    const q=encodeURIComponent([item.name,item.city].filter(Boolean).join(", "));
+    window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank","noopener,noreferrer");
+    if(A&&A.toast)A.toast("Opening map for "+item.name+".");
+    return;
+  }
+  if(act==="price"){
+    const card=b.closest(".stay-card");
+    const actions=card&&card.querySelector(".card-actions");
+    if(actions){actions.scrollIntoView({behavior:"smooth",block:"nearest"});actions.classList.add("price-highlight");setTimeout(()=>actions.classList.remove("price-highlight"),1800);}
+    if(A&&A.toast)A.toast("Current rates: check the booking buttons on this card.");
+    else window.alert("Current rates: check the booking buttons on this card.");
+    return;
+  }
+  if(act==="notify"){
+    if(!A){window.alert("Sign in later to save notify preferences. For now, alerts stay on this device once listing actions load.");return;}
+    await A.toggleAlert(item);render();return;
+  }
+ }));
+
+ // Slow photo carousel: ~5.5s per slide, pause on hover, respect reduced motion
+ initStayCarousels();
+ if(location.hash&&location.hash.startsWith("#stay-")){
+  const el=document.getElementById(location.hash.slice(1));
+  if(el)setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"center"}),120);
+ }
+
+}
+document.getElementById("viewMoreBtn").addEventListener("click",()=>{showAllListings=!showAllListings;render();if(!showAllListings)document.getElementById("stays").scrollIntoView({behavior:"smooth"});});
+
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();showAllListings=false;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
+document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
+document.getElementById("destination").addEventListener("input",()=>{showAllListings=false;render()});document.getElementById("style").addEventListener("change",()=>{showAllListings=false;render()});document.getElementById("vibe").addEventListener("change",()=>{showAllListings=false;render()});
+const languageOrder=["en","es","pt"];
+const languageLabels={en:"EN",es:"ES",pt:"PT"};
+const languageNames={en:"English",es:"Español",pt:"Português"};
+try{const savedLang=localStorage.getItem("staylatin-lang");if(languageOrder.includes(savedLang))language=savedLang;}catch(e){}
+function applyLanguage(){
+ document.documentElement.lang=language;
+ document.querySelectorAll("[data-en]").forEach(el=>{const val=el.getAttribute("data-"+language);if(val!==null)el.textContent=val});
+ document.querySelectorAll("[data-en-placeholder]").forEach(el=>{const val=el.getAttribute("data-"+language+"-placeholder");if(val!==null)el.placeholder=val});
+ const languageButton=document.getElementById("language");
+ if(languageButton){languageButton.textContent=(languageLabels[language]||language.toUpperCase())+" ▾";languageButton.setAttribute("aria-label","Language: "+(languageNames[language]||language));}
+ const menu=document.getElementById("languageMenu");
+ if(menu){menu.querySelectorAll("[data-lang]").forEach(li=>{li.setAttribute("aria-selected",li.getAttribute("data-lang")===language?"true":"false");});}
+ try{localStorage.setItem("staylatin-lang",language);}catch(e){}
+}
+function closeLangMenu(){
+ const languageButton=document.getElementById("language");
+ const menu=document.getElementById("languageMenu");
+ if(menu){menu.hidden=true;menu.classList.remove("is-open");}
+ if(languageButton)languageButton.setAttribute("aria-expanded","false");
+}
+function openLangMenu(){
+ const languageButton=document.getElementById("language");
+ const menu=document.getElementById("languageMenu");
+ if(menu){menu.hidden=false;menu.classList.add("is-open");}
+ if(languageButton)languageButton.setAttribute("aria-expanded","true");
+}
+const languageButton=document.getElementById("language");
+const languageMenu=document.getElementById("languageMenu");
+if(languageButton&&languageMenu){
+ languageButton.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();if(languageMenu.hidden)openLangMenu();else closeLangMenu();});
+ languageMenu.addEventListener("click",(e)=>{e.stopPropagation();const li=e.target.closest("[data-lang]");if(!li)return;language=li.getAttribute("data-lang");closeLangMenu();applyLanguage();render();});
+ document.addEventListener("click",(e)=>{if(!e.target.closest(".sl-lang-wrap"))closeLangMenu();});
+ document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeLangMenu();});
+}
+applyLanguage();
+render();
+const yearElement=document.getElementById("year");
+if(yearElement)yearElement.textContent=new Date().getFullYear();
+// Always start the homepage with the first eight listings in the directory's fixed tier/name order.
+function ensureInitialListings(){
+ // Reapply the default, unfiltered state every time the homepage is opened or refreshed.
+ activeType="all";showAllListings=false;
+ const destinationInput=document.getElementById("destination");
+ const styleSelect=document.getElementById("style");
+ const vibeSelect=document.getElementById("vibe");
+ if(destinationInput)destinationInput.value="";
+ if(styleSelect)styleSelect.value="all";
+ if(vibeSelect)vibeSelect.value="all";
+ document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));
+ render();
+}
+ensureInitialListings();
+// Merge only records produced by the scheduled verifier. Existing hand-maintained listings
+// remain untouched; the generated file is served from the same StayLatin directory.
+fetch("auto-discovered-stays.json",{cache:"no-store"})
+ .then(response=>{if(!response.ok)throw new Error("Discovery data unavailable");return response.json()})
+ .then(items=>{
+  if(!Array.isArray(items))return;
+  const keys=new Set(stays.map(s=>(s.name+"|"+s.city).toLowerCase()));
+  let changed=false;
+  items.forEach(item=>{
+   if(!item||!item.name||!item.city||!item.type||!item.image)return;
+   const key=(item.name+"|"+item.city).toLowerCase();
+   if(keys.has(key))return;
+   // Only hotel/hostel records with an Expedia or Trip.com property profile are eligible.
+   const validProfile=url=>{try{const u=new URL(url);return (u.hostname==="expedia.com"||u.hostname.endsWith(".expedia.com")||u.hostname==="trip.com"||u.hostname.endsWith(".trip.com"))}catch(e){return false}};
+   if(!["Boutique hotel","Hostel"].includes(item.type)||!(validProfile(item.expedia)||validProfile(item.trip)))return;
+   if(!["Tunja, Colombia","Santa Marta, Colombia"].includes(item.city))return;
+   if(!item.website||!/^https:\/\//i.test(item.website)||!/^https:\/\//i.test(item.image))return;
+   stays.push(item);keys.add(key);changed=true;
+  });
+  if(changed)ensureInitialListings();
+ })
+ .catch(()=>{/* Discovery is additive; a missing data file never blocks existing cards. */});
+window.addEventListener("pageshow",ensureInitialListings);
+document.addEventListener("DOMContentLoaded",ensureInitialListings,{once:true});
+let stayReviewRotationTimer=null;
+function rotateStayReviews(){
+ document.querySelectorAll(".stay-review").forEach(card=>{
+  const slides=[...card.querySelectorAll("[data-review-slide]")];
+  if(slides.length<2)return;
+  const current=slides.findIndex(slide=>slide.classList.contains("active"));
+  const next=(current+1)%slides.length;
+  slides.forEach((slide,index)=>{slide.classList.toggle("active",index===next);if(index===next)slide.setAttribute("aria-live","polite");else slide.removeAttribute("aria-live");});
+ });
+}
+if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,5000);
+</script>
+
+<div id="slCompareModal" hidden>
+  <div class="sl-compare-panel" role="dialog" aria-modal="true" aria-labelledby="slCompareTitle">
+    <div class="sl-compare-head">
+      <div><div class="kicker">Compare stays</div><h3 id="slCompareTitle" style="margin:4px 0 0;font:500 26px Georgia,serif;color:var(--forest)">Side by side</h3></div>
+      <button type="button" class="btn btn-quiet" id="slCompareClose">Close</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Pin up to 3 stays from listing cards. Open your traveler portal to keep them on your profile.</p>
+    <div class="sl-compare-grid" id="slCompareGrid"></div>
+    <p style="margin:14px 0 0;font-size:12px;color:var(--muted)"><a href="traveler.html#dashboard" style="color:var(--forest);font-weight:750">Open traveler portal ↗</a></p>
+  </div>
+</div>
+<div id="slInviteModal" hidden>
+  <div class="sl-invite-panel" role="dialog" aria-modal="true" aria-labelledby="slInviteTitle">
+    <div class="kicker">Invite a friend</div>
+    <h3 id="slInviteTitle" style="margin:4px 0 8px;font:500 24px Georgia,serif;color:var(--forest)">Share this stay</h3>
+    <p id="slInviteText" style="font-size:13px;color:var(--muted);white-space:pre-wrap"></p>
+    <div class="sl-invite-actions">
+      <a class="btn btn-primary" id="slInviteWhatsApp" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a class="btn btn-quiet" id="slInviteEmail">Email</a>
+      <button type="button" class="btn btn-quiet" id="slInviteCopy">Copy invite text</button>
+      <button type="button" class="btn btn-quiet" id="slInviteClose">Close</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const A=window.StayLatinListingActions;
+  if(A){A.syncOnSignIn().then(function(){if(typeof refreshSavedFromStore==="function"){refreshSavedFromStore();}}).catch(function(){});}
+  window.openCompareModal=function(){
+    const modal=document.getElementById("slCompareModal");
+    const grid=document.getElementById("slCompareGrid");
+    if(!modal||!grid||!A)return;
+    const rows=A.getCompare();
+    grid.innerHTML=rows.length?rows.map(function(r){return '<article style="background:#fff;border:1px solid #d7e5db;border-radius:10px;padding:12px"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+(r.tier||"Stay")+'</div><h4 style="font:500 18px Georgia,serif;color:var(--forest);margin:6px 0">'+(r.name||"")+'</h4><div style="font-size:12px;color:var(--muted)">'+(r.city||"")+'</div><div style="font-size:12px;margin-top:8px"><b>Type:</b> '+(r.type||"—")+'<br><b>Vibe:</b> '+(r.vibe||"—")+'</div><button type="button" class="btn btn-quiet" style="margin-top:10px;padding:8px 12px" data-compare-remove="'+r.id+'">Remove</button></article>';}).join(""):'<div class="empty" style="grid-column:1/-1">No stays pinned yet. Tap ⧉ on a listing card.</div>';
+    modal.hidden=false;
+    grid.querySelectorAll("[data-compare-remove]").forEach(function(btn){btn.addEventListener("click",async function(){
+      const item={id:Number(btn.dataset.compareRemove)};
+      const full=rows.find(function(x){return Number(x.id)===item.id;})||item;
+      await A.toggleCompare(full);
+      openCompareModal();
+      if(typeof render==="function")render();
+    });});
+  };
+  window.openInviteModal=function(inv){
+    const modal=document.getElementById("slInviteModal");
+    if(!modal||!inv)return;
+    document.getElementById("slInviteText").textContent=inv.text;
+    document.getElementById("slInviteWhatsApp").href=inv.wa;
+    document.getElementById("slInviteEmail").href=inv.mail;
+    modal.hidden=false;
+    document.getElementById("slInviteCopy").onclick=async function(){
+      try{await navigator.clipboard.writeText(inv.text);if(A)A.toast("Invite text copied.");}catch(_){window.prompt("Copy invite:",inv.text);}
+    };
+  };
+  document.getElementById("slCompareClose")&&document.getElementById("slCompareClose").addEventListener("click",function(){document.getElementById("slCompareModal").hidden=true;});
+  document.getElementById("slInviteClose")&&document.getElementById("slInviteClose").addEventListener("click",function(){document.getElementById("slInviteModal").hidden=true;});
+  document.getElementById("slCompareModal")&&document.getElementById("slCompareModal").addEventListener("click",function(e){if(e.target.id==="slCompareModal")e.currentTarget.hidden=true;});
+  document.getElementById("slInviteModal")&&document.getElementById("slInviteModal").addEventListener("click",function(e){if(e.target.id==="slInviteModal")e.currentTarget.hidden=true;});
+})();
+</script>
+
+</body>
+</html>
