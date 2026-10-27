@@ -306,11 +306,9 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .sl-mark{color:var(--green-bright)!important;border-color:var(--green-mid)!important}
 
 
-/* Card backgrounds only: darkest green at Premium → lightest at Basic. Lettering/buttons unchanged. */
-.stay-card.tier-premium{background:#5d9a80!important;border-color:#4e876e!important}
-.stay-card.tier-featured{background:#8bbfa8!important;border-color:#78ad96!important}
-.stay-card.tier-verified{background:#b7d9c8!important;border-color:#a3cbb8!important}
-.stay-card.tier-basic{background:#e5f3ec!important;border-color:#d0e6db!important}
+/* Uniform card background for every tier. Lettering/buttons unchanged. */
+.stay-card,.stay-card.tier-premium,.stay-card.tier-featured,.stay-card.tier-verified,.stay-card.tier-basic{
+ background:#e5f3ec!important;border-color:#d0e6db!important}
 
 /* Header Join / Sign in actions as compact green buttons */
 .sl-navlinks{gap:clamp(8px,1.2vw,12px)!important}
