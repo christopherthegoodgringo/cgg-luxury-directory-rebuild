@@ -62,4 +62,36 @@ async function loadInboxConversation(travelerId){
   if(statusEl)statusEl.textContent="Private conversation loaded. Only you and this traveler can read it.";
  }catch(err){box.innerHTML='<div class="detail-hint" style="color:#9b3c2c">Could not load this conversation: '+esc(err.message||"Check private-message access.")+'</div>';}
 }$("rows").addEventListener("keydown",e=>{const row=e.target.closest("[data-toggle-profile]");if(row&&(e.key==="Enter"||e.key===" ")){e.preventDefault();row.click();}});let adminProfileDirty=false;$("signout").addEventListener("click",async()=>{const btn=$("signout");btn.disabled=true;btn.textContent="Logging out…";try{if(client)await client.auth.signOut();}finally{window.location.replace("admin-signin.html");}});$("saveAdminProfile").addEventListener("click",saveAdminProfile);$("sendAdminPasswordReset").addEventListener("click",async()=>{const status=$("profileStatus");try{const {data,error}=await client.auth.getUser();if(error)throw error;if(!data.user||data.user.app_metadata?.role!=="admin"||!data.user.email)throw new Error("Administrator sign-in is required.");if(!window.confirm("Send a password-reset email to "+data.user.email+"?"))return;const {error:resetError}=await client.auth.resetPasswordForEmail(data.user.email,{redirectTo:"https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler.html?recovery=1"});if(resetError)throw resetError;status.classList.remove("error");status.textContent="If email delivery is enabled, a password-reset link has been requested for "+data.user.email+". After resetting, sign in again through the administrator sign-in page.";}catch(err){status.classList.add("error");status.textContent=err.message||"Could not request a password reset.";}});$("toggleAdminProfile").addEventListener("click",()=>{const panel=$("adminProfile"),collapsed=panel.classList.toggle("collapsed");$("toggleAdminProfile").textContent=collapsed?"Edit profile":"Collapse profile";$("toggleAdminProfile").setAttribute("aria-expanded",String(!collapsed));});$("toggleTravelerDirectory").addEventListener("click",()=>{const content=$("travelerDirectoryContent"),collapsed=content.classList.toggle("collapsed");$("toggleTravelerDirectory").textContent=collapsed?"Expand directory":"Collapse directory";$("toggleTravelerDirectory").setAttribute("aria-expanded",String(!collapsed));});$("adminAvatarQuickPick").addEventListener("click",()=>$("adminAvatarQuickInput").click());$("adminAvatarInput").addEventListener("change",e=>{const file=e.target.files?.[0];if(!file)return;const status=$("adminAvatarStatus"),preview=$("adminAvatarPreview");if(!["image/png","image/jpeg","image/webp","image/gif"].includes(file.type)||file.size>2*1024*1024){status.textContent="Choose a JPG, PNG, WEBP or GIF image up to 2 MB.";e.target.value="";return;}const reader=new FileReader();reader.onload=()=>{preview.src=String(reader.result);preview.hidden=false;const headerPreview=$("adminAvatarHeaderImage"),placeholder=$("adminAvatarPlaceholder"),sidePreview=$("sidebarAdminAvatar"),sidePlaceholder=$("sidebarAvatarPlaceholder");headerPreview.src=String(reader.result);headerPreview.hidden=false;placeholder.hidden=true;sidePreview.src=String(reader.result);sidePreview.hidden=false;sidePlaceholder.hidden=true;status.textContent="Photo preview ready. Click Save administrator profile to upload.";$("removeAdminAvatar").dataset.remove="false";};reader.readAsDataURL(file);});$("adminAvatarQuickInput").addEventListener("change",e=>{const file=e.target.files?.[0];if(!file)return;const mainInput=$("adminAvatarInput");try{mainInput.files=e.target.files;}catch(err){}mainInput.dispatchEvent(new Event("change",{bubbles:true}));});$("sidebarAvatarInput")?.addEventListener("change",e=>{const file=e.target.files?.[0];if(!file)return;const mainInput=$("adminAvatarInput");try{mainInput.files=e.target.files;}catch(err){}mainInput.dispatchEvent(new Event("change",{bubbles:true}));});$("removeAdminAvatar").addEventListener("click",()=>{const preview=$("adminAvatarPreview");preview.hidden=true;preview.removeAttribute("src");const headerPreview=$("adminAvatarHeaderImage"),placeholder=$("adminAvatarPlaceholder"),sidePreview=$("sidebarAdminAvatar"),sidePlaceholder=$("sidebarAvatarPlaceholder");headerPreview.hidden=true;headerPreview.removeAttribute("src");placeholder.hidden=false;sidePreview.hidden=true;sidePreview.removeAttribute("src");sidePlaceholder.hidden=false;$("adminAvatarInput").value="";$("adminAvatarQuickInput").value="";$("sidebarAvatarInput").value="";$("adminAvatarStatus").textContent="Photo will be removed when you save.";$("removeAdminAvatar").dataset.remove="true";});["search","languageFilter","sort"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",render));document.addEventListener("input",e=>{if(e.target.closest("#adminProfile"))adminProfileDirty=true;});document.addEventListener("change",e=>{if(e.target.closest("#adminProfile"))adminProfileDirty=true;});$("refreshAdminInbox").addEventListener("click",async()=>{const btn=$("refreshAdminInbox");btn.disabled=true;btn.textContent="↻ Refreshing…";try{await loadAdminInbox();if(activeInboxChatUserId)await loadInboxConversation(activeInboxChatUserId);}finally{btn.disabled=false;btn.textContent="↻ Refresh messages";}});$("refreshTravelerDirectory").addEventListener("click",async()=>{const btn=$("refreshTravelerDirectory");btn.disabled=true;btn.textContent="↻ Refreshing travelers…";try{await load();}finally{btn.disabled=false;btn.textContent="↻ Refresh travelers";}});load();})();
-</script></body></html>
+</script>
+<script>
+/* Keep the active portal work area anchored after clicks, form submissions, chat actions, and async UI updates. */
+(function(){
+ if(window.__stayLatinKeepWorkArea)return;window.__stayLatinKeepWorkArea=true;
+ let pending=null;
+ function capture(el){
+  if(!el||!el.getBoundingClientRect)return;
+  if(el.matches&&el.matches('a[href]')&&el.target==='_blank')return;
+  const rect=el.getBoundingClientRect();
+  pending={el:el,top:rect.top,left:rect.left,startedAt:Date.now()};
+  [70,220,480,850].forEach(function(delay){setTimeout(function(){
+   const p=pending;if(!p||p.el!==el||!el.isConnected||Date.now()-p.startedAt>1200)return;
+   const now=el.getBoundingClientRect();const delta=now.top-p.top;
+   if(Math.abs(delta)>2)window.scrollBy({top:delta,left:0,behavior:'instant'});
+  },delay);});
+ }
+ document.addEventListener('click',function(event){
+  const target=event.target&&event.target.closest?event.target.closest('button,input[type="submit"],input[type="button"],[role="button"],a[href],summary'):null;
+  if(target)capture(target);
+ },true);
+ document.addEventListener('submit',function(event){
+  const form=event.target;if(!form||!form.getBoundingClientRect)return;
+  const active=form.querySelector('button[type="submit"],input[type="submit"]')||form;
+  capture(active);
+ },true);
+ document.addEventListener('change',function(event){
+  const target=event.target;if(!target||!target.matches||!target.matches('select,input[type="checkbox"],input[type="radio"]'))return;
+  capture(target);
+ },true);
+})();
+</script>
+</body></html>
