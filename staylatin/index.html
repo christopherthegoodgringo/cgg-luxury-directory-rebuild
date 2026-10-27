@@ -1177,6 +1177,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   window.addEventListener("message",function(event){
     if(event.origin!==window.location.origin||!event.data)return;
     if(event.data.type==="staylatin-login-success"){if(event.data.role==="traveler"){if(frame){frame.src=new URL("traveler.html#dashboard",window.location.href).href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");var dialog=document.getElementById("staylatin-account-dialog");if(dialog)dialog.classList.add("portal-view");previousOverflow=document.body.style.overflow;document.body.style.overflow="hidden";window.setTimeout(fitAccountDialog,80);}return;}closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&(fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"||fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/admin-travel-members.html")){window.location.replace(fallback.href);}}catch(e){}}return;}
+    if(event.data.type==="staylatin-signout"){closeAccount();return;}
     if(event.data.type==="staylatin-account-content-changed"){window.setTimeout(fitAccountDialog,30);return;}
     if(event.data.type!=="staylatin-account-switch")return;
     try{
