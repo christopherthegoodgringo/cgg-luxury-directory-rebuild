@@ -5,7 +5,7 @@ const $=id=>document.getElementById(id);
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const keys=["trip_planner","budget_tracker","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites","emergency_card"];
 const defaults={
- trip_planner:{name:"",destination:"",start:"",end:"",days:[]},
+ trip_planner:{name:"",destination:"",start:"",end:"",days:[],trips:[],activeTripId:""},
  budget_tracker:{budget:"",currency:"USD",expenses:[]},
  documents_checklist:{items:[["Passport validity checked",false],["Visa / entry requirements checked",false],["Travel insurance arranged",false],["Flights or transport confirmed",false],["Accommodation confirmation saved",false],["Copies of key documents stored safely",false],["Medication and prescriptions prepared",false]]},
  packing_checklist:{items:[["Passport and travel documents",false],["Phone and charger",false],["Power adapter",false],["Payment cards and some cash",false],["Prescription medication",false],["Comfortable walking shoes",false],["Weather-appropriate clothing",false],["Toiletries and sunscreen",false]]},
@@ -31,8 +31,16 @@ async function loadAll(){
    if(!error){(data||[]).forEach(r=>{if(keys.includes(r.tool_key)&&r.payload&&typeof r.payload==="object")state[r.tool_key]=Object.assign(clone(defaults[r.tool_key]),r.payload);});cloudReady=true;writeLocal();}
   }catch(_){}
  }
+ normalizeTrips();
  renderAll();
 }
+function newTripId(){return "trip-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);}
+function normalizeTrips(){const s=state.trip_planner;if(!Array.isArray(s.trips))s.trips=[];if(!s.trips.length&&(s.name||s.destination||s.start||s.end||(s.days||[]).length))s.trips.push({id:newTripId(),name:s.name||"My trip",destination:s.destination||"",start:s.start||"",end:s.end||"",days:s.days||[]});let t=s.trips.find(x=>x.id===s.activeTripId)||s.trips[0];if(t)loadTripRecord(t);else{s.activeTripId="";s.name="";s.destination="";s.start="";s.end="";s.days=[];}writeLocal();}
+function loadTripRecord(t){const s=state.trip_planner;s.activeTripId=t.id;s.name=t.name||"";s.destination=t.destination||"";s.start=t.start||"";s.end=t.end||"";s.days=Array.isArray(t.days)?t.days:[];}
+function captureTrip(){const s=state.trip_planner;s.name=$("tripName").value.trim();s.destination=$("tripDestination").value.trim();s.start=$("tripStart").value;s.end=$("tripEnd").value;let t=s.trips.find(x=>x.id===s.activeTripId);if(!t){if(!(s.name||s.destination||s.start||s.end||(s.days||[]).length))return null;t={id:newTripId()};s.trips.unshift(t);s.activeTripId=t.id;}Object.assign(t,{name:s.name||"My trip",destination:s.destination,start:s.start,end:s.end,days:s.days||[],updatedAt:new Date().toISOString()});return t;}
+function renderSavedTrips(){const box=$("savedTripsList"),s=state.trip_planner;if(!box)return;box.innerHTML=(s.trips||[]).length?s.trips.map(t=>'<article class="tool-item saved-trip-item"><div><b>'+escapeHtml(t.name||"Untitled trip")+'</b><p>'+escapeHtml(t.destination||"Destination not set")+(t.start?" · "+escapeHtml(t.start):"")+(t.end?" – "+escapeHtml(t.end):"")+' · '+((t.days||[]).length)+' activities</p></div><button type="button" class="tool-small" data-trip-open="'+escapeHtml(t.id)+'">'+(t.id===s.activeTripId?"Open now":"Open trip")+'</button></article>').join(""):'<p class="tool-empty">Save your first trip to see it here.</p>';}
+async function startNewTrip(){captureTrip();const s=state.trip_planner,t={id:newTripId(),name:"",destination:"",start:"",end:"",days:[]};s.trips.unshift(t);loadTripRecord(t);renderTrip();renderSavedTrips();await save("trip_planner");status("tripStatus","New trip started. Give it a name and save the details.");}
+function openTrip(id){const s=state.trip_planner;captureTrip();const t=s.trips.find(x=>x.id===id);if(!t)return;loadTripRecord(t);renderTrip();renderSavedTrips();writeLocal();status("tripStatus","Saved trip opened.");}
 let saveTimers={};
 async function save(k){
  writeLocal();
@@ -47,10 +55,8 @@ async function save(k){
 }
 function renderAll(){renderTrip();renderBudget();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderTrip(){
- const s=state.trip_planner;
- $("tripName").value=s.name||"";$("tripDestination").value=s.destination||"";$("tripStart").value=s.start||"";$("tripEnd").value=s.end||"";
- const box=$("tripDayList");if(!box)return;
- box.innerHTML=s.days.length?s.days.map((d,i)=>'<article class="tool-item"><div><b>'+escapeHtml(d.date||"Flexible date")+' · '+escapeHtml(d.title)+'</b><p>'+escapeHtml(d.note||"")+'</p></div><button type="button" class="tool-small danger" data-trip-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">Add your first activity to build your day-by-day plan.</p>';
+ const s=state.trip_planner;$("tripName").value=s.name||"";$("tripDestination").value=s.destination||"";$("tripStart").value=s.start||"";$("tripEnd").value=s.end||"";
+ const box=$("tripDayList");if(box)box.innerHTML=(s.days||[]).length?s.days.map((d,i)=>'<article class="tool-item"><div><b>'+escapeHtml(d.date||"Flexible date")+' · '+escapeHtml(d.title)+'</b><p>'+escapeHtml(d.note||"")+'</p></div><button type="button" class="tool-small danger" data-trip-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">Add your first activity to build your day-by-day plan.</p>';renderSavedTrips();
 }
 function renderBudget(){
  const s=state.budget_tracker;$("budgetLimit").value=s.budget??"";$("budgetCurrency").value=s.currency||"USD";
@@ -105,9 +111,11 @@ function renderCurrency(){
  state.currency_preferences={from,to,amount:String(amount)};writeLocal();
 }
 function bindForms(){
- $("tripDetailsForm").addEventListener("submit",async e=>{e.preventDefault();Object.assign(state.trip_planner,{name:$("tripName").value.trim(),destination:$("tripDestination").value.trim(),start:$("tripStart").value,end:$("tripEnd").value});await save("trip_planner");status("tripStatus","Trip details saved.");});
- $("tripDayForm").addEventListener("submit",async e=>{e.preventDefault();state.trip_planner.days.push({date:$("tripDayDate").value,title:$("tripDayTitle").value.trim(),note:$("tripDayNote").value.trim()});$("tripDayForm").reset();renderTrip();await save("trip_planner");status("tripStatus","Activity added to your itinerary.");});
- $("tripDayList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-delete]");if(!b)return;state.trip_planner.days.splice(Number(b.dataset.tripDelete),1);renderTrip();await save("trip_planner");});
+ $("tripDetailsForm").addEventListener("submit",async e=>{e.preventDefault();captureTrip();await save("trip_planner");renderSavedTrips();status("tripStatus","Trip saved. Reopen it anytime under Saved Trips.");});
+ $("tripDayForm").addEventListener("submit",async e=>{e.preventDefault();state.trip_planner.days.push({date:$("tripDayDate").value,title:$("tripDayTitle").value.trim(),note:$("tripDayNote").value.trim()});$("tripDayForm").reset();captureTrip();renderTrip();await save("trip_planner");status("tripStatus","Activity added and trip saved. Reopen it anytime under Saved Trips.");});
+ $("tripDayList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-delete]");if(!b)return;state.trip_planner.days.splice(Number(b.dataset.tripDelete),1);captureTrip();renderTrip();await save("trip_planner");});
+ $("savedTripsList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-open]");if(!b)return;openTrip(b.dataset.tripOpen);await save("trip_planner");});
+ $("newTripButton").addEventListener("click",startNewTrip);
  $("budgetDetailsForm").addEventListener("submit",async e=>{e.preventDefault();state.budget_tracker.budget=$("budgetLimit").value;state.budget_tracker.currency=$("budgetCurrency").value;await save("budget_tracker");renderBudget();status("budgetStatus","Budget settings saved.");});
  $("expenseForm").addEventListener("submit",async e=>{e.preventDefault();state.budget_tracker.expenses.push({title:$("expenseTitle").value.trim(),category:$("expenseCategory").value,currency:$("expenseCurrency").value,planned:Number($("expensePlanned").value)||0,actual:Number($("expenseActual").value)||0});$("expenseForm").reset();$("expenseCurrency").value=state.budget_tracker.currency||"USD";renderBudget();await save("budget_tracker");status("budgetStatus","Expense saved.");});
  $("budgetExpenseList").addEventListener("click",async e=>{const b=e.target.closest("[data-expense-delete]");if(!b)return;state.budget_tracker.expenses.splice(Number(b.dataset.expenseDelete),1);renderBudget();await save("budget_tracker");});
