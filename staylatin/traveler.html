@@ -114,7 +114,8 @@ body.password-recovery-mode #status{display:block;margin-top:14px;padding:11px;b
 body.password-recovery-mode #status.error{background:#f9e9e5;color:#8b392a}
 body.password-recovery-mode #privacyNote{display:none!important}
 @media(max-width:520px){body.password-recovery-mode .traveler-content{width:calc(100% - 24px);padding:20px 0 42px}body.password-recovery-mode .traveler-auth{border-radius:19px!important;padding:27px 22px!important}}
-.danger-action{background:#fff2ef!important;border:1px solid #d98a7a!important;color:#9f3325!important;font-weight:800}.danger-action:hover{background:#fbe2dc!important}.account-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.account-actions .minor-action{width:auto;margin:0}</style><style id="staylatin-donation-glow-style">
+.danger-action{background:#fff2ef!important;border:1px solid #d98a7a!important;color:#9f3325!important;font-weight:800}.danger-action:hover{background:#fbe2dc!important}.account-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.account-actions .minor-action{width:auto;margin:0}@media(max-width:560px){#travelerJournalForm,#travelerSavedPlaceForm{grid-template-columns:minmax(0,1fr)!important}#travelerJournalForm>label,#travelerSavedPlaceForm>label{grid-column:1!important}#travelerJournalForm>div,#travelerSavedPlaceForm>div{grid-column:1!important}}
+</style><style id="staylatin-donation-glow-style">
 #travelerDonationCta.staylatin-donation-glow{animation:staylatinGreenFade 12s ease-in-out infinite;transition:box-shadow 1s ease}
 #travelerDonationCta.staylatin-donation-glow::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(190,255,195,.38),transparent 42%),radial-gradient(ellipse at 85% 80%,rgba(0,70,45,.36),transparent 46%);opacity:.8;animation:staylatinGreenGlow 8s ease-in-out infinite alternate}
 #travelerDonationCta.staylatin-donation-glow>div[aria-hidden="true"]{color:#e5ffe533!important}
@@ -314,7 +315,7 @@ async function loadTravelerJournal(){
  const db=introClient();if(!journalEntries)return;
  if(!db||!activeTripUserId){journalEntries.innerHTML='<div class="status">Sign in to view your travel journal.</div>';return;}
  journalEntries.innerHTML='<div class="status">Loading your journal…</div>';
- const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,user_id,title,destination,entry_date,body,visibility,created_at,updated_at").order("updated_at",{ascending:false}).limit(100);
+ const {data,error}=await db.from("staylatin_traveler_journal_entries").select("id,user_id,title,destination,entry_date,body,visibility,created_at,updated_at").eq("user_id",activeTripUserId).order("updated_at",{ascending:false}).limit(100);
  if(error){journalEntries.innerHTML='<div class="status error">Your journal could not load. Please refresh and try again.</div>';return;}
  const rows=data||[];
  if(!rows.length){journalEntries.innerHTML='<div class="status">Your journal is ready. Add your first travel memory above.</div>';return;}
