@@ -1118,7 +1118,7 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
     }
     if(activeListingTab==="map"){
       const rows=A.getMapPins();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Map shortlist · city/country pin</div>')).join(""):empty("No map pins yet. Tap 📌 on a listing.");
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Map shortlist · city/country pin</div>')).join(""):empty("No map shortlist yet. Tap ⌖ on a hotel card to save it and open its map.");
       if(statusEl)statusEl.textContent=rows.length?rows.length+" map pin"+(rows.length===1?"":"s")+".":"";
       return;
     }
@@ -1136,7 +1136,7 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
     }
     if(activeListingTab==="invites"){
       const rows=A.getInvites();
-      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">'+(r.invited_at?("Invited "+esc(new Date(r.invited_at).toLocaleString())):"Invite ready")+(r.link?' · <a href="'+esc(r.link)+'">Open link</a>':'')+'</div>')).join(""):empty("No invites yet. Tap ✉ on a listing to invite a friend.");
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">'+(r.invited_at?("Invited "+esc(new Date(r.invited_at).toLocaleString())):"Invite ready")+(r.link?' · <a href="'+esc(r.link)+'">Open link</a>':'')+'</div>')).join(""):empty("No shared stays yet. Tap ↗ on a hotel card to share its listing.");
       if(statusEl)statusEl.textContent=rows.length?"Recent invite actions.":"";
     }
   };
