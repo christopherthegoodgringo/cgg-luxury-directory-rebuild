@@ -55,7 +55,7 @@ async function save(k){
    if(!error){cloudReady=true;status("toolkitStatus","Saved securely to your StayLatin account.");return;}
   }catch(_){}
  }
- status("toolkitStatus",getUserId()?"Saved on this device for this signed-in account. Account sync is awaiting toolkit storage setup.":"Saved on this device. Sign in to keep your tools separated by traveler account.");
+ 
 }
 function renderAll(){renderTrip();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderEmergency();renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderTrip(){
