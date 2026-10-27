@@ -39,7 +39,9 @@
       vibe: item.vibe || "",
       tier: item.tier || item.tag || "",
       image: (Array.isArray(item.images) && item.images[0]) || item.image || "",
-      website: item.website || ""
+      website: item.website || "",
+      expedia: item.expedia || item.expediaUrl || "",
+      trip: item.trip || item.tripUrl || ""
     };
   }
   function getFavorites() {
