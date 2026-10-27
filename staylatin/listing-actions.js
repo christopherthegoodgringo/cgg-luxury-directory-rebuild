@@ -8,7 +8,8 @@
     map: "staylatin-map",
     alerts: "staylatin-alerts",
     invites: "staylatin-invites",
-    favoriteDetails: "staylatin-favorite-details"
+    favoriteDetails: "staylatin-favorite-details",
+    prices: "staylatin-price-checks"
   };
   const SIGNIN = "traveler-signin.html";
   const MAX_COMPARE = 3;
@@ -87,6 +88,8 @@
     return Array.isArray(rows) ? rows : [];
   }
   function setAlerts(rows) { writeJson(STORAGE.alerts, rows); }
+  function getPriceChecks() { const rows = readJson(STORAGE.prices, []); return Array.isArray(rows) ? rows : []; }
+  function setPriceChecks(rows) { writeJson(STORAGE.prices, rows.slice(0, 200)); }
   function getInvites() {
     const rows = readJson(STORAGE.invites, []);
     return Array.isArray(rows) ? rows : [];
@@ -254,6 +257,18 @@
     return { active: true, synced: cloud.synced, signedIn: cloud.signedIn };
   }
 
+  async function savePriceCheck(item) {
+    const snap = listingSnapshot(item);
+    if (!snap) return { saved: false };
+    const checkedAt = new Date().toISOString();
+    const rows = getPriceChecks().filter(x => Number(x.id) !== Number(snap.id));
+    rows.unshift(Object.assign({}, snap, { checked_at: checkedAt, rate_estimate: item.rateEstimate || "Check dates" }));
+    setPriceChecks(rows);
+    const cloud = await cloudUpsert("price_check", snap, { checked_at: checkedAt, rate_estimate: item.rateEstimate || "Check dates" });
+    toast("Price check saved for " + snap.name + "." + guestNote(cloud.signedIn));
+    return { saved: true, synced: cloud.synced, signedIn: cloud.signedIn };
+  }
+
   async function toggleAlert(item) {
     const snap = listingSnapshot(item);
     let rows = getAlerts();
@@ -304,6 +319,7 @@
       const been = [];
       const map = [];
       const alerts = [];
+      const prices = [];
       const invites = [];
       rows.forEach(row => {
         const p = Object.assign({ id: Number(row.listing_key), listing_key: row.listing_key }, row.payload || {});
@@ -318,6 +334,7 @@
         if (row.action_type === "been") been.push(p);
         if (row.action_type === "map") map.push(p);
         if (row.action_type === "alert") alerts.push(p);
+        if (row.action_type === "price_check") prices.push(p);
         if (row.action_type === "invite") invites.push(p);
       });
       setFavorites([...favs]);
@@ -326,6 +343,7 @@
       setBeen(been);
       setMapPins(map);
       setAlerts(alerts);
+      setPriceChecks(prices);
       if (invites.length) setInvites(invites.concat(getInvites()).slice(0, 40));
       return true;
     } catch (_) {
@@ -346,6 +364,7 @@
     getBeen().forEach(item => jobs.push(cloudUpsert("been", listingSnapshot(item) || item, { visited_at: item.visited_at })));
     getMapPins().forEach(item => jobs.push(cloudUpsert("map", listingSnapshot(item) || item)));
     getAlerts().forEach(item => jobs.push(cloudUpsert("alert", listingSnapshot(item) || item)));
+    getPriceChecks().forEach(item => jobs.push(cloudUpsert("price_check", listingSnapshot(item) || item, { checked_at: item.checked_at, rate_estimate: item.rate_estimate })));
     await Promise.allSettled(jobs);
     return true;
   }
@@ -372,9 +391,9 @@
   global.StayLatinListingActions = {
     STORAGE, MAX_COMPARE, SIGNIN,
     getFavorites, setFavorites, getFavoriteDetails, getTrips, setTrips, getCompare, setCompare,
-    getBeen, setBeen, getMapPins, setMapPins, getAlerts, setAlerts, getInvites, setInvites,
+    getBeen, setBeen, getMapPins, setMapPins, getAlerts, setAlerts, getPriceChecks, setPriceChecks, getInvites, setInvites,
     listingSnapshot, toast, currentUserId, stateFor,
-    toggleFavorite, saveToTrip, toggleCompare, toggleBeen, toggleMapPin, toggleAlert, inviteFriend,
+    toggleFavorite, saveToTrip, toggleCompare, toggleBeen, toggleMapPin, toggleAlert, savePriceCheck, inviteFriend,
     syncOnSignIn, pullCloudIntoLocal, pushLocalToCloud, cloudUpsert, cloudRemove
   };
 })(window);
