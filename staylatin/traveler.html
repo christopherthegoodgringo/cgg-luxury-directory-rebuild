@@ -249,49 +249,6 @@ body [role="button"][aria-disabled="true"] {
 <label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
 <div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
 </form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
-</section><section id="travelerJournal" aria-labelledby="travelerJournalTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
-  <div class="kicker" style="color:var(--terra)">Your journeys · Your memories</div>
-  <h3 id="travelerJournalTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">My Travel Journal</h3>
-  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Save trip memories, useful notes, and destination ideas. Entries are private by default. You choose if an entry can be shared with signed-in StayLatin travelers.</p>
-  <form id="travelerJournalForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:15px;border:1px solid #e4dfd2;border-radius:10px;background:#fff">
-    <input id="journalEntryId" type="hidden">
-    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">ENTRY TITLE<input id="journalTitle" maxlength="120" required placeholder="A perfect weekend in Santa Marta" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
-    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">DESTINATION<input id="journalDestination" maxlength="120" placeholder="City or region" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
-    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">TRIP DATE<input id="journalDate" type="date" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"></label>
-    <label style="display:grid;gap:5px;font-size:11px;font-weight:800">SHARING<select id="journalVisibility" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px"><option value="private">Private — only me</option><option value="shared">Share with signed-in travelers</option></select></label>
-    <label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">YOUR NOTES<textarea id="journalBody" maxlength="10000" rows="4" placeholder="Places to remember, what worked well, tips for next time…" style="padding:11px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;grid-column:1/-1"><button id="journalSaveButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save journal entry</button><button id="journalCancelEdit" type="button" class="minor-action" hidden>Cancel edit</button></div>
-  </form>
-  <p id="journalStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p>
-  <div id="travelerJournalEntries" style="display:grid;gap:10px"><div class="status">Your journal entries will appear here.</div></div>
-</section><section id="travelerSavedPlaces" aria-labelledby="travelerSavedPlacesTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
-<div class="kicker" style="color:var(--terra)">Keep your shortlist close</div><h3 id="travelerSavedPlacesTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Saved Places</h3>
-<p style="font-size:13px;color:var(--muted);margin:0 0 15px">Keep a private shortlist of stays and places you want to remember. Add a website and a personal note for your next trip.</p>
-<form id="travelerSavedPlaceForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px;border:1px solid #e4dfd2;border-radius:10px;background:#fff">
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800">PLACE NAME<input id="savedPlaceName" required maxlength="160" placeholder="Hotel or place name" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800">CATEGORY<select id="savedPlaceCategory" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"><option>Hotel</option><option>Hostel</option><option>Restaurant</option><option>Bar</option><option>Activity</option><option selected>Other</option></select></label>
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800">CITY<input id="savedPlaceCity" maxlength="120" placeholder="Santa Marta" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800">COUNTRY<input id="savedPlaceCountry" maxlength="120" placeholder="Colombia" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">WEBSITE (OPTIONAL)<input id="savedPlaceUrl" type="url" maxlength="1000" placeholder="https://example.com" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px"></label>
-<label style="display:grid;gap:5px;font-size:11px;font-weight:800;grid-column:1/-1">PERSONAL NOTE<textarea id="savedPlaceNote" maxlength="2000" rows="2" placeholder="Why I saved this place…" style="padding:10px;border:1px solid #dcd8cd;border-radius:7px;resize:vertical"></textarea></label>
-<div style="grid-column:1/-1"><button type="submit" id="savedPlaceSubmit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Save place</button></div></form>
-<p id="savedPlacesStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:10px 0"></p><div id="travelerSavedPlacesList" style="display:grid;gap:9px"><div class="status">Your saved places will appear here.</div></div>
-</section><section id="travelerListingCollections" aria-labelledby="travelerListingCollectionsTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
-<div class="kicker" style="color:var(--terra)">From homepage listing cards</div>
-<h3 id="travelerListingCollectionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Saved from StayLatin</h3>
-<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Hearts, trip boards, compare pins, been-here marks, map pins, and listing alerts from the homepage. Guest saves stay on this device; signed-in travelers sync to your profile.</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px" id="listingActionTabs" role="tablist">
-<button type="button" class="tab active" data-listing-tab="favorites" style="width:auto;margin:0">Favorites ♥</button>
-<button type="button" class="tab" data-listing-tab="trips" style="width:auto;margin:0">Trip boards ✈</button>
-<button type="button" class="tab" data-listing-tab="compare" style="width:auto;margin:0">Compare ⧉</button>
-<button type="button" class="tab" data-listing-tab="been" style="width:auto;margin:0">Been here ✓</button>
-<button type="button" class="tab" data-listing-tab="map" style="width:auto;margin:0">Map pins 📌</button>
-<button type="button" class="tab" data-listing-tab="alerts" style="width:auto;margin:0">Alerts 🔔</button>
-<button type="button" class="tab" data-listing-tab="invites" style="width:auto;margin:0">Invites ✉</button>
-</div>
-<p id="listingActionsStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
-<div id="travelerListingActionsPanel" style="display:grid;gap:9px"><div class="status">Your saved listing actions will appear here.</div></div>
-<p style="margin:12px 0 0;font-size:12px;color:var(--muted)"><a href="index.html#stays" style="color:var(--forest);font-weight:750">Browse stays on the homepage ↗</a></p>
 </section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
@@ -357,8 +314,8 @@ body [role="button"][aria-disabled="true"] {
 
 <section id="travelerLounge" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Paid traveler feature</div>
-  <h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler Lounge</h3>
-  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0">Share travel tips, ask questions, and meet other StayLatin travelers in the community lounge.</p>
+  <h3 id="chatTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">StayLatin Traveler Lounge</h3>
+  <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0">Connect with the StayLatin traveler community, share travel tips, and ask questions in the shared lounge.</p>
   <p style="font-size:11px;color:var(--muted);margin:8px 0 14px">Preview access is open to signed-in traveler accounts while membership billing is being prepared. Messages can be seen by other traveler members; please don't share passwords, private contact details, or sensitive information.</p>
   
   <div class="lounge-toolbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
