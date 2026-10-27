@@ -509,4 +509,124 @@ async function loadPrivateConversation(silent=false){
    const adminProfile=other===STAYLATIN_ADMIN_CONTACT_ID?await loadPublicAdminProfile(db):null;
    if(adminProfile){activePrivateName=adminProfile.name;document.getElementById("privateConversationTitle").textContent="Private conversation with "+activePrivateName;}
    if(!rows.length)privateMessages.innerHTML='<div class="status">No messages yet. Send a private hello to begin.</div>';
-   else privateMessages.innerHTML=rows.map(m=>{const own=m.sender_id===me;const showAdmin=!own&&m.sender_id===STAYLATIN_ADMIN_CONTACT_ID;const avatar=showAdmin&&adminProfile?.photo?'<img src="'+introEscape(adminProfile.photo)+'" alt="Christopher Kesl profile photo" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b;vertical-align:middle;margin-right:7px">':(showAdmin?'<span aria-hidden="true" style="display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e5efe6;color:var(--forest);font:700 12px Georgia,serif;vertical-align:middle;margin-right:7px">CK</span>':"");return '<article style="align-self:'+(own?"flex-end":"flex-start")+';max-width:88%;border:1px solid '+(own?"#d4e7d7":"#e5e0d5")+';border-radius:10px;padding:9px 12px;background:'+(own?"#edf6ee":"#fffdf8")+'"><div style="display:flex;align-items:center;font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px">'+avatar+(own?"You":introEscape(activePrivateName))+' · '+introEscape(new Date(m.created_at).toLocaleString())+'</div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></article>'}).join("");>
+   else privateMessages.innerHTML=rows.map(m=>{const own=m.sender_id===me;const showAdmin=!own&&m.sender_id===STAYLATIN_ADMIN_CONTACT_ID;const avatar=showAdmin&&adminProfile?.photo?'<img src="'+introEscape(adminProfile.photo)+'" alt="Christopher Kesl profile photo" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b;vertical-align:middle;margin-right:7px">':(showAdmin?'<span aria-hidden="true" style="display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e5efe6;color:var(--forest);font:700 12px Georgia,serif;vertical-align:middle;margin-right:7px">CK</span>':"");return '<article style="align-self:'+(own?"flex-end":"flex-start")+';max-width:88%;border:1px solid '+(own?"#d4e7d7":"#e5e0d5")+';border-radius:10px;padding:9px 12px;background:'+(own?"#edf6ee":"#fffdf8")+'"><div style="display:flex;align-items:center;font-size:10px;font-weight:800;color:var(--forest);margin-bottom:4px">'+avatar+(own?"You":introEscape(activePrivateName))+' · '+introEscape(new Date(m.created_at).toLocaleString())+'</div><div style="font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+introEscape(m.body)+'</div></article>'}).join("");
+ }catch(err){
+   if(privateMessages)privateMessages.innerHTML='<div class="status error">Could not load this conversation. Please refresh and try again.</div>';
+ }
+}
+
+function setTravelerStatus(message,kind=""){
+ if(!statusBox)return;
+ statusBox.hidden=false;
+ statusBox.className="status show"+(kind?" "+kind:"");
+ statusBox.textContent=message;
+}
+function setTravelerSignedIn(user){
+ activeTripUserId=user.id;
+ document.querySelector(".traveler-intro")?.setAttribute("hidden","");
+ document.querySelector(".traveler-auth")?.setAttribute("hidden","");
+ document.getElementById("privacyNote")?.setAttribute("hidden","");
+ document.getElementById("travelerDashboard").hidden=false;
+ document.getElementById("dashboardGreeting").textContent="Welcome"+(user.user_metadata?.full_name?" back, "+user.user_metadata.full_name:" back")+". Your travel space is ready.";
+ form.hidden=true;
+ signin.closest(".tabs").hidden=true;
+ resetPassword.hidden=true;
+ resendConfirmation.hidden=true;
+ signout.hidden=false;
+ document.getElementById("formTitle").textContent="Your travel dashboard";
+ document.getElementById("formSub").textContent="You are signed in to your StayLatin traveler account.";
+ loadTravelerAvatar();
+ loadTravelerIntroduction();
+ loadTravelerIntroductionDirectory();
+ loadPrivateInbox();
+}
+function setTravelerSignedOut(){
+ activeTripUserId=null;
+ document.querySelector(".traveler-intro")?.removeAttribute("hidden");
+ document.querySelector(".traveler-auth")?.removeAttribute("hidden");
+ document.getElementById("travelerDashboard").hidden=true;
+ document.getElementById("privacyNote")?.removeAttribute("hidden");
+ form.hidden=false;
+ signin.closest(".tabs").hidden=false;
+ resetPassword.hidden=false;
+ signout.hidden=true;
+ setMode("signin");
+}
+signin.addEventListener("click",()=>setMode("signin"));
+signup.addEventListener("click",()=>setMode("signup"));
+document.getElementById("dashSignout")?.addEventListener("click",async()=>{
+ try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
+ catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+});
+signout.addEventListener("click",async()=>{
+ try{const db=introClient();if(db){const {error}=await db.auth.signOut();if(error)throw error;}setTravelerSignedOut();setTravelerStatus("You have signed out.","success");}
+ catch(err){setTravelerStatus(err.message||"Could not sign out. Please try again.","error");}
+});
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+ submit.disabled=true;
+ setTravelerStatus(mode==="signin"?"Signing you in securely…":"Creating your traveler account…");
+ try{
+   const db=introClient();
+   if(!db)throw new Error("StayLatin authentication is not configured. Please try again later.");
+   const email=document.getElementById("email").value.trim();
+   const pass=password.value;
+   let result;
+   if(mode==="signup"){
+     const fullName=document.getElementById("name").value.trim();
+     result=await db.auth.signUp({email,password:pass,options:{data:{full_name:fullName,intended_account_type:"traveler"},emailRedirectTo:"https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler.html"}});
+     if(result.error)throw result.error;
+     if(result.data.session&&result.data.user){setTravelerSignedIn(result.data.user);setTravelerStatus("Your traveler account is ready.","success");}
+     else setTravelerStatus("Your account was created. Check your email to confirm your address, then sign in here.","success");
+   }else{
+     result=await db.auth.signInWithPassword({email,password:pass});
+     if(result.error)throw result.error;
+     const user=result.data.user;
+     const intended=user.user_metadata?.intended_account_type;
+     if(intended&&intended!=="traveler"){await db.auth.signOut();throw new Error("This account was registered for a different StayLatin area. Please use its dedicated sign-in page.");}
+     setTravelerSignedIn(user);
+     setTravelerStatus("Sign-in successful. You are now inside your traveler portal.","success");
+   }
+ }catch(err){setTravelerStatus(err.message||"Could not complete sign-in. Please check your details and try again.","error");}
+ finally{submit.disabled=false;}
+});
+resetPassword.addEventListener("click",async()=>{
+ try{
+   const email=document.getElementById("email").value.trim();
+   if(!email)throw new Error("Enter your email address first.");
+   const db=introClient();if(!db)throw new Error("StayLatin authentication is not configured.");
+   const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:"https://christopherthegoodgringo.github.io/cgg-luxury-directory-rebuild/staylatin/traveler.html?recovery=1"});
+   if(error)throw error;
+   setTravelerStatus("If an account exists for this address, a password-reset email has been requested.","success");
+ }catch(err){setTravelerStatus(err.message||"Could not request a password reset.","error");}
+});
+document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const next=document.getElementById("recoveryNewPassword").value;
+ const confirm=document.getElementById("recoveryConfirmPassword").value;
+ if(next!==confirm){setTravelerStatus("The passwords do not match.","error");return;}
+ try{const db=introClient();if(!db)throw new Error("StayLatin authentication is not configured.");const {error}=await db.auth.updateUser({password:next});if(error)throw error;history.replaceState({},document.title,location.pathname);setTravelerStatus("Your password has been updated. Sign in with your new password.","success");document.getElementById("passwordRecoveryForm").hidden=true;setMode("signin");}
+ catch(err){setTravelerStatus(err.message||"Could not update your password.","error");}
+});
+(async()=>{
+ try{
+   const db=introClient();
+   if(!db){setTravelerStatus("StayLatin authentication is not configured. Please try again later.","error");return;}
+   const recovery=new URLSearchParams(location.search).get("recovery")==="1"||new URLSearchParams(location.hash.slice(1)).get("type")==="recovery";
+   if(recovery){
+     document.body.classList.add("password-recovery-mode");
+     document.getElementById("passwordRecoveryForm").hidden=false;
+     document.getElementById("formTitle").textContent="Choose a new password";
+     document.getElementById("formSub").textContent="Enter and confirm your new password.";
+     form.hidden=true;signin.closest(".tabs").hidden=true;resetPassword.hidden=true;
+   }
+   const {data,error}=await db.auth.getSession();
+   if(error)throw error;
+   if(data.session?.user&&!recovery){setTravelerSignedIn(data.session.user);}
+   db.auth.onAuthStateChange((event,session)=>{
+     if(session?.user&&!recovery)setTravelerSignedIn(session.user);
+     else if(!session&&!recovery)setTravelerSignedOut();
+   });
+ }catch(err){setTravelerStatus(err.message||"Could not restore your traveler session. Please refresh and try again.","error");}
+})();
+</script>
