@@ -763,7 +763,7 @@ const stays=[
  {id:8,name:"Mezcal Boutique Hotel",city:"Cancún, Mexico",country:"Mexico",type:"Boutique hotel",vibe:"Nature",desc:"A relaxed downtown Cancún stay with a garden setting, outdoor pool, spa services and easy access to local dining.",image:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/e1/95/09/nuestra-alberca-es-el.jpg",images:["https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/e1/95/09/nuestra-alberca-es-el.jpg", "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/12/espacios-comodos-y-bien.jpg", "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/0d/luz-natural-texturas.jpg"],imageFallback:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/12/espacios-comodos-y-bien.jpg",imageFallbacks:["https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/d4/76/0d/luz-natural-texturas.jpg"],tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",website:"https://www.mezcalboutiquehotel.com/en/",trip:"https://us.trip.com/hotels/cancun-hotel-detail-2560655/mezcal-hotel-and-hostel/",rating:3,review:"Downtown Cancun garden pool stay; convenient, though not a beachfront property.                 ",reviewer:"Omar F.",tripadvisorUrl:"https://www.tripadvisor.com/Hotel_Review-g150807-d6781635-Reviews-Mezcal_Boutique_Hotel-Cancun_Yucatan_Peninsula.html"}
  {id:16,name:"Hilton Santa Marta",city:"Santa Marta, Colombia",country:"Colombia",type:"Boutique hotel",vibe:"Nature",desc:"A contemporary beachfront resort in Pozos Colorados with Caribbean Sea views, rooftop and outdoor pools, a full-service spa, and several dining options.",image:"https://assets.hiltonstatic.com/hilton-asset-cache/image/upload/c_fill%2Cw_7242%2Ch_4833%2Cq_90%2Cf_auto/c_fill%2Cw_1920%2Ch_1281%2Cq_90%2Cf_auto/Property%20Photography/NoBrand/S/SMRCNHH/DUF_7349_v_ok.jpg",images:["https://assets.hiltonstatic.com/hilton-asset-cache/image/upload/c_fill%2Cw_7242%2Ch_4833%2Cq_90%2Cf_auto/c_fill%2Cw_1920%2Ch_1281%2Cq_90%2Cf_auto/Property%20Photography/NoBrand/S/SMRCNHH/DUF_7349_v_ok.jpg","https://assets.hiltonstatic.com/hilton-asset-cache/image/upload/c_fill%2Cw_7259%2Ch_4845%2Cq_90%2Cf_auto/c_fill%2Cw_1920%2Ch_1281%2Cq_90%2Cf_auto/Imagery/Property%20Photography/Hilton%20International/S/SMRCNHH/DUF_7240_v_ok.jpg","https://assets.hiltonstatic.com/hilton-asset-cache/image/upload/c_fill%2Cw_7360%2Ch_4912%2Cq_90%2Cf_auto/c_fill%2Cw_1920%2Ch_1281%2Cq_90%2Cf_auto/Imagery/Property%20Photography/Hilton%20International/S/SMRCNHH/DUF_6992_v_ok.jpg"],tag:"Featured",tier:"Featured",tierFeature:"Featured placement in eligible results",website:"https://www.hilton.com/en/hotels/smrcnhh-hilton-santa-marta/",trip:"https://www.trip.com/hotels/santa-marta-hotel-detail-100619308/hilton-santa-marta/",expedia:"https://www.expedia.com/Santa-Marta-Hotels-Hilton-Santa-Marta.h87909595.Hotel-Information",rating:4,review:"A polished beachfront resort with ocean views, rooftop pool areas, spa facilities, and several restaurants and bars.",reviewer:"StayLatin editor",note:"Book with Expedia or Trip.com, or visit Hilton directly."},
 ];
-let activeType="all",language="en",saved=[],showAllListings=false;
+let activeType="all",language="en",saved=[],listingLimit=8;
 function refreshSavedFromStore(){
   if(window.StayLatinListingActions){saved=StayLatinListingActions.getFavorites();}
   else{try{saved=JSON.parse(localStorage.getItem("staylatin-saved")||"[]");if(!Array.isArray(saved))saved=[];}catch(e){saved=[];}}
@@ -852,7 +852,7 @@ function render(){
  const vibe=document.getElementById("vibe").value;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
  const found=stays.filter(s=>(activeType==="all"||s.type===activeType)&&(type==="all"||s.type===type)&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
- const visible=found; // Keep every matching listing visible; do not hide listings behind Load more.
+ const visible=found.slice(0,listingLimit); // Show eight listings initially and reveal eight more per click.
  grid.innerHTML=visible.length?visible.map(s=>{
   const links=[];
   const link=(url,label,cls="")=>'<a class="staylatin-booking '+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(label+" — "+s.name)+'">'+esc(label)+'</a>';
@@ -908,8 +908,8 @@ function render(){
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
  const viewBtn=document.getElementById("viewMoreBtn");
- viewWrap.hidden=found.length<=8;
- viewBtn.textContent=({en:showAllListings?"Show fewer":"Load more",es:showAllListings?"Ver menos":"Cargar más",pt:showAllListings?"Ver menos":"Carregar mais"})[language]||(showAllListings?"Show fewer":"Load more");
+ viewWrap.hidden=found.length<=listingLimit;
+ viewBtn.textContent=({en:"Load more",es:"Cargar más",pt:"Carregar mais"})[language]||"Load more";
  refreshSavedFromStore();
  grid.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",async e=>{
   e.preventDefault();e.stopPropagation();
@@ -965,12 +965,12 @@ function render(){
  }
 
 }
-document.getElementById("viewMoreBtn").addEventListener("click",()=>{showAllListings=!showAllListings;render();if(!showAllListings)document.getElementById("stays").scrollIntoView({behavior:"smooth"});});
+document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=8;render();});
 
-document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();showAllListings=false;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
-document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
-document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{showAllListings=false;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
-document.getElementById("destination").addEventListener("input",()=>{showAllListings=false;render()});document.getElementById("style").addEventListener("change",()=>{showAllListings=false;render()});document.getElementById("vibe").addEventListener("change",()=>{showAllListings=false;render()});
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=8;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=8;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
+document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=8;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
+document.getElementById("destination").addEventListener("input",()=>{listingLimit=8;render()});document.getElementById("style").addEventListener("change",()=>{listingLimit=8;render()});document.getElementById("vibe").addEventListener("change",()=>{listingLimit=8;render()});
 const languageOrder=["en","es","pt"];
 const languageLabels={en:"EN",es:"ES",pt:"PT"};
 const languageNames={en:"English",es:"Español",pt:"Português"};
@@ -1033,7 +1033,7 @@ if(yearElement)yearElement.textContent=new Date().getFullYear();
 // Always start the homepage with the first eight listings in the directory's fixed tier/name order.
 function ensureInitialListings(){
  // Reapply the default, unfiltered state every time the homepage is opened or refreshed.
- activeType="all";showAllListings=false;
+ activeType="all";listingLimit=8;
  const destinationInput=document.getElementById("destination");
  const styleSelect=document.getElementById("style");
  const vibeSelect=document.getElementById("vibe");
