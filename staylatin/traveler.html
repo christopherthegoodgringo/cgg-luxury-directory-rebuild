@@ -177,7 +177,7 @@
     <button id="chatNotificationsToggle" type="button" class="minor-action" style="width:auto;margin:0">Enable chat notifications</button>
     <span id="chatNotificationStatus" style="font-size:11px;color:var(--muted)"></span>
   </div>
-  <div id="aiLoungeDisclosure" style="margin:10px 0;padding:10px 12px;border:1px solid #e4d3a8;border-radius:8px;background:#fff8e7;font-size:11px;color:#6b5527"><strong>AI Traveler Lounge activity</strong> — fictional AI members keep a rotating sample conversation going while this page is open, with AI posts interleaved between real traveler posts. AI messages are labeled. AI demo activity is local to each browser and is not saved or broadcast as real member messages.</div>
+  
   <div id="chatMessages" class="lounge-messages" role="log" aria-live="polite" aria-relevant="additions" style="height:min(45vh,420px);min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#f6f7f1;border:1px solid #dce8dd;border-radius:10px">
     <div class="status show">Connecting to the Traveler Lounge…</div>
   </div>
@@ -431,9 +431,17 @@ async function loadPrivateInbox(){
  const partners=[...latestByPartner.values()];
  if(!partners.length){box.innerHTML='<div class="status">Your private inbox is empty. Choose “Message privately” on a member card to start a conversation.</div>';return}
  const ids=partners.map(x=>x.partner);
- const {data:profiles}=await db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids);
- const names=Object.create(null);(profiles||[]).forEach(p=>names[p.user_id]=p.display_name||"StayLatin traveler");
- box.innerHTML=partners.map(m=>'<button type="button" data-inbox-partner="'+introEscape(m.partner)+'" data-inbox-name="'+introEscape(names[m.partner]||"StayLatin traveler")+'" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:1px solid #dce8dd;border-radius:9px;background:#fff;padding:11px 13px;cursor:pointer"><span style="min-width:0"><strong style="display:block;color:var(--forest);font-size:13px">'+introEscape(names[m.partner]||"StayLatin traveler")+'</strong><span style="display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px">'+introEscape(m.body)+'</span></span><span style="flex:0 0 auto;color:var(--terra);font-size:10px;font-weight:800">'+(m.unread?"NEW":"Open ↗")+'</span></button>').join("");
+ const [{data:profiles},{data:chatProfiles}]=await Promise.all([
+  db.from("staylatin_traveler_introduction_directory").select("user_id,display_name").in("user_id",ids),
+  db.from("staylatin_traveler_chat_profiles").select("user_id,display_name,share_name,share_photo,avatar_path").in("user_id",ids)
+ ]);
+ const names=Object.create(null),photos=Object.create(null);
+ (profiles||[]).forEach(p=>names[p.user_id]=p.display_name||"StayLatin traveler");
+ await Promise.all((chatProfiles||[]).map(async p=>{
+  if(p.share_name&&p.display_name)names[p.user_id]=p.display_name;
+  if(p.share_photo&&p.avatar_path){try{const {data,error}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(p.avatar_path,3600);if(!error&&data?.signedUrl)photos[p.user_id]=data.signedUrl}catch(e){}}
+ }));
+ box.innerHTML=partners.map(m=>{const name=names[m.partner]||"StayLatin traveler";const photo=photos[m.partner]?'<img src="'+introEscape(photos[m.partner])+'" alt="'+introEscape(name)+' profile photo" style="width:46px;height:46px;flex:0 0 46px;object-fit:cover;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6">':'<span aria-hidden="true" style="width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:50%;border:2px solid #c8a86b;background:#e5efe6;color:var(--forest);font-size:20px">✳</span>';return '<button type="button" data-inbox-partner="'+introEscape(m.partner)+'" data-inbox-name="'+introEscape(name)+'" style="display:flex;align-items:center;gap:11px;text-align:left;border:1px solid #dce8dd;border-radius:9px;background:#fff;padding:11px 13px;cursor:pointer;width:100%">'+photo+'<span style="min-width:0;flex:1"><strong style="display:block;color:var(--forest);font-size:13px">'+introEscape(name)+'</strong><span style="display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px">'+introEscape(m.body)+'</span></span><span style="flex:0 0 auto;color:var(--terra);font-size:10px;font-weight:800">'+(m.unread?"NEW":"Open ↗")+'</span></button>'}).join("");
  box.querySelectorAll("[data-inbox-partner]").forEach(button=>button.addEventListener("click",()=>openPrivateConversation(button.dataset.inboxPartner,button.dataset.inboxName)));
 }
 async function openPrivateConversation(userId,displayName){
@@ -589,8 +597,8 @@ async function loadTravelerChat(){
   }
   if(!messages.length){
    chatMessages.innerHTML='<div class="status show">You’re first in the lounge. Say hello or share a useful travel tip.</div>';
-   renderAILoungeActivity([]);
-   setChatNotice("Chat is ready. Fictional AI lounge demo is active.");
+   
+   setChatNotice("Chat is ready. Be the first traveler to post.");
    return;
   }
 
@@ -627,9 +635,9 @@ async function loadTravelerChat(){
     : '<div aria-hidden="true" style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#e5efe6;color:var(--forest);font-size:18px;border:1px solid var(--line)">✳</div>';
    return '<article style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:'+(own?'#f0f3eb':'#fffefb')+'"><div style="display:flex;align-items:flex-start;gap:10px">'+avatar+'<div style="min-width:0;flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><strong style="font-size:12px;color:var(--forest);overflow-wrap:anywhere">'+dashSafe(displayName)+'</strong><time style="font-size:10px;color:var(--muted)">'+dashSafe(new Date(m.created_at).toLocaleString())+'</time></div><p style="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere">'+dashSafe(m.body)+'</p></div></div></article>';
   }).join("");
-  renderAILoungeActivity(messages);
+  
   chatMessages.scrollTop=0;
-  setChatNotice("Showing "+messages.length+" recent real member message"+(messages.length===1?"":"s")+" plus labeled AI demo activity.");
+  setChatNotice("Showing "+messages.length+" real traveler message"+(messages.length===1?"":"s")+".");
  }catch(e){
   chatMessages.innerHTML='<div class="status show">Messages could not be loaded.</div>';
   setChatNotice("Could not load the Traveler Lounge: "+(e&&e.message?e.message:"please refresh and try again."),"error");
@@ -637,89 +645,8 @@ async function loadTravelerChat(){
 }
 
 /* The 25 AI personas are fictional. Lounge banter is a local demo overlay, not impersonated real-user posts. */
-let aiLoungeLatestRealMessages=[];
-let aiLoungeTicker=null;
-let aiLoungeLastHumanMessageId=null;
-let aiLoungeLastHumanReplyAt=0;
-const aiLoungeConversation=[
- {a:"sof-martinez",b:"dan-rodriguez",text:"I always leave a little time to explore a neighborhood without a checklist. That's when I find my favorite cafés."},
- {a:"isa-rossi",b:"james-wilson",text:"A short local history walk can make the rest of a city feel completely different."},
- {a:"lucia-fernandez",b:"mateo-silva",text:"I love when a trip has both a nature morning and a long, relaxed local lunch."},
- {a:"emma-johnson",b:"alexander-kim",text:"For remote work, I always ask about backup Wi-Fi and noise before booking a longer stay."},
- {a:"sophia-patel",b:"mia-thompson",text:"A gentle sunrise walk is my favorite way to get oriented in a new place."},
- {a:"liam-oconnor",b:"camila-torres",text:"Local music nights can tell you so much about a place. I like to check transport home before I go."},
- {a:"olivia-santos",b:"harper-lewis",text:"Buying directly from local makers makes a souvenir feel more personal."},
- {a:"carlos-mendez",b:"benjamin-lee",text:"Mountain weather can change quickly, so I always check the forecast and bring an extra layer."},
- {a:"noah-garcia",b:"grace-walker",text:"Market lunches are a great way to try regional food and learn what ingredients are in season."},
- {a:"amelia-turner",b:"henry-adams",text:"Longer stays feel better when you find your regular café and learn the neighborhood's everyday rhythm."},
- {a:"ava-wilson",b:"charlotte-taylor",text:"I like planning one or two anchors each day and leaving the rest open for discoveries."},
- {a:"jack-harrison",b:"ethan-clark",text:"My best work trips have one extra day to explore beyond the meeting venue."},
- {a:"sophia-patel",b:"lucia-fernandez",text:"Responsible local guides can add context and help make nature trips more respectful."}
-];
-function renderAILoungeActivity(realMessages){
- const profiles=window.STAYLATIN_AI_TRAVELERS||[];
- if(!profiles.length||!chatMessages)return;
- aiLoungeLatestRealMessages=Array.isArray(realMessages)?realMessages:[];
- const get=id=>profiles.find(p=>p.id===id)||profiles[0];
- // The database query is newest-first, so answer the newest real post.
- const newest=aiLoungeLatestRealMessages[0]||null;
- const items=[];
- // Rotate a cast of no more than seven AI personas every 12 seconds.
- const rotation=Math.floor(Date.now()/12000);
- const activeProfiles=profiles.length<=7?profiles:profiles.slice((rotation*7)%profiles.length).concat(profiles.slice(0,(rotation*7)%profiles.length)).slice(0,7);
- const getActive=id=>activeProfiles.find(p=>p.id===id)||activeProfiles[Math.abs(String(id||"").split("").reduce((n,c)=>n+c.charCodeAt(0),0))%activeProfiles.length]||profiles[0];
- const offset=rotation%aiLoungeConversation.length;
- if(newest&&newest.id!==aiLoungeLastHumanMessageId&&Date.now()-aiLoungeLastHumanReplyAt>15000){
-  const body=String(newest.body||"");
-  const lower=body.toLowerCase();
-  const messageWords=lower.split(/[^a-z0-9]+/).filter(Boolean);
-  const mentioned=profiles.find(p=>{
-   const first=String(p.name||"").trim().split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g,"");
-   return first.length>1&&messageWords.includes(first);
-  });
-  const seed=Math.abs(String(newest.id).split("").reduce((n,c)=>n+c.charCodeAt(0),0));
-  const p=(mentioned&&activeProfiles.find(x=>x.id===mentioned.id))||getActive(profiles[seed%profiles.length].id);
-  aiLoungeLastHumanMessageId=newest.id;aiLoungeLastHumanReplyAt=Date.now();
-  let reply;
-  if(mentioned) reply="Hey, you called my name! 😊 I’m here. What would you like to chat about?";
-  else if(messageWords.some(w=>["hello","hi","hey"].includes(w))||lower.includes("good morning")||lower.includes("good evening")) reply="Hi there! 👋 Glad you joined us. Where are you traveling, and what are you hoping to discover?";
-  else if(messageWords.some(w=>["where","recommend","recommendation","hotel","hostel","stay","place","visit","destination"].includes(w))) reply="Thanks for bringing that up! I’d compare location, recent traveler reviews, and current details. Which city or country are you considering?";
-  else if(body.includes("?")) reply="That’s a good question! Let’s think it through together. Which country or city are you asking about?";
-  else reply="Thanks for sharing that with the lounge! 😊 What else would you tell a traveler who’s planning a similar trip?";
-  items.push({name:p.name+" · AI",avatar:p.avatar,body:reply,stamp:mentioned?"AI persona responding to name":"Fictional AI reply to traveler"});
- }
- for(let n=0;n<5;n++){
-  const pair=aiLoungeConversation[(offset+n)%aiLoungeConversation.length],a=getActive(pair.a),b=getActive(pair.b);
-  items.push({name:a.name+" · AI",avatar:a.avatar,body:pair.text,stamp:"Fictional AI conversation"});
-  if(n===1||n===3)items.push({name:b.name+" · AI",avatar:b.avatar,body:"That’s a good point! I’d also check local opening times and confirm details with a trusted local source before setting off.",stamp:"Fictional AI reply"});
- }
- chatMessages.querySelectorAll("[data-ai-lounge-demo]").forEach(el=>el.remove());
- const cards=items.map(item=>{
-  const card=document.createElement("article");card.dataset.aiLoungeDemo="true";card.style.cssText="border:1px dashed #c8a86b;border-radius:9px;padding:11px 13px;background:#fff9e9";
-  const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-start;gap:10px";
-  const img=document.createElement("img");img.src=item.avatar;img.alt="Illustrated fictional AI traveler";img.style.cssText="width:38px;height:38px;flex:0 0 38px;border-radius:50%;object-fit:cover;border:1px solid #c8a86b";
-  const bodyEl=document.createElement("div");bodyEl.style.cssText="min-width:0;flex:1";
-  const heading=document.createElement("div");heading.style.cssText="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap";
-  const name=document.createElement("strong");name.textContent=item.name;name.style.cssText="font-size:12px;color:var(--forest)";
-  const tag=document.createElement("span");tag.textContent=item.stamp;tag.style.cssText="font-size:9px;color:#7c632c;background:#f4e8c9;border-radius:999px;padding:2px 6px";
-  const para=document.createElement("p");para.textContent=item.body;para.style.cssText="margin:7px 0 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere";
-  heading.append(name,tag);bodyEl.append(heading,para);row.append(img,bodyEl);card.append(row);return card;
- });
- // Mix real traveler posts and AI personas in one feed, newest activity at the top.
- const realCards=Array.from(chatMessages.children).filter(el=>!el.matches("[data-ai-lounge-demo]")&&!el.classList.contains("status"));
- const realTop=realCards[0]||null;
- const mixed=[];
- // Interleave so real members are visible among the personas rather than in a separate block.
- const count=Math.max(realCards.length,cards.length);
- for(let i=0;i<count;i++){
-  if(i<cards.length)mixed.push(cards[i]);
-  if(i<realCards.length)mixed.push(realCards[i]);
- }
- mixed.forEach(card=>chatMessages.append(card));
- chatMessages.scrollTop=0;
-}
-
-chatForm?.addEventListener("submit",async e=>{
+/* AI-generated lounge posts are disabled for now. Only real member posts appear in this feed. */
+ chatForm?.addEventListener("submit",async e=>{
  e.preventDefault();if(chatBusy)return;
  if(!client||!currentTravelerSession){setChatNotice("Please sign in again to send a message.","error");return;}
  const body=chatInput.value.trim();if(!body)return;
@@ -738,8 +665,8 @@ function connectTravelerChat(session){
  if(aiLoungeTicker){window.clearInterval(aiLoungeTicker);aiLoungeTicker=null;}
  if(!session){chatMessages.innerHTML='<div class="status show">Sign in to view lounge messages.</div>';setChatNotice("Sign in to join the Traveler Lounge.");return;}
  setChatNotice("Connecting to the Traveler Lounge…");loadTravelerChat();
- aiLoungeTicker=window.setInterval(()=>{if(currentTravelerSession&&!document.hidden)renderAILoungeActivity(aiLoungeLatestRealMessages);},12000);
- chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_chat_messages"},()=>{if(currentTravelerSession)loadTravelerChat();}).subscribe(status=>{if(status==="SUBSCRIBED")setChatNotice("Connected. Real member posts update live; fictional AI conversation refreshes every 12 seconds while this page is open.");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setChatNotice("Live updates are temporarily unavailable. Reopen the lounge to catch up.","error");});
+ 
+ chatSubscription=client.channel("staylatin-traveler-lounge").on("postgres_changes",{event:"INSERT",schema:"public",table:"staylatin_traveler_chat_messages"},()=>{if(currentTravelerSession)loadTravelerChat();}).subscribe(status=>{if(status==="SUBSCRIBED")setChatNotice("Connected. Real traveler posts update live.");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setChatNotice("Live updates are temporarily unavailable. Reopen the lounge to catch up.","error");});
 }
 async function loadDashboardStays(session){
  try{
