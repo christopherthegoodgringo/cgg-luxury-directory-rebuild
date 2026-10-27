@@ -731,6 +731,10 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 #staylatin-account-frame{display:block;width:100%;height:100%;border:0;background:#eef6f2}
 @keyframes staylatinAccountIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:560px){#staylatin-account-overlay{padding:10px}#staylatin-account-dialog{width:100%;height:min(700px,calc(100dvh - 20px));border-radius:15px}}
+#staylatin-account-dialog.portal-view{width:min(1000px,calc(100vw - 36px));height:calc(100dvh - 36px);max-height:calc(100dvh - 36px);background:transparent;border-color:#c8a86b;border-radius:20px}
+#staylatin-account-dialog.portal-view #staylatin-account-frame{background:transparent}
+#staylatin-account-dialog.portal-view #staylatin-account-close{position:absolute;right:12px;top:12px;width:42px;height:42px;font-size:28px;border:2px solid #c8a86b;background:#fffdf8;box-shadow:0 4px 16px #0003}
+@media(max-width:560px){#staylatin-account-dialog.portal-view{width:calc(100vw - 20px);height:calc(100dvh - 20px);max-height:calc(100dvh - 20px);border-radius:14px}}
 @media(prefers-reduced-motion:reduce){#staylatin-account-dialog{animation:none}}
 </style>
 <style id="staylatin-property-search-count">
@@ -1172,7 +1176,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   var previousOverflow="";
   window.addEventListener("message",function(event){
     if(event.origin!==window.location.origin||!event.data)return;
-    if(event.data.type==="staylatin-login-success"){closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&(fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"||fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/admin-travel-members.html")){window.location.replace(fallback.href);}}catch(e){}}return;}
+    if(event.data.type==="staylatin-login-success"){if(event.data.role==="traveler"){if(frame){frame.src=new URL("traveler.html#dashboard",window.location.href).href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");var dialog=document.getElementById("staylatin-account-dialog");if(dialog)dialog.classList.add("portal-view");previousOverflow=document.body.style.overflow;document.body.style.overflow="hidden";window.setTimeout(fitAccountDialog,80);}return;}closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&(fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"||fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/admin-travel-members.html")){window.location.replace(fallback.href);}}catch(e){}}return;}
     if(event.data.type==="staylatin-account-content-changed"){window.setTimeout(fitAccountDialog,30);return;}
     if(event.data.type!=="staylatin-account-switch")return;
     try{
@@ -1200,7 +1204,9 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
       var body=doc.body;
       var contentHeight=Math.ceil(Math.max(panel?panel.getBoundingClientRect().height:0,body?body.scrollHeight:0));
       var maxHeight=Math.max(300,window.innerHeight-36);
-      document.getElementById("staylatin-account-dialog").style.height=Math.min(contentHeight+4,maxHeight)+"px";
+      var dialog=document.getElementById("staylatin-account-dialog");
+      if(dialog&&dialog.classList.contains("portal-view")){dialog.style.height=maxHeight+"px";return;}
+      if(dialog)dialog.style.height=Math.min(contentHeight+4,maxHeight)+"px";
     }catch(e){}
   }
   frame&&frame.addEventListener("load",function(){window.setTimeout(fitAccountDialog,30);});
@@ -1209,6 +1215,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
     if(!overlay)return;
     overlay.hidden=true;
     overlay.setAttribute("aria-hidden","true");
+    var dialog=document.getElementById("staylatin-account-dialog");if(dialog){dialog.classList.remove("portal-view");dialog.style.height="";}
     frame.src="about:blank";
     document.body.style.overflow=previousOverflow;
   }
