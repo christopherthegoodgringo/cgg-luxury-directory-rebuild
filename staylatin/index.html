@@ -524,6 +524,34 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
  .stay-card.tier-premium .tier-star::before,.stay-card.tier-premium .tier-star::after{animation:none!important;opacity:.85}
 }
 </style>
+<style id="staylatin-card-content-rhythm">
+/* Refined card hierarchy: description, location, property name, then review. */
+.stay-card .stay-body .stay-description{
+ margin:0 0 8px!important;
+ line-height:1.42!important;
+ max-height:4.25em!important;
+}
+.stay-card .stay-body .location{
+ margin:0 0 4px!important;
+ line-height:1.25!important;
+}
+.stay-card .stay-body h3{
+ margin:0 0 8px!important;
+ line-height:1.18!important;
+}
+.stay-card .stay-body .stay-review{
+ margin:0 0 7px!important;
+ padding:8px 10px!important;
+ gap:4px!important;
+}
+.stay-card .stay-body .stay-review-top{margin:0!important}
+.stay-card .stay-body .stay-review-text{line-height:1.35!important}
+@media(max-width:560px){
+ .stay-card .stay-body .stay-description{margin-bottom:7px!important}
+ .stay-card .stay-body h3{margin-bottom:7px!important}
+ .stay-card .stay-body .stay-review{padding:7px 9px!important}
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
