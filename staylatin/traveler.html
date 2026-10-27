@@ -294,8 +294,6 @@ body [role="button"][aria-disabled="true"] {
 </section><section id="travelerListingActions" aria-labelledby="travelerListingActionsTitle" style="margin:16px 0 24px;border:1px solid #b9d3c2;border-radius:14px;padding:18px;background:#fffdf8">
   <div class="kicker" style="color:var(--terra)">Your saved stays</div>
   <h3 id="travelerListingActionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">♥ Your Favorites</h3>
-  <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Only listings you heart on StayLatin appear here, with available Expedia and Trip.com booking links.</p>
-  <p id="listingActionsStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
   <div id="travelerListingActionsPanel" style="display:grid;gap:10px"></div>
 </section>
 
@@ -1083,7 +1081,6 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
   const A=window.StayLatinListingActions;
   if(!A)return;
   const panel=document.getElementById("travelerListingActionsPanel");
-  const statusEl=document.getElementById("listingActionsStatus");
   function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
   function affiliateLink(item,network){
     const saved=network==="expedia"?(item.expedia||item.expediaUrl):(item.trip||item.tripUrl);
@@ -1123,7 +1120,6 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
     const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
     const rows=ids.map(id=>byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"});
     panel.innerHTML=rows.length?rows.map(card).join(""):'<div class="status show">No favorites yet. Tap ♥ on any StayLatin listing and it will appear here.</div>';
-    if(statusEl)statusEl.textContent=rows.length+ " favorite"+(rows.length===1?"":"s")+" saved.";
   }
   window.renderTravelerListingActions=render;
   window.loadTravelerListingActions=async function(){try{await A.syncOnSignIn();}catch(_){}render();};
