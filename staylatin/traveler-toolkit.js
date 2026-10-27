@@ -3,9 +3,8 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const keys=["trip_planner","documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites"];
+const keys=["documents_checklist","packing_checklist","currency_preferences","phrasebook_favorites"];
 const defaults={
- trip_planner:{name:"",destination:"",start:"",end:"",days:[],trips:[],activeTripId:""},
  documents_checklist:{items:[["Passport validity and blank pages checked",false],["Passport copy stored securely for backup",false],["Visa / eVisa and entry requirements checked",false],["Arrival, entry, or customs forms checked if required",false],["Return or onward ticket proof saved if required",false],["Flight and transport confirmations saved offline",false],["Accommodation confirmation and address saved offline",false],["Travel insurance and emergency assistance details saved",false],["Required vaccinations and health certificates checked",false],["Prescription medicines and supporting medical letter prepared if needed",false],["International driving permit checked if needed",false],["Backup payment method and bank travel notices checked",false],["Emergency contacts and embassy / consulate details saved",false],["Copies of key travel documents stored securely",false]]},
  packing_checklist:{items:[["Passport and travel documents",false],["Phone and charger",false],["Power adapter",false],["Payment cards and some cash",false],["Prescription medication",false],["Comfortable walking shoes",false],["Weather-appropriate clothing",false],["Toiletries and sunscreen",false]]},
  currency_preferences:{from:"USD",to:"COP",amount:"1"},
@@ -30,7 +29,6 @@ async function loadAll(){
    if(!error){(data||[]).forEach(r=>{if(keys.includes(r.tool_key)&&r.payload&&typeof r.payload==="object")state[r.tool_key]=Object.assign(clone(defaults[r.tool_key]),r.payload);});cloudReady=true;writeLocal();}
   }catch(_){}
  }
- normalizeTrips();
  const previousDocs=state.documents_checklist.items||[];
  state.documents_checklist.items=defaults.documents_checklist.items.map(item=>previousDocs.find(saved=>String(saved[0]).trim().toLowerCase()===item[0].trim().toLowerCase())||clone(item)).concat(previousDocs.filter(saved=>!defaults.documents_checklist.items.some(item=>item[0].trim().toLowerCase()===String(saved[0]).trim().toLowerCase())));
  const addedDocs=state.documents_checklist.items.length>previousDocs.length;
@@ -38,13 +36,6 @@ async function loadAll(){
  renderAll();
  if(addedDocs)await save("documents_checklist");
 }
-function newTripId(){return "trip-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);}
-function normalizeTrips(){const s=state.trip_planner;if(!Array.isArray(s.trips))s.trips=[];if(!s.trips.length&&(s.name||s.destination||s.start||s.end||(s.days||[]).length))s.trips.push({id:newTripId(),name:s.name||"My trip",destination:s.destination||"",start:s.start||"",end:s.end||"",days:s.days||[]});let t=s.trips.find(x=>x.id===s.activeTripId)||s.trips[0];if(t)loadTripRecord(t);else{s.activeTripId="";s.name="";s.destination="";s.start="";s.end="";s.days=[];}writeLocal();}
-function loadTripRecord(t){const s=state.trip_planner;s.activeTripId=t.id;s.name=t.name||"";s.destination=t.destination||"";s.start=t.start||"";s.end=t.end||"";s.days=Array.isArray(t.days)?t.days:[];}
-function captureTrip(){const s=state.trip_planner;s.name=$("tripName").value.trim();s.destination=$("tripDestination").value.trim();s.start=$("tripStart").value;s.end=$("tripEnd").value;let t=s.trips.find(x=>x.id===s.activeTripId);if(!t){if(!(s.name||s.destination||s.start||s.end||(s.days||[]).length))return null;t={id:newTripId()};s.trips.unshift(t);s.activeTripId=t.id;}Object.assign(t,{name:s.name||"My trip",destination:s.destination,start:s.start,end:s.end,days:s.days||[],updatedAt:new Date().toISOString()});return t;}
-function renderSavedTrips(){const box=$("savedTripsList"),s=state.trip_planner;if(!box)return;box.innerHTML=(s.trips||[]).length?s.trips.map(t=>'<article class="tool-item saved-trip-item"><div><b>'+escapeHtml(t.name||"Untitled trip")+'</b><p>'+escapeHtml(t.destination||"Destination not set")+(t.start?" · "+escapeHtml(t.start):"")+(t.end?" – "+escapeHtml(t.end):"")+' · '+((t.days||[]).length)+' activities</p></div><button type="button" class="tool-small" data-trip-open="'+escapeHtml(t.id)+'">'+(t.id===s.activeTripId?"Open now":"Open trip")+'</button></article>').join(""):'<p class="tool-empty">Save your first trip to see it here.</p>';}
-async function startNewTrip(){captureTrip();const s=state.trip_planner,t={id:newTripId(),name:"",destination:"",start:"",end:"",days:[]};s.trips.unshift(t);loadTripRecord(t);renderTrip();renderSavedTrips();await save("trip_planner");status("tripStatus","New trip started. Give it a name and save the details.");}
-function openTrip(id){const s=state.trip_planner;captureTrip();const t=s.trips.find(x=>x.id===id);if(!t)return;loadTripRecord(t);renderTrip();renderSavedTrips();writeLocal();status("tripStatus","Saved trip opened.");}
 let saveTimers={};
 async function save(k){
  writeLocal();
@@ -57,11 +48,7 @@ async function save(k){
  }
  
 }
-function renderAll(){renderTrip();renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderPhrasebook();renderCurrencySelectors();renderCurrency();}
-function renderTrip(){
- const s=state.trip_planner;$("tripName").value=s.name||"";$("tripDestination").value=s.destination||"";$("tripStart").value=s.start||"";$("tripEnd").value=s.end||"";
- const box=$("tripDayList");if(box)box.innerHTML=(s.days||[]).length?s.days.map((d,i)=>'<article class="tool-item"><div><b>'+escapeHtml(d.date||"Flexible date")+' · '+escapeHtml(d.title)+'</b><p>'+escapeHtml(d.note||"")+'</p></div><button type="button" class="tool-small danger" data-trip-delete="'+i+'">Remove</button></article>').join(""):'<p class="tool-empty">Add your first activity to build your day-by-day plan.</p>';renderSavedTrips();
-}
+function renderAll(){renderChecklist("documents_checklist","documentItems","documentStatus");renderChecklist("packing_checklist","packingItems","packingStatus");renderPhrasebook();renderCurrencySelectors();renderCurrency();}
 function renderChecklist(key,boxId,statusId){
  const s=state[key],box=$(boxId);if(!box)return;
  box.innerHTML=s.items.map((it,i)=>'<label class="tool-check"><input type="checkbox" data-check-key="'+key+'" data-check-index="'+i+'" '+(it[1]?"checked":"")+'><span class="'+(it[1]?"done":"")+'">'+escapeHtml(it[0])+'</span><button type="button" class="tool-delete" aria-label="Remove '+escapeHtml(it[0])+'" data-check-delete="'+key+':'+i+'">×</button></label>').join("");
@@ -71,9 +58,10 @@ function renderChecklist(key,boxId,statusId){
 const phrases=[
 ["Hello","Hola"],["Good morning","Buenos días"],["Good afternoon","Buenas tardes"],["Good evening","Buenas noches"],["Please","Por favor"],["Thank you","Gracias"],["You're welcome","De nada"],["Excuse me","Disculpe"],["Do you speak English?","¿Habla inglés?"],["I speak a little Spanish","Hablo un poco de español"],["Could you help me?","¿Me puede ayudar?"],["Where is the bathroom?","¿Dónde está el baño?"],["How much does it cost?","¿Cuánto cuesta?"],["Can I pay by card?","¿Puedo pagar con tarjeta?"],["I would like water","Quisiera agua"],["The menu, please","La carta, por favor"],["Where is the bus station?","¿Dónde está la terminal de autobuses?"],["Please call a taxi","Por favor, llame un taxi"],["I need a doctor","Necesito un médico"],["I need help","Necesito ayuda"],["Call the police, please","Llame a la policía, por favor"],["I have a reservation","Tengo una reserva"],["Could I have the bill?","¿Me trae la cuenta?"],["I am allergic to…","Soy alérgico/a a…"],["Where is the nearest pharmacy?","¿Dónde está la farmacia más cercana?"]];
 function renderPhrasebook(){
- const q=($("phraseSearch").value||"").toLowerCase(),fav=state.phrasebook_favorites.favorites;
- const rows=phrases.map((p,i)=>({p,i})).filter(x=>(x.p[0]+" "+x.p[1]).toLowerCase().includes(q));
- $("phraseList").innerHTML=rows.map(({p,i})=>'<article class="phrase-row"><div><div class="phrase-en">'+escapeHtml(p[0])+'</div><div class="phrase-es">'+escapeHtml(p[1])+'</div></div><button type="button" class="tool-small '+(fav.includes(i)?"selected":"")+'" data-phrase-fav="'+i+'">'+(fav.includes(i)?"♥ Saved":"♡ Save")+'</button></article>').join("")||'<p class="tool-empty">No phrases match that search.</p>';
+ const q=($("phraseSearch").value||"").toLowerCase(),fav=state.phrasebook_favorites.favorites||[],custom=state.phrasebook_favorites.customPhrases||[];
+ const all=phrases.concat(custom);
+ const rows=all.map((p,i)=>({p,i,isCustom:i>=phrases.length})).filter(x=>(x.p[0]+" "+x.p[1]).toLowerCase().includes(q));
+ $("phraseList").innerHTML=rows.map(({p,i,isCustom})=>'<article class="phrase-row"><div><div class="phrase-en">'+escapeHtml(p[0])+'</div><div class="phrase-es">'+escapeHtml(p[1])+'</div>'+(isCustom?'<small style="color:#6b7f72">Your phrase</small>':'')+'</div><button type="button" class="tool-small '+(fav.includes(i)?"selected":"")+'" data-phrase-fav="'+i+'">'+(fav.includes(i)?"♥ Saved":"♡ Save")+'</button></article>').join("")||'<p class="tool-empty">No phrases match that search.</p>';
 }
 let rates=null,rateDate="",rateLoading=false;
 const currencyNames={USD:"US Dollar",EUR:"Euro",COP:"Colombian Peso",MXN:"Mexican Peso",BRL:"Brazilian Real",ARS:"Argentine Peso",CLP:"Chilean Peso",PEN:"Peruvian Sol",GBP:"British Pound",CAD:"Canadian Dollar",AUD:"Australian Dollar",NZD:"New Zealand Dollar",JPY:"Japanese Yen",CNY:"Chinese Yuan",INR:"Indian Rupee",CHF:"Swiss Franc",KRW:"South Korean Won",CRC:"Costa Rican Colón",DOP:"Dominican Peso",GTQ:"Guatemalan Quetzal",HNL:"Honduran Lempira",NIO:"Nicaraguan Córdoba",PAB:"Panamanian Balboa",UYU:"Uruguayan Peso",BOB:"Bolivian Boliviano",PYG:"Paraguayan Guaraní",VES:"Venezuelan Bolívar",PEN:"Peruvian Sol"};
@@ -105,16 +93,20 @@ function renderCurrency(){
  state.currency_preferences={from,to,amount:String(amount)};writeLocal();
 }
 function bindForms(){
- $("tripDetailsForm").addEventListener("submit",async e=>{e.preventDefault();captureTrip();await save("trip_planner");renderSavedTrips();status("tripStatus","Trip saved. Reopen it anytime under Saved Trips.");});
- $("tripDayForm").addEventListener("submit",async e=>{e.preventDefault();state.trip_planner.days.push({date:$("tripDayDate").value,title:$("tripDayTitle").value.trim(),note:$("tripDayNote").value.trim()});$("tripDayForm").reset();captureTrip();renderTrip();await save("trip_planner");status("tripStatus","Activity added and trip saved. Reopen it anytime under Saved Trips.");});
- $("tripDayList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-delete]");if(!b)return;state.trip_planner.days.splice(Number(b.dataset.tripDelete),1);captureTrip();renderTrip();await save("trip_planner");});
- $("savedTripsList").addEventListener("click",async e=>{const b=e.target.closest("[data-trip-open]");if(!b)return;openTrip(b.dataset.tripOpen);await save("trip_planner");});
- $("newTripButton").addEventListener("click",startNewTrip);
  ["documents_checklist","packing_checklist"].forEach(k=>{const box=$(k==="documents_checklist"?"documentItems":"packingItems");box.addEventListener("change",async e=>{const el=e.target.closest("[data-check-index]");if(!el)return;state[k].items[Number(el.dataset.checkIndex)][1]=el.checked;renderChecklist(k,k==="documents_checklist"?"documentItems":"packingItems",k==="documents_checklist"?"documentStatus":"packingStatus");await save(k);});box.addEventListener("click",async e=>{const b=e.target.closest("[data-check-delete]");if(!b)return;e.preventDefault();const [key,index]=b.dataset.checkDelete.split(":");state[key].items.splice(Number(index),1);renderChecklist(key,key==="documents_checklist"?"documentItems":"packingItems",key==="documents_checklist"?"documentStatus":"packingStatus");await save(key);});});
  $("addDocumentTask").addEventListener("click",async()=>{const v=$("newDocumentTask").value.trim();if(!v)return;state.documents_checklist.items.push([v,false]);$("newDocumentTask").value="";renderChecklist("documents_checklist","documentItems","documentStatus");await save("documents_checklist");});
  $("addPackingTask").addEventListener("click",async()=>{const v=$("newPackingTask").value.trim();if(!v)return;state.packing_checklist.items.push([v,false]);$("newPackingTask").value="";renderChecklist("packing_checklist","packingItems","packingStatus");await save("packing_checklist");});
  $("phraseSearch").addEventListener("input",renderPhrasebook);
- $("phraseList").addEventListener("click",async e=>{const b=e.target.closest("[data-phrase-fav]");if(!b)return;const i=Number(b.dataset.phraseFav),f=state.phrasebook_favorites.favorites;state.phrasebook_favorites.favorites=f.includes(i)?f.filter(x=>x!==i):f.concat(i);renderPhrasebook();await save("phrasebook_favorites");});
+ $("customPhraseForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const english=$("customPhraseEnglish").value.trim(),spanish=$("customPhraseSpanish").value.trim();
+  if(!english||!spanish)return;
+  if(!Array.isArray(state.phrasebook_favorites.customPhrases))state.phrasebook_favorites.customPhrases=[];
+  state.phrasebook_favorites.customPhrases.push([english,spanish]);
+  $("customPhraseForm").reset();renderPhrasebook();await save("phrasebook_favorites");
+  status("phraseStatus","Your phrase was added and saved.");
+ });
+ $("phraseList").addEventListener("click",async e=>{const b=e.target.closest("[data-phrase-fav]");if(!b)return;const i=Number(b.dataset.phraseFav),f=state.phrasebook_favorites.favorites||[];state.phrasebook_favorites.favorites=f.includes(i)?f.filter(x=>x!==i):f.concat(i);renderPhrasebook();await save("phrasebook_favorites");});
  ["currencyAmount","currencyFrom","currencyTo"].forEach(id=>$(id).addEventListener(id==="currencyAmount"?"input":"change",renderCurrency));
  $("swapCurrency").addEventListener("click",()=>{const a=$("currencyFrom").value;$("currencyFrom").value=$("currencyTo").value;$("currencyTo").value=a;renderCurrency();});
  $("refreshRates").addEventListener("click",async()=>{try{localStorage.removeItem("staylatin-fx-cache")}catch(_){}await loadRates();});
