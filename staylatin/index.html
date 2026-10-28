@@ -1335,8 +1335,8 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
             if(!style){
               style=doc.createElement("style");
               style.id="staylatin-hide-admin-popup-banner";
-              style.textContent="html body>.topbar,html body>.sl-top-message,html body>.sl-global-header,html body>.sl-mainnav,html body>header:not(.top),html body>.topbar,html body .topbar,html body .sl-top-message,html body .sl-global-header,html body .sl-mainnav,html body .sl-tagline,html body .top-extra,html body #staylatin-donation-tab{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important}";
-              doc.querySelectorAll("body>.topbar,body>.sl-top-message,body>.sl-global-header,body>.sl-mainnav,body>.top-extra,body>#staylatin-donation-tab").forEach(function(node){node.remove();});
+              style.textContent="html body>.topbar,html body>.sl-top-message,html body>.sl-global-header,html body>.sl-mainnav,html body>header:not(.top),html body>.topbar,html body .topbar,html body .sl-top-message,html body .sl-global-header,html body .sl-mainnav,html body .sl-tagline,html body .top-extra,html body #staylatin-donation-tab,html body>.top .brand,html body>.top .eyebrow{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important}";
+              doc.querySelectorAll("body>.topbar,body>.sl-top-message,body>.sl-global-header,body>.sl-mainnav,body>.top-extra,body>#staylatin-donation-tab,body>.top .brand,body>.top .eyebrow").forEach(function(node){node.remove();});
               (doc.head||doc.documentElement).appendChild(style);
             }
           }
