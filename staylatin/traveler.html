@@ -1194,7 +1194,29 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
 })();
 </script>
 
-<script>document.getElementById("refreshTravelerPortal")?.addEventListener("click",function(){this.disabled=true;this.textContent="↻ Refreshing…";const url=new URL(window.location.href);url.searchParams.set("portalRefresh",Date.now().toString());window.location.replace(url.href);});</script>
+<script>
+document.getElementById("refreshTravelerPortal")?.addEventListener("click",function(){
+  const button=this;
+  button.disabled=true;
+  button.textContent="↻ Clearing cache…";
+  const refreshId=Date.now().toString();
+  /* Browsers do not allow a page to erase the entire browser cache. Give local
+     scripts and styles fresh URLs so this refresh bypasses their cached copies. */
+  document.querySelectorAll('script[src],link[rel="stylesheet"][href]').forEach(function(asset){
+    try{
+      const assetUrl=new URL(asset.src||asset.href,window.location.href);
+      if(assetUrl.origin!==window.location.origin)return;
+      assetUrl.searchParams.set("refresh",refreshId);
+      if(asset.tagName==="SCRIPT")asset.src=assetUrl.href;
+      else asset.href=assetUrl.href;
+    }catch(e){}
+  });
+  const url=new URL(window.location.href);
+  url.searchParams.set("portalRefresh",refreshId);
+  url.searchParams.set("assetsRefresh",refreshId);
+  window.location.replace(url.href);
+});
+</script>
 <script src="shared-chrome.js?v=sl20261028"></script><script src="traveler-toolkit-ui.js?v=a84850e7"></script><script src="traveler-toolkit.js?v=sl20261028"></script><script src="traveler-portal-flow.js?v=sl20261028"></script>
 </body>
 </html>
