@@ -291,13 +291,43 @@ body [role="button"][aria-disabled="true"] {
 <label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
 <div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
 </form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
-</section><section id="travelerListingActions" aria-labelledby="travelerListingActionsTitle" style="margin:16px 0 24px;border:1px solid #b9d3c2;border-radius:14px;padding:18px;background:#fffdf8">
-  <div class="kicker" style="color:var(--terra)">Your saved stays</div>
-  <h3 id="travelerListingActionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">♥ Your Favorites</h3>
+</section><section id="travelerListingActions" aria-labelledby="travelerListingActionsTitle" style="margin:16px 0 24px;border:2px solid #b9d3c2;border-radius:14px;padding:18px;background:#fffdf8">
+  <div class="kicker" style="color:var(--terra)">Your saved card actions</div>
+  <h3 id="travelerListingActionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Your stays &amp; activity</h3>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Use the five actions on a hotel card and find them here: favorites, shares, map shortlist, price checks, and listing alerts. Sign in to sync your activity to your StayLatin account.</p>
+  <div id="listingActionTabs" role="tablist" aria-label="Saved hotel card actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px">
+    <button type="button" data-listing-tab="favorites" class="active" role="tab" aria-selected="true" style="border:1px solid #b9d3c2;border-radius:999px;background:#173f35;color:#fff;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">♥ Favorites</button>
+    <button type="button" data-listing-tab="invites" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">↗ Shared stays</button>
+    <button type="button" data-listing-tab="map" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">⌖ Map shortlist</button>
+    <button type="button" data-listing-tab="prices" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">$ Price checks</button>
+    <button type="button" data-listing-tab="alerts" role="tab" aria-selected="false" style="border:1px solid #b9d3c2;border-radius:999px;background:#f3f7f1;color:#173f35;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer">♧ Alerts</button>
+  </div>
+  <p id="listingActionsStatus" role="status" aria-live="polite" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
   <div id="travelerListingActionsPanel" style="display:grid;gap:10px"></div>
 </section>
+<div class="dashboard-stats"><div class="dashboard-stat"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted)">YOUR MEMBERSHIP</div><strong style="display:block;margin-top:7px">Forever free</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">No traveler membership fee. Ever.</div></div><div class="dashboard-stat donation-stat"><div class="donation-kicker">KEEP STAYLATIN FREE</div><strong>Support our journey</strong><div class="donation-copy">Enjoying StayLatin? Optional donations help us keep it free for every traveler and build new features.</div><div class="donation-soon">Donation options coming soon</div></div></div>
 
-<section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+
+
+
+
+<section id="travelerAccountSecurity" aria-labelledby="travelerAccountSecurityTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
+<h3 id="travelerAccountSecurityTitle" style="font:500 25px Georgia,serif;color:var(--forest);margin:0 0 6px">Account &amp; password</h3>
+<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Your sign-in email is shown below. Change your password here while signed in. Your existing password is never displayed.</p>
+<label for="travelerAccountEmail" style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">ACCOUNT EMAIL</label>
+<input id="travelerAccountEmail" type="email" readonly aria-readonly="true" style="width:100%;max-width:520px;padding:11px;border:1px solid #dce3dc;border-radius:8px;background:#f5f7f3;color:var(--forest);margin-bottom:18px">
+<form id="travelerChangeEmailForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px;margin:0 0 18px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW EMAIL ADDRESS<input id="travelerNewEmail" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerEmailCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end;grid-column:1/-1"><button id="travelerChangeEmailButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Change email</button></div>
+</form><p id="travelerEmailStatus" aria-live="polite" style="font-size:12px;margin:-8px 0 18px;color:var(--muted)">We'll send a confirmation email if required by your account security settings.</p>
+<form id="travelerChangePasswordForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW PASSWORD<input id="travelerNewPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
+<div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
+</form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
+</section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler · Free</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
   <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Share a little about yourself and discover travelers with similar interests. Every detail has its own visibility switch. Only details you choose to share are copied to the member directory; private details remain in your own profile.</p>
@@ -1080,50 +1110,84 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
 (function(){
   const A=window.StayLatinListingActions;
   if(!A)return;
+  let activeListingTab="favorites";
   const panel=document.getElementById("travelerListingActionsPanel");
+  const statusEl=document.getElementById("listingActionsStatus");
   function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
-  function affiliateLink(item,network){
-    const saved=network==="expedia"?(item.expedia||item.expediaUrl):(item.trip||item.tripUrl);
-    if(saved){
-      try{
-        const u=new URL(saved);
-        if(network==="expedia"&&/(^|\\.)expedia\\.com$/i.test(u.hostname.replace(/^www\\./,""))){
-          u.searchParams.set("affcid","US.DIRECT.PHG.1101l441706.1100l68075");
-          u.searchParams.set("my_ad","AFF.US.DIRECT.PHG.1101l441706.1100l68075");
-        }else if(network==="trip"&&/(^|\\.)trip\\.com$/i.test(u.hostname.replace(/^www\\./,""))){
-          u.searchParams.set("Allianceid","11136945");u.searchParams.set("SID","334407578");u.searchParams.set("trip_sub3","D20681383");
-        }
-        return u.toString();
-      }catch(_){}
-    }
-    const q=encodeURIComponent([item.name,item.city,item.country].filter(Boolean).join(" "));
-    if(network==="expedia")return "https://www.expedia.com/Hotel-Search?"+new URLSearchParams({destination:[item.name,item.city,item.country].filter(Boolean).join(" "),affcid:"US.DIRECT.PHG.1101l441706.1100l68075",my_ad:"AFF.US.DIRECT.PHG.1101l441706.1100l68075"}).toString();
-    return "https://www.trip.com/hotels/list?"+new URLSearchParams({city:item.city||"",keyword:item.name||"",Allianceid:"11136945",SID:"334407578",trip_sub3:"D20681383"}).toString();
+  function card(item,extra){
+    return '<article style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:10px;padding:12px;background:#fff"><div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">'+esc(item.tier||item.type||"Stay")+'</div><h4 style="font:500 19px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4><div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+(extra||"")+(item.website?'<div style="margin-top:6px"><a href="'+esc(item.website)+'" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--forest);font-weight:700">Open website ↗</a></div>':'')+'</div><a class="minor-action" href="index.html#stay-'+esc(item.id)+'" style="width:auto;margin:0">View on homepage</a></article>';
   }
-  function card(item){
-    const expedia=affiliateLink(item,"expedia");
-    const trip=affiliateLink(item,"trip");
-    return '<article style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px solid #e4dfd2;border-radius:12px;padding:14px;background:#fff">'+
-      (item.image?'<img src="'+esc(item.image)+'" alt="" loading="lazy" style="width:104px;height:100px;object-fit:cover;border-radius:8px;flex:0 0 104px">':'')+
-      '<div style="min-width:0;flex:1"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)">♥ SAVED FAVORITE</div>'+
-      '<h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:4px 0">'+esc(item.name||("Stay #"+item.id))+'</h4>'+
-      '<div style="font-size:12px;color:var(--muted)">'+esc([item.city,item.country].filter(Boolean).join(", "))+'</div>'+
-      '<div class="traveler-booking-buttons">'+
-      '<a class="traveler-booking-button" href="'+esc(expedia)+'" target="_blank" rel="noopener noreferrer sponsored" aria-label="Book this stay on Expedia">Book on Expedia ↗</a>'+
-      '<a class="traveler-booking-button" href="'+esc(trip)+'" target="_blank" rel="noopener noreferrer sponsored" aria-label="Book this stay on Trip.com">Book on Trip.com ↗</a>'+
-      '</div></div></article>';
-  }
-  function render(){
+  function empty(msg){return '<div class="status">'+esc(msg)+'</div>';}
+  window.renderTravelerListingActions=function(){
     if(!panel)return;
-    const ids=A.getFavorites();
-    const details=A.getFavoriteDetails?A.getFavoriteDetails():[];
-    const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
-    const rows=ids.map(id=>byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"});
-    panel.innerHTML=rows.length?rows.map(card).join(""):'<div class="status show">No favorites yet. Tap ♥ on any StayLatin listing and it will appear here.</div>';
-  }
-  window.renderTravelerListingActions=render;
-  window.loadTravelerListingActions=async function(){try{await A.syncOnSignIn();}catch(_){}render();};
-  render();
+    if(activeListingTab==="favorites"){
+      const ids=A.getFavorites();
+      const details=A.getFavoriteDetails?A.getFavoriteDetails():[];
+      const byId=Object.fromEntries(details.map(d=>[Number(d.id),d]));
+      panel.innerHTML=ids.length?ids.map(id=>card(byId[Number(id)]||{id:id,name:"Favorite stay #"+id,tier:"Favorite"})).join(""):empty("No hearted stays yet. Tap ♥ on a homepage listing.");
+      if(statusEl)statusEl.textContent=ids.length+" favorite"+(ids.length===1?"":"s")+" saved.";
+      return;
+    }
+    if(activeListingTab==="trips"){
+      const trips=A.getTrips();const boards=Object.keys(trips);
+      if(!boards.length){panel.innerHTML=empty("No trip boards yet. Tap ✈ on a listing and name a board.");if(statusEl)statusEl.textContent="";return;}
+      panel.innerHTML=boards.map(board=>{
+        const rows=trips[board]||[];
+        return '<div style="border:1px solid #dce8dd;border-radius:10px;padding:12px;background:#fff"><h4 style="font:500 20px Georgia,serif;color:var(--forest);margin:0 0 8px">'+esc(board)+' <span style="font-size:12px;color:var(--muted);font-weight:600">('+rows.length+')</span></h4>'+(rows.length?rows.map(r=>card(r)).join(""):empty("Empty board"))+'</div>';
+      }).join("");
+      if(statusEl)statusEl.textContent=boards.length+" trip board"+(boards.length===1?"":"s")+".";
+      return;
+    }
+    if(activeListingTab==="compare"){
+      const rows=A.getCompare();
+      panel.innerHTML=rows.length?('<p style="font-size:12px;color:var(--muted);margin:0 0 8px">Up to 3 stays · '+rows.length+'/3</p>'+rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px"><b>Type:</b> '+esc(r.type||"—")+' · <b>Vibe:</b> '+esc(r.vibe||"—")+'</div>')).join("")):empty("No compare pins yet. Tap ⧉ on up to 3 listings.");
+      if(statusEl)statusEl.textContent=rows.length?"Compare pins ready.":"";
+      return;
+    }
+    if(activeListingTab==="been"){
+      const rows=A.getBeen();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,r.visited_at?'<div style="font-size:12px;margin-top:6px">Visited: '+esc(r.visited_at)+'</div>':'')).join(""):empty("No Been here marks yet. Tap ✓ after you visit a stay.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" stay"+(rows.length===1?"":"s")+" in your journal marks.":"";
+      return;
+    }
+    if(activeListingTab==="map"){
+      const rows=A.getMapPins();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Map shortlist · city/country pin</div>')).join(""):empty("No map shortlist yet. Tap ⌖ on a hotel card to save it and open its map.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" map pin"+(rows.length===1?"":"s")+".":"";
+      return;
+    }
+    if(activeListingTab==="alerts"){
+      const rows=A.getAlerts();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">Watching for listing updates</div>')).join(""):empty("No alerts yet. Tap 🔔 to watch a listing.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" alert"+(rows.length===1?"":"s")+".":"";
+      return;
+    }
+    if(activeListingTab==="prices"){
+      const rows=A.getPriceChecks?A.getPriceChecks():[];
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px"><b>Rate shown:</b> '+esc(r.rate_estimate||"Check dates")+(r.checked_at?' · Checked '+esc(new Date(r.checked_at).toLocaleString()):'')+'</div>')).join(""):empty("No price checks yet. Tap $ on a hotel card to save its current rate-check reminder here.");
+      if(statusEl)statusEl.textContent=rows.length?rows.length+" saved price check"+(rows.length===1?"":"s")+".":"";
+      return;
+    }
+    if(activeListingTab==="invites"){
+      const rows=A.getInvites();
+      panel.innerHTML=rows.length?rows.map(r=>card(r,'<div style="font-size:12px;margin-top:6px">'+(r.invited_at?("Invited "+esc(new Date(r.invited_at).toLocaleString())):"Invite ready")+(r.link?' · <a href="'+esc(r.link)+'">Open link</a>':'')+'</div>')).join(""):empty("No shared stays yet. Tap ↗ on a hotel card to share its listing.");
+      if(statusEl)statusEl.textContent=rows.length?"Recent invite actions.":"";
+    }
+  };
+  document.getElementById("listingActionTabs")?.addEventListener("click",e=>{
+    const btn=e.target.closest("[data-listing-tab]");if(!btn)return;
+    activeListingTab=btn.dataset.listingTab;
+    document.querySelectorAll("#listingActionTabs [data-listing-tab]").forEach(b=>{
+      const active=b===btn;b.classList.toggle("active",active);b.setAttribute("aria-selected",active?"true":"false");
+      b.style.background=active?"#173f35":"#f3f7f1";b.style.color=active?"#fff":"#173f35";
+    });
+    renderTravelerListingActions();
+  });
+  window.loadTravelerListingActions=async function(){
+    try{await A.syncOnSignIn();}catch(_){}
+    renderTravelerListingActions();
+  };
+  renderTravelerListingActions();
 })();
 </script>
 
