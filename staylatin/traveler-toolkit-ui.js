@@ -67,19 +67,31 @@
  const grid=document.querySelector("#travelerToolkit .tool-grid");
  const journal=document.getElementById("travelerJournal");
  if(grid&&journal){
-  /* Explicitly place the journal inside the Travel Toolkit grid, even if other page scripts relocate it. */
-  grid.appendChild(journal);
+  /* Keep My Travel Journal as a first-class, independently collapsible tool card. */
   journal.classList.add("tool-card");
   journal.classList.remove("full");
-  const journalHeading=journal.querySelector("h3");
-  if(journalHeading){const title=document.createElement("h4");title.textContent="My Travel Journal";journalHeading.replaceWith(title);}
+  const journalHeading=journal.querySelector("h3,h4");
+  if(journalHeading){
+    const title=document.createElement("h4");
+    title.textContent="My Travel Journal";
+    journalHeading.replaceWith(title);
+  }
+  if(journal.parentElement!==grid)grid.appendChild(journal);
  }
  if(favorites&&grid&&journal){
-  favorites.className="tool-card";favorites.removeAttribute("style");favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
+  /* Keep the existing saved-stays panel as its own tool card inside the same vertical toolkit. */
+  favorites.className="tool-card";
+  favorites.removeAttribute("style");
+  favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
   const oldTitle=document.getElementById("travelerListingActionsTitle");
-  if(oldTitle){const title=document.createElement("h4");title.id=oldTitle.id;title.textContent="6. Your Favorites";oldTitle.replaceWith(title);}
+  if(oldTitle){
+    const title=document.createElement("h4");
+    title.id=oldTitle.id;
+    title.textContent="Your Favorites";
+    oldTitle.replaceWith(title);
+  }
   grid.insertBefore(favorites,journal);
-  favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>7. Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
+  favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
  }
  const inviteForm=document.getElementById("travelerInviteForm");
  if(inviteForm)inviteForm.addEventListener("submit",function(event){
@@ -117,6 +129,12 @@
      button.setAttribute("aria-label",(collapsed?"Expand ":"Collapse ")+heading.childNodes[0].textContent.trim());
    });
  }
+ /* Final placement guard: both requested tools are direct children of the toolkit and retain their exact names. */
+ const liveGrid=document.querySelector("#travelerToolkit .tool-grid");
+ const liveJournal=document.getElementById("travelerJournal");
+ const liveFavorites=document.getElementById("travelerListingActions");
+ if(liveGrid&&liveJournal&&liveJournal.parentElement!==liveGrid)liveGrid.appendChild(liveJournal);
+ if(liveGrid&&liveFavorites&&liveFavorites.parentElement!==liveGrid)liveGrid.insertBefore(liveFavorites,liveJournal||null);
  document.querySelectorAll("#travelerToolkit .tool-card").forEach(section=>makeCollapsible(section,"h4"));
  makeCollapsible(document.getElementById("travelerJournal"),"h3");
  /* Add the same independent Open/Close controls to the main traveler community panels. */
