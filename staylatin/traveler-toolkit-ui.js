@@ -20,6 +20,14 @@
  const favorites=document.getElementById("travelerListingActions");
  const grid=document.querySelector("#travelerToolkit .tool-grid");
  const journal=document.getElementById("travelerJournal");
+ if(grid&&journal){
+  /* Explicitly place the journal inside the Travel Toolkit grid, even if other page scripts relocate it. */
+  grid.appendChild(journal);
+  journal.classList.add("tool-card");
+  journal.classList.remove("full");
+  const journalHeading=journal.querySelector("h3");
+  if(journalHeading){const title=document.createElement("h4");title.textContent="My Travel Journal";journalHeading.replaceWith(title);}
+ }
  if(favorites&&grid&&journal){
   favorites.className="tool-card";favorites.removeAttribute("style");favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
   const oldTitle=document.getElementById("travelerListingActionsTitle");
