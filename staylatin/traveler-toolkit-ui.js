@@ -183,7 +183,23 @@
  }
  addCommunityCollapse(document.getElementById("travelerAccountSecurity"),document.getElementById("travelerAccountSecurityTitle"));
  addCommunityCollapse(document.getElementById("travelerIntroductions"),document.getElementById("travelerIntroductionsTitle"));
- addCommunityCollapse(document.getElementById("privateMessagingPanel"),document.querySelector("#privateMessagingPanel h4"));
+ /* Private messages: only the title and Open/Close button stay visible; the description, admin chat button, inbox and conversation collapse together. */
+(function(){
+  const panel=document.getElementById("privateMessagingPanel");
+  const heading=panel&&panel.querySelector("h4");
+  if(!panel||!heading||panel.dataset.communityCollapseReady==="1")return;
+  const headerRow=panel.firstElementChild;
+  const titleBox=heading.parentElement;
+  const body=document.createElement("div");body.className="community-collapse-body";
+  if(headerRow&&titleBox){
+    const description=heading.nextElementSibling;if(description)body.appendChild(description);
+    [...headerRow.children].forEach(function(el){if(el!==titleBox)body.appendChild(el);});
+    let node=headerRow.nextSibling;
+    while(node){const next=node.nextSibling;body.appendChild(node);node=next;}
+  }
+  panel.appendChild(body);
+  addCommunityCollapse(panel,heading,body);
+})();
  addCommunityCollapse(document.getElementById("travelerLounge"),document.getElementById("chatTitle"));
  /* Keep Meet other travelers independent from the introduction profile form. */
  (function(){
