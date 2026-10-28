@@ -25,8 +25,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Discover verified properties
-        env:
-          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
         run: python scripts/staylatin_daily_discovery.py
       - name: Commit newly verified listings
         run: |

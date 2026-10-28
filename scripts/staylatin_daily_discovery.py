@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Discover at most one verified hotel/hostel per city in CITIES per run (17 Latin American countries).
+"""Discover at most one hotel/hostel per city in CITIES per run (17 Latin American countries).
 
-Requires BRAVE_SEARCH_API_KEY. Publishes only candidates with a working Expedia
-or Trip.com property profile, a separate official property website, and an
-official-site Open Graph photo. Fails closed when any requirement is uncertain.
+Free and keyless: candidates come from OpenStreetMap (Overpass API) and must have an
+official https website and a usable Open Graph photo on that site. Each listing links
+to Expedia and Trip.com search results for the property. Fails closed when uncertain.
 """
 import hashlib, html, json, os, re, sys, time
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import quote, urlparse
+from urllib.parse import quote, urlencode, urlparse
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
@@ -25,10 +25,6 @@ CITIES = [
     ("Santiago", "Chile", "cl", "es"), ("Quito", "Ecuador", "ec", "es"), ("Asunción", "Paraguay", "py", "es"),
     ("Cusco", "Peru", "pe", "es"), ("Montevideo", "Uruguay", "uy", "es"),
 ]
-API_KEY = os.environ.get("BRAVE_SEARCH_API_KEY", "").strip()
-if not API_KEY:
-    print("Missing required repository secret BRAVE_SEARCH_API_KEY; no listings changed.", file=sys.stderr)
-    sys.exit(2)
 
 class MetaParser(HTMLParser):
     def __init__(self):
@@ -51,14 +47,6 @@ def get(url, headers=None, timeout=18):
             return res.status, res.geturl(), res.read(1_500_000).decode("utf-8", "replace")
     except (HTTPError, URLError, TimeoutError, ValueError) as exc:
         return getattr(exc, "code", 0) or 0, url, ""
-
-def search(q, count=20, cc="co", lang="es"):
-    url = "https://api.search.brave.com/res/v1/web/search?q=" + quote(q) + "&count=" + str(count) + "&country=" + cc + "&search_lang=" + lang
-    status, _, body = get(url, {"X-Subscription-Token": API_KEY, "Accept":"application/json"})
-    if status != 200:
-        raise RuntimeError("Brave Search request failed (HTTP %s); no listings changed." % status)
-    data = json.loads(body)
-    return data.get("web", {}).get("results", [])
 
 def clean_name(title):
     s = re.sub(r"\s*[|–—-]\s*(Expedia|Trip\.com).*$", "", title, flags=re.I)
@@ -104,57 +92,46 @@ def read_existing():
         existing.add((str(x.get("name","")).casefold().strip(), str(x.get("city","")).split(",")[0].casefold().strip()))
     return existing, extra
 
+def overpass_hotels(city, cc):
+    q = ('[out:json][timeout:60];area["ISO3166-1"="%s"]->.c;area(area.c)["name"="%s"]->.a;'
+         '(nwr["tourism"~"^(hotel|hostel|guest_house)$"]["website"](area.a););out tags 200;') % (cc.upper(), city)
+    req = Request("https://overpass-api.de/api/interpreter", data=urlencode({"data": q}).encode(),
+                  headers={"User-Agent": "StayLatinDiscovery/1.0 (christopherthegoodgringo)"})
+    with urlopen(req, timeout=90) as resp:
+        return json.loads(resp.read().decode("utf-8")).get("elements", [])
+
 def choose_for_city(city, country, cc, lang, existing):
-    city_q = '"%s" %s hotel hostel Expedia Trip.com' % (city, country)
-    results = search(city_q, 20, cc, lang)
-    for result in results:
-        title = str(result.get("title") or "")
-        booking = str(result.get("url") or "")
-        if not valid_booking_url(booking): continue
-        name = clean_name(title)
-        if len(name) < 4 or len(name) > 100: continue
-        if any(x in name.casefold() for x in ("best hotels", "cheap hotels", "hotels in", "hostels in", "hotel deals")): continue
+    for el in overpass_hotels(city, cc):
+        tags = el.get("tags", {})
+        name = str(tags.get("name") or "").strip()
+        website = str(tags.get("website") or "").strip()
+        if len(name) < 4 or len(name) > 100 or not website.startswith("https://"): continue
         if (name.casefold().strip(), city.casefold()) in existing: continue
-        # Confirm the specific property profile resolves and identifies the same property.
-        status, final_booking, booking_html = get(booking)
-        if status < 200 or status >= 400 or not booking_html: continue
-        parsed = MetaParser(); parsed.feed(booking_html)
-        page_title = " ".join(parsed.title_parts).casefold()
-        if page_title and not any(token in page_title for token in name.casefold().split()[:2]): continue
-        # Locate a distinct official property site, not a booking aggregator or directory.
-        official = None
-        for site_result in search('"%s" "%s" official hotel website' % (name, city), 10, cc, lang):
-            candidate = str(site_result.get("url") or "")
-            if candidate.startswith("https://") and not is_excluded_host(candidate):
-                official = candidate; break
-        if not official: continue
-        site = fetch_page(official)
+        if is_excluded_host(website): continue
+        site = fetch_page(website)
         if not site or not site["image"]: continue
-        # Require the official-looking site to identify the property in its title or domain.
         name_tokens = [t for t in re.findall(r"[a-z0-9]+", name.casefold()) if len(t) >= 4]
         site_identity = (site["title"] + " " + urlparse(site["url"]).netloc).casefold()
         if not name_tokens or not any(token in site_identity for token in name_tokens): continue
-        # Verify the photo URL is accessible; never substitute an unrelated stock photo.
         img_status, img_final, _ = get(site["image"], timeout=12)
         if img_status < 200 or img_status >= 400: continue
-        kind_text = (name + " " + title + " " + str(result.get("description") or "")).casefold()
-        stay_type = "Hostel" if any(w in kind_text for w in ("hostel", "hostal", "albergue")) else "Boutique hotel"
-        desc = site["description"] or str(result.get("description") or "")
+        desc = site["description"] or str(tags.get("description") or "")
         desc = re.sub(r"\s+", " ", html.unescape(desc)).strip()[:300]
         if len(desc) < 35: continue
+        stay_type = "Hostel" if tags.get("tourism") == "hostel" else "Boutique hotel"
         pid = int(hashlib.sha256((name.casefold()+"|"+city.casefold()).encode()).hexdigest()[:7], 16) + 100000000
-        item = {
+        query = quote(name + " " + city)
+        return {
             "id": pid, "name": name, "city": city + ", " + country, "country": country,
             "type": stay_type, "vibe": "Culture", "desc": desc,
             "image": img_final, "imageFallback": img_final,
             "tag": "Basic", "tier": "Basic", "tierFeature": "Standard property profile",
             "website": site["url"],
-            "expedia": final_booking if "expedia.com" in urlparse(final_booking).netloc.lower() else "",
-            "trip": final_booking if "trip.com" in urlparse(final_booking).netloc.lower() else "",
-            "note": "Official property website and verified " + ("Expedia" if "expedia.com" in urlparse(final_booking).netloc.lower() else "Trip.com") + " property profile",
-            "discoverySource": "Brave Search; profile and official website checked " + time.strftime("%Y-%m-%d", time.gmtime())
+            "expedia": "https://www.expedia.com/Hotel-Search?destination=" + query,
+            "trip": "https://www.trip.com/hotels/list?keywords=" + query,
+            "note": "Official property website; Expedia and Trip.com search links",
+            "discoverySource": "OpenStreetMap; official website checked " + time.strftime("%Y-%m-%d", time.gmtime())
         }
-        return item
     print("No sufficiently verified new property found for %s; skipping rather than guessing." % city)
     return None
 
