@@ -4,7 +4,6 @@
   function arrange() {
     const dashboard = document.getElementById("travelerDashboard");
     if (!dashboard || dashboard.dataset.flowArranged === "true") return;
-    const favorites = document.getElementById("travelerListingActions");
     const toolkit = document.getElementById("travelerToolkit");
     const journal = document.getElementById("travelerJournal");
     const introductions = document.getElementById("travelerIntroductions");
@@ -15,7 +14,7 @@
     // Overview first, then planning tools and journal; favorites sit immediately
     // before traveler introductions as requested.
     let previous = stats;
-    [toolkit, journal, favorites, introductions, messages, lounge].forEach(function (section) {
+    [toolkit, journal, introductions, messages, lounge].forEach(function (section) {
       if (section && previous) {
         previous.insertAdjacentElement("afterend", section);
         previous = section;
