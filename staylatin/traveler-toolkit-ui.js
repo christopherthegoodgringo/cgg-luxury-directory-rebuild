@@ -6,10 +6,12 @@
  style.textContent += `
 /* Unified traveler portal typography and aligned tool cards */
 #travelerToolkit .toolkit-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap}
+#travelerToolkit .toolkit-head>.toolkit-main-toggle{align-self:center}
 #travelerToolkit .toolkit-head>div{min-width:0;flex:1}
 #travelerToolkit .toolkit-head .kicker{font:800 11px/1.3 system-ui,sans-serif;letter-spacing:.12em}\n#travelerToolkit .toolkit-head .toolkit-description{font:800 clamp(18px,2.5vw,23px)/1.25 system-ui,sans-serif;letter-spacing:.01em;text-transform:none;background:linear-gradient(100deg,#0f6b4f,#168a68,#38a169);-webkit-background-clip:text;background-clip:text;color:transparent!important;margin:0 0 4px}
 #travelerToolkit .toolkit-head h3{display:none;font:700 17px/1.3 system-ui,sans-serif;margin:3px 0;color:#173f35}
 #travelerToolkit .toolkit-head .tool-status{font:500 12px/1.35 system-ui,sans-serif;margin:0;min-height:0}
+#travelerToolkit .toolkit-head>.toolkit-main-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 88px;width:88px;min-width:88px;height:36px;margin:0 0 0 auto;padding:0 12px;line-height:1;text-align:center;white-space:nowrap;box-sizing:border-box}
 #travelerToolkit .tool-grid{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto;align-items:stretch;gap:12px}
 #travelerToolkit .tool-card{display:flex;flex-direction:column;min-width:0;min-height:0;height:auto;padding:16px;align-self:stretch}
 #travelerToolkit .tool-card h4,#travelerToolkit .journal-card h3{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;font:700 14px/1.35 system-ui,sans-serif;color:#173f35;margin:0 0 10px}
