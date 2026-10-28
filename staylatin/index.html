@@ -1250,40 +1250,65 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   var frame=document.getElementById("staylatin-account-frame");
   var close=document.getElementById("staylatin-account-close");
   var previousOverflow="";
+  function setOverlayOpen(portal){
+    if(!overlay||!frame)return;
+    var dialog=document.getElementById("staylatin-account-dialog");
+    if(dialog){dialog.classList.toggle("portal-view",!!portal);if(!portal)dialog.style.height="";}
+    previousOverflow=document.body.style.overflow;
+    overlay.hidden=false;overlay.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";
+    window.setTimeout(fitAccountDialog,80);
+  }
+  function safeStayLatinUrl(raw,allowPortal){
+    var target=new URL(raw,window.location.href);
+    if(target.origin!==window.location.origin||!target.pathname.startsWith("/cgg-luxury-directory-rebuild/staylatin/"))return null;
+    if(/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-(?:signin|signup)\.html$/.test(target.pathname))return target;
+    if(allowPortal&&/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-[a-z0-9-]+\.html$/.test(target.pathname))return target;
+    if(allowPortal&&target.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html")return target;
+    return null;
+  }
   window.addEventListener("message",function(event){
     if(event.origin!==window.location.origin||!event.data)return;
-    if(event.data.type==="staylatin-login-success"){if(event.data.role==="traveler"){if(frame){frame.src=new URL("traveler.html#dashboard",window.location.href).href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");var dialog=document.getElementById("staylatin-account-dialog");if(dialog)dialog.classList.add("portal-view");previousOverflow=document.body.style.overflow;document.body.style.overflow="hidden";window.setTimeout(fitAccountDialog,80);}return;}closeAccount();if(event.data.fallbackUrl){try{var fallback=new URL(event.data.fallbackUrl,window.location.href);if(fallback.origin===window.location.origin&&(fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/traveler.html"||fallback.pathname==="/cgg-luxury-directory-rebuild/staylatin/admin-travel-members.html")){window.location.replace(fallback.href);}}catch(e){}}return;}
+    if(event.data.type==="staylatin-login-success"){
+      if(event.data.role==="traveler"){
+        if(frame)frame.src=new URL("traveler.html#dashboard",window.location.href).href;
+        setOverlayOpen(true);return;
+      }
+      if(event.data.role==="admin"){
+        var adminTarget=null;
+        try{adminTarget=safeStayLatinUrl(event.data.fallbackUrl||"admin-traveler-mirror.html",true);}catch(e){}
+        if(adminTarget&&frame){frame.src=adminTarget.href;setOverlayOpen(true);}
+        return;
+      }
+      return;
+    }
     if(event.data.type==="staylatin-signout"){closeAccount();return;}
     if(event.data.type==="staylatin-account-content-changed"){window.setTimeout(fitAccountDialog,30);return;}
     if(event.data.type!=="staylatin-account-switch")return;
-    try{
-      var target=new URL(event.data.url,window.location.href);
-      if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-(signin|signup)\.html$/.test(target.pathname))return;
-      if(frame){frame.src=target.href;overlay.hidden=false;overlay.setAttribute("aria-hidden","false");}
-    }catch(e){}
+    try{var switchTarget=safeStayLatinUrl(event.data.url,false);if(switchTarget&&frame){frame.src=switchTarget.href;setOverlayOpen(false);}}catch(e){}
   });
+  document.addEventListener("click",function(event){
+    var link=event.target&&event.target.closest?event.target.closest("#stayLatinAdminDropdown a"):null;
+    if(!link)return;
+    var target=safeStayLatinUrl(link.getAttribute("href"),false);
+    if(!target)return;
+    event.preventDefault();event.stopPropagation();
+    if(event.stopImmediatePropagation)event.stopImmediatePropagation();
+    window.openStayLatinAccount(target.href);
+  },true);
   window.openStayLatinAccount=function(url){
     if(!overlay||!frame)return false;
-    var target;
-    try{target=new URL(url,window.location.href);}catch(e){return false;}
-    if(target.origin!==window.location.origin||!/^\/cgg-luxury-directory-rebuild\/staylatin\/(?:traveler|admin)-(?:signin|signup)\.html$/.test(target.pathname))return false;
-    // Keep the existing homepage loaded underneath; account pages belong only in this iframe.
-    var dialog=document.getElementById("staylatin-account-dialog");
-    if(dialog){dialog.classList.remove("portal-view");dialog.style.height="";}
-    previousOverflow=document.body.style.overflow;
-    overlay.hidden=false;
-    overlay.setAttribute("aria-hidden","false");
-    document.body.style.overflow="hidden";
+    var target;try{target=safeStayLatinUrl(url,false);}catch(e){return false;}
+    if(!target)return false;
+    setOverlayOpen(false);
     frame.src=target.href;
     close&&close.focus();
     return false;
   };
   function fitAccountDialog(){
     try{
-      var doc=frame.contentDocument;
-      if(!doc)return;
-      var panel=doc.querySelector(".panel");
-      var body=doc.body;
+      var doc=frame.contentDocument;if(!doc)return;
+      var panel=doc.querySelector(".panel"),body=doc.body;
       var contentHeight=Math.ceil(Math.max(panel?panel.getBoundingClientRect().height:0,body?body.scrollHeight:0));
       var maxHeight=Math.max(300,window.innerHeight-36);
       var dialog=document.getElementById("staylatin-account-dialog");
@@ -1295,11 +1320,9 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   window.addEventListener("resize",fitAccountDialog);
   function closeAccount(){
     if(!overlay)return;
-    overlay.hidden=true;
-    overlay.setAttribute("aria-hidden","true");
+    overlay.hidden=true;overlay.setAttribute("aria-hidden","true");
     var dialog=document.getElementById("staylatin-account-dialog");if(dialog){dialog.classList.remove("portal-view");dialog.style.height="";}
-    frame.src="about:blank";
-    document.body.style.overflow=previousOverflow;
+    frame.src="about:blank";document.body.style.overflow=previousOverflow;
   }
   close&&close.addEventListener("click",closeAccount);
   overlay&&overlay.addEventListener("click",function(event){if(event.target===overlay)closeAccount();});
