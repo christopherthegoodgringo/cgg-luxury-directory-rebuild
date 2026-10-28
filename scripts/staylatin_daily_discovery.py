@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "staylatin" / "index.html"
 OUT = ROOT / "staylatin" / "auto-discovered-stays.json"
 # (city, country, Brave country code, Brave search language)
+PLACEHOLDER_IMAGE = "assets/hotel-placeholder.svg"
 CITIES = [
     ("Tunja", "Colombia", "co", "es"), ("Santa Marta", "Colombia", "co", "es"), ("Cartagena", "Colombia", "co", "es"),
     ("Oaxaca", "Mexico", "mx", "es"), ("San José", "Costa Rica", "cr", "es"), ("San Salvador", "El Salvador", "sv", "es"),
@@ -109,12 +110,17 @@ def choose_for_city(city, country, cc, lang, existing):
         if (name.casefold().strip(), city.casefold()) in existing: continue
         if is_excluded_host(website): continue
         site = fetch_page(website)
-        if not site or not site["image"]: continue
+        if not site: continue
         name_tokens = [t for t in re.findall(r"[a-z0-9]+", name.casefold()) if len(t) >= 4]
         site_identity = (site["title"] + " " + urlparse(site["url"]).netloc).casefold()
         if not name_tokens or not any(token in site_identity for token in name_tokens): continue
-        img_status, img_final, _ = get(site["image"], timeout=12)
-        if img_status < 200 or img_status >= 400: continue
+        if site["image"]:
+            img_status, img_final, _ = get(site["image"], timeout=12)
+            if img_status < 200 or img_status >= 400: img_final = PLACEHOLDER_IMAGE
+            photo_note = "official site photo"
+        else:
+            img_final = PLACEHOLDER_IMAGE
+            photo_note = "placeholder photo (none on official site)"
         desc = site["description"] or str(tags.get("description") or "")
         desc = re.sub(r"\s+", " ", html.unescape(desc)).strip()[:300]
         if len(desc) < 35: continue
@@ -124,12 +130,12 @@ def choose_for_city(city, country, cc, lang, existing):
         return {
             "id": pid, "name": name, "city": city + ", " + country, "country": country,
             "type": stay_type, "vibe": "Culture", "desc": desc,
-            "image": img_final, "imageFallback": img_final,
+            "image": img_final, "imageFallback": PLACEHOLDER_IMAGE,
             "tag": "Basic", "tier": "Basic", "tierFeature": "Standard property profile",
             "website": site["url"],
             "expedia": "https://www.expedia.com/Hotel-Search?destination=" + query,
             "trip": "https://www.trip.com/hotels/list?keywords=" + query,
-            "note": "Official property website; Expedia and Trip.com search links",
+            "note": "Official property website; " + photo_note + "; Expedia and Trip.com search links",
             "discoverySource": "OpenStreetMap; official website checked " + time.strftime("%Y-%m-%d", time.gmtime())
         }
     print("No sufficiently verified new property found for %s; skipping rather than guessing." % city)
