@@ -1531,6 +1531,16 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
  function save(v){try{localStorage.setItem(KEY,v)}catch(e){}}
  function apply(v){root.setAttribute('data-view',v)}
  function open(){if(dlg.showModal&&!dlg.open)dlg.showModal()}
+ function detectView(){
+  var ua=navigator.userAgent||'';
+  var touch=(navigator.maxTouchPoints||0)>0;
+  var w=window.innerWidth||document.documentElement.clientWidth||1280;
+  if(/iPad|Tablet|Android(?!.*Mobile)/i.test(ua)||(/Macintosh/.test(ua)&&touch))return 'tablet';
+  if(/iPhone|iPod|Android.*Mobile|Mobile/i.test(ua))return 'mobile';
+  if(touch){return w<700?'mobile':(w<1100?'tablet':'desktop');}
+  if(w<600)return 'mobile';
+  return 'desktop';
+ }
  dlg.querySelectorAll('[data-view-choice]').forEach(function(btn){
   btn.addEventListener('click',function(){
    var v=btn.getAttribute('data-view-choice');
@@ -1540,7 +1550,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
  sw.addEventListener('click',open);
  var v=saved();
  if(v==='mobile'||v==='tablet'||v==='desktop'){apply(v);}
- else{window.addEventListener('load',function(){setTimeout(open,300)});}
+ else{apply(detectView());}
 })();
 </script>
 </body>
