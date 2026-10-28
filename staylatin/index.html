@@ -1249,7 +1249,7 @@ fetch("auto-discovered-stays.json",{cache:"no-store"})
    // Only hotel/hostel records with an Expedia or Trip.com property profile are eligible.
    const validProfile=url=>{try{const u=new URL(url);return (u.hostname==="expedia.com"||u.hostname.endsWith(".expedia.com")||u.hostname==="trip.com"||u.hostname.endsWith(".trip.com"))}catch(e){return false}};
    if(!["Boutique hotel","Hostel"].includes(item.type)||!(validProfile(item.expedia)||validProfile(item.trip)))return;
-   if(!["Tunja, Colombia","Santa Marta, Colombia"].includes(item.city))return;
+   if(!["Tunja, Colombia", "Santa Marta, Colombia", "Cartagena, Colombia", "Oaxaca, Mexico", "San José, Costa Rica", "San Salvador, El Salvador", "Antigua Guatemala, Guatemala", "Roatán, Honduras", "Granada, Nicaragua", "Panama City, Panama", "Santo Domingo, Dominican Republic", "Buenos Aires, Argentina", "La Paz, Bolivia", "Rio de Janeiro, Brazil", "Santiago, Chile", "Quito, Ecuador", "Asunción, Paraguay", "Cusco, Peru", "Montevideo, Uruguay"].includes(item.city))return;
    if(!item.website||!/^https:\/\//i.test(item.website)||!/^https:\/\//i.test(item.image))return;
    stays.push(item);keys.add(key);changed=true;
   });

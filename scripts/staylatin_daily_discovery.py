@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Discover at most one verified hotel/hostel in Tunja and Santa Marta per run.
+"""Discover at most one verified hotel/hostel per city in CITIES per run (17 Latin American countries).
 
 Requires BRAVE_SEARCH_API_KEY. Publishes only candidates with a working Expedia
 or Trip.com property profile, a separate official property website, and an
@@ -15,6 +15,16 @@ from urllib.error import HTTPError, URLError
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "staylatin" / "index.html"
 OUT = ROOT / "staylatin" / "auto-discovered-stays.json"
+# (city, country, Brave country code, Brave search language)
+CITIES = [
+    ("Tunja", "Colombia", "co", "es"), ("Santa Marta", "Colombia", "co", "es"), ("Cartagena", "Colombia", "co", "es"),
+    ("Oaxaca", "Mexico", "mx", "es"), ("San José", "Costa Rica", "cr", "es"), ("San Salvador", "El Salvador", "sv", "es"),
+    ("Antigua Guatemala", "Guatemala", "gt", "es"), ("Roatán", "Honduras", "hn", "es"), ("Granada", "Nicaragua", "ni", "es"),
+    ("Panama City", "Panama", "pa", "es"), ("Santo Domingo", "Dominican Republic", "do", "es"),
+    ("Buenos Aires", "Argentina", "ar", "es"), ("La Paz", "Bolivia", "bo", "es"), ("Rio de Janeiro", "Brazil", "br", "pt"),
+    ("Santiago", "Chile", "cl", "es"), ("Quito", "Ecuador", "ec", "es"), ("Asunción", "Paraguay", "py", "es"),
+    ("Cusco", "Peru", "pe", "es"), ("Montevideo", "Uruguay", "uy", "es"),
+]
 API_KEY = os.environ.get("BRAVE_SEARCH_API_KEY", "").strip()
 if not API_KEY:
     print("Missing required repository secret BRAVE_SEARCH_API_KEY; no listings changed.", file=sys.stderr)
@@ -42,8 +52,8 @@ def get(url, headers=None, timeout=18):
     except (HTTPError, URLError, TimeoutError, ValueError) as exc:
         return getattr(exc, "code", 0) or 0, url, ""
 
-def search(q, count=20):
-    url = "https://api.search.brave.com/res/v1/web/search?q=" + quote(q) + "&count=" + str(count) + "&country=co&search_lang=es"
+def search(q, count=20, cc="co", lang="es"):
+    url = "https://api.search.brave.com/res/v1/web/search?q=" + quote(q) + "&count=" + str(count) + "&country=" + cc + "&search_lang=" + lang
     status, _, body = get(url, {"X-Subscription-Token": API_KEY, "Accept":"application/json"})
     if status != 200:
         raise RuntimeError("Brave Search request failed (HTTP %s); no listings changed." % status)
@@ -94,9 +104,9 @@ def read_existing():
         existing.add((str(x.get("name","")).casefold().strip(), str(x.get("city","")).split(",")[0].casefold().strip()))
     return existing, extra
 
-def choose_for_city(city, existing):
-    city_q = '"%s" Colombia hotel hostel Expedia Trip.com' % city
-    results = search(city_q, 20)
+def choose_for_city(city, country, cc, lang, existing):
+    city_q = '"%s" %s hotel hostel Expedia Trip.com' % (city, country)
+    results = search(city_q, 20, cc, lang)
     for result in results:
         title = str(result.get("title") or "")
         booking = str(result.get("url") or "")
@@ -113,7 +123,7 @@ def choose_for_city(city, existing):
         if page_title and not any(token in page_title for token in name.casefold().split()[:2]): continue
         # Locate a distinct official property site, not a booking aggregator or directory.
         official = None
-        for site_result in search('"%s" "%s" official hotel website' % (name, city), 10):
+        for site_result in search('"%s" "%s" official hotel website' % (name, city), 10, cc, lang):
             candidate = str(site_result.get("url") or "")
             if candidate.startswith("https://") and not is_excluded_host(candidate):
                 official = candidate; break
@@ -134,7 +144,7 @@ def choose_for_city(city, existing):
         if len(desc) < 35: continue
         pid = int(hashlib.sha256((name.casefold()+"|"+city.casefold()).encode()).hexdigest()[:7], 16) + 100000000
         item = {
-            "id": pid, "name": name, "city": city + ", Colombia", "country": "Colombia",
+            "id": pid, "name": name, "city": city + ", " + country, "country": country,
             "type": stay_type, "vibe": "Culture", "desc": desc,
             "image": img_final, "imageFallback": img_final,
             "tag": "Basic", "tier": "Basic", "tierFeature": "Standard property profile",
@@ -151,16 +161,16 @@ def choose_for_city(city, existing):
 def main():
     existing, extra = read_existing()
     added = []
-    for city in ("Tunja", "Santa Marta"):
+    for city, country, cc, lang in CITIES:
         try:
-            item = choose_for_city(city, existing)
+            item = choose_for_city(city, country, cc, lang, existing)
         except Exception as exc:
             print("Discovery for %s did not complete safely: %s" % (city, exc), file=sys.stderr)
             continue
         if item:
             extra.append(item)
             existing.add((item["name"].casefold().strip(), city.casefold()))
-            added.append({"name": item["name"], "city": city, "type": item["type"], "profile": item.get("expedia") or item.get("trip")})
+            added.append({"name": item["name"], "city": item["city"], "type": item["type"], "profile": item.get("expedia") or item.get("trip")})
     if added:
         OUT.write_text(json.dumps(extra, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("Verified new StayLatin properties:", json.dumps(added, ensure_ascii=False))
