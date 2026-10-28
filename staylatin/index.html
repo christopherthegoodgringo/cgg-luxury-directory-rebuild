@@ -991,7 +991,7 @@ const stays=[
  {id:115,name:"La Misión Hotel Boutique",rateEstimate:"$80–$145 USD / night",city:"Asunción, Paraguay",country:"Paraguay",type:"Boutique hotel",vibe:"Culture",desc:"A boutique hotel in central Asunción set in a renovated historic building with palm-lined gardens and an intimate atmosphere.",image:"https://images.unsplash.com/photo-1708007736300-89c16fa57b40?auto=format&fit=crop&w=800&q=80",images:["https://images.unsplash.com/photo-1708007736300-89c16fa57b40?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1710172908681-bd2e80d776c0?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=800&q=80"],tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",expedia:"https://www.expedia.com/Asuncion-Hotels-La-Mision-Hotel-Boutique.h2411710.Hotel-Information",trip:"https://www.trip.com/hotels/list?keywords=La+Mision+Hotel+Boutique+Asuncion",rating:4,review:"Historic palm-garden setting in the heart of Paraguay's capital.",reviewer:"StayLatin"},
  {id:116,name:"Cala di Volpe Boutique Hotel",rateEstimate:"$90–$165 USD / night",city:"Montevideo, Uruguay",country:"Uruguay",type:"Boutique hotel",vibe:"Culture",desc:"A refined boutique hotel in Montevideo with European-influenced design, warm service and a central location ideal for exploring the city.",image:"https://images.unsplash.com/photo-1766792232779-d077834be243?auto=format&fit=crop&w=800&q=80",images:["https://images.unsplash.com/photo-1766792232779-d077834be243?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1674955111143-70f33c42ea32?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=800&q=80"],tag:"Basic",tier:"Basic",tierFeature:"Standard property profile",expedia:"https://www.expedia.com/Montevideo-Hotels-Cala-Di-Volpe-Boutique-Hotel.h1094969.Hotel-Information",trip:"https://www.trip.com/hotels/list?keywords=Cala+di+Volpe+Boutique+Hotel+Montevideo",rating:4,review:"European refinement in South America's most underrated capital.",reviewer:"StayLatin"}
 ];
-let activeType="all",language="en",saved=[],listingLimit=8;
+let activeType="all",language="en",saved=[],listingLimit=9;
 function refreshSavedFromStore(){
   if(window.StayLatinListingActions){saved=StayLatinListingActions.getFavorites();}
   else{try{saved=JSON.parse(localStorage.getItem("staylatin-saved")||"[]");if(!Array.isArray(saved))saved=[];}catch(e){saved=[];}}
@@ -1198,12 +1198,12 @@ function render(){
  }
 
 }
-document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=8;render();});
+document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=9;render();});
 
-document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=8;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
-document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=8;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
-document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=8;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
-document.getElementById("destination").addEventListener("input",()=>{listingLimit=8;render()});document.getElementById("style").addEventListener("change",()=>{listingLimit=8;render()});document.getElementById("vibe").addEventListener("change",()=>{listingLimit=8;render()});
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
+document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
+document.getElementById("destination").addEventListener("input",()=>{listingLimit=9;render()});document.getElementById("style").addEventListener("change",()=>{listingLimit=9;render()});document.getElementById("vibe").addEventListener("change",()=>{listingLimit=9;render()});
 const languageOrder=["en","es","pt"];
 const languageLabels={en:"EN",es:"ES",pt:"PT"};
 const languageNames={en:"English",es:"Español",pt:"Português"};
@@ -1245,7 +1245,7 @@ if(yearElement)yearElement.textContent=new Date().getFullYear();
 // Always start the homepage with the first eight listings in the directory's fixed tier/name order.
 function ensureInitialListings(){
  // Reapply the default, unfiltered state every time the homepage is opened or refreshed.
- activeType="all";listingLimit=8;
+ activeType="all";listingLimit=9;
  const destinationInput=document.getElementById("destination");
  const styleSelect=document.getElementById("style");
  const vibeSelect=document.getElementById("vibe");
