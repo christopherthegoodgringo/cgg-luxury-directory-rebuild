@@ -52,14 +52,13 @@
    const toolkitButton=document.createElement("button");
    toolkitButton.type="button";
    toolkitButton.className="tool-collapse-toggle toolkit-main-toggle";
-   toolkitButton.textContent="Open";
-   toolkitButton.setAttribute("aria-expanded","false");
+   toolkitButton.textContent="Close";
+   toolkitButton.setAttribute("aria-expanded","true");
    toolkitButton.setAttribute("aria-label","Open personal travel tools");
    toolkitHead.appendChild(toolkitButton);
    const toolkitCollapseStyle=document.createElement("style");
    toolkitCollapseStyle.textContent="#travelerToolkit .tool-grid.toolkit-content-collapsed{display:none!important}#travelerToolkit .toolkit-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap}#travelerToolkit .toolkit-head>.toolkit-intro{min-width:0;flex:1}";
    document.head.appendChild(toolkitCollapseStyle);
-   toolkitGrid.classList.add("toolkit-content-collapsed");
    toolkitButton.addEventListener("click",function(){
      const closed=toolkitGrid.classList.toggle("toolkit-content-collapsed");
      toolkitButton.textContent=closed?"Open":"Close";
