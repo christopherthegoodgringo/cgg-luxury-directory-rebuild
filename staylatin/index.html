@@ -1316,7 +1316,26 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
       if(dialog)dialog.style.height=Math.min(contentHeight+4,maxHeight)+"px";
     }catch(e){}
   }
-  frame&&frame.addEventListener("load",function(){window.setTimeout(fitAccountDialog,30);});
+  frame&&frame.addEventListener("load",function(){
+    window.setTimeout(function(){
+      fitAccountDialog();
+      try{
+        var target=new URL(frame.src,window.location.href);
+        if(target.pathname.indexOf("/staylatin/admin-")!==-1){
+          var doc=frame.contentDocument;
+          if(doc){
+            var style=doc.getElementById("staylatin-hide-admin-popup-banner");
+            if(!style){
+              style=doc.createElement("style");
+              style.id="staylatin-hide-admin-popup-banner";
+              style.textContent="body>.topbar,body>.sl-top-message,body>.sl-global-header,body>.sl-mainnav,body>header:not(.top),.topbar,.sl-top-message,.sl-global-header,.sl-mainnav,.sl-tagline,.top-extra{display:none!important}";
+              (doc.head||doc.documentElement).appendChild(style);
+            }
+          }
+        }
+      }catch(e){}
+    },30);
+  });
   window.addEventListener("resize",fitAccountDialog);
   function closeAccount(){
     if(!overlay)return;
