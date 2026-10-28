@@ -1516,30 +1516,9 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
  });
 })();
 </script>
-<dialog id="viewDialog" class="view-dialog" aria-labelledby="viewTitle">
-<div class="view-card">
-<div class="view-kicker" data-en="Welcome to StayLatin" data-es="Bienvenido a StayLatin" data-pt="Bem-vindo à StayLatin">Welcome to StayLatin</div>
-<h2 id="viewTitle" data-en="Choose your view" data-es="Elige tu vista" data-pt="Escolha sua visualização">Choose your view</h2>
-<p data-en="Pick the layout that suits your screen. You can change it any time." data-es="Elige el diseño que mejor se adapte a tu pantalla. Puedes cambiarlo en cualquier momento." data-pt="Escolha o layout que melhor se adapta à sua tela. Você pode mudar a qualquer momento.">Pick the layout that suits your screen. You can change it any time.</p>
-<div class="view-options">
-<button type="button" data-view-choice="mobile"><span class="view-icon" aria-hidden="true">📱</span><strong data-en="Mobile" data-es="Móvil" data-pt="Celular">Mobile</strong><small data-en="Phone" data-es="Teléfono" data-pt="Telefone">Phone</small></button>
-<button type="button" data-view-choice="tablet"><span class="view-icon" aria-hidden="true">▭</span><strong data-en="Tablet" data-es="Tableta" data-pt="Tablet">Tablet</strong><small data-en="Medium screen" data-es="Pantalla mediana" data-pt="Tela média">Medium screen</small></button>
-<button type="button" data-view-choice="desktop"><span class="view-icon" aria-hidden="true">🖥</span><strong data-en="Computer" data-es="Computadora" data-pt="Computador">Computer</strong><small data-en="Full width" data-es="Ancho completo" data-pt="Largura total">Full width</small></button>
-</div>
-</div>
-</dialog>
-<button type="button" class="view-switch" id="viewSwitch" aria-haspopup="dialog" data-en="Change view" data-es="Cambiar vista" data-pt="Mudar visualização">Change view</button>
 <script>
 (function(){
- var KEY='staylatin-view';
  var root=document.documentElement;
- var dlg=document.getElementById('viewDialog');
- var sw=document.getElementById('viewSwitch');
- if(!dlg||!sw)return;
- function saved(){try{return localStorage.getItem(KEY)}catch(e){return null}}
- function save(v){try{localStorage.setItem(KEY,v)}catch(e){}}
- function apply(v){root.setAttribute('data-view',v)}
- function open(){if(dlg.showModal&&!dlg.open)dlg.showModal()}
  function detectView(){
   var ua=navigator.userAgent||'';
   var touch=(navigator.maxTouchPoints||0)>0;
@@ -1550,16 +1529,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   if(w<600)return 'mobile';
   return 'desktop';
  }
- dlg.querySelectorAll('[data-view-choice]').forEach(function(btn){
-  btn.addEventListener('click',function(){
-   var v=btn.getAttribute('data-view-choice');
-   apply(v);save(v);dlg.close();
-  });
- });
- sw.addEventListener('click',open);
- var v=saved();
- if(v==='mobile'||v==='tablet'||v==='desktop'){apply(v);}
- else{apply(detectView());}
+ root.setAttribute('data-view',detectView());
 })();
 </script>
 <script>
