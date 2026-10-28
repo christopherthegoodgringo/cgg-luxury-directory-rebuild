@@ -10,8 +10,8 @@
 #travelerToolkit .toolkit-head .kicker{font:800 11px/1.3 system-ui,sans-serif;letter-spacing:.12em}
 #travelerToolkit .toolkit-head h3{font:700 17px/1.3 system-ui,sans-serif;margin:3px 0;color:#173f35}
 #travelerToolkit .toolkit-head .tool-status{font:500 12px/1.35 system-ui,sans-serif;margin:0;min-height:0}
-#travelerToolkit .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;align-items:stretch;gap:14px}
-#travelerToolkit .tool-card{display:flex;flex-direction:column;min-width:0;min-height:0;height:100%;padding:16px;align-self:stretch}
+#travelerToolkit .tool-grid{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto;align-items:stretch;gap:12px}
+#travelerToolkit .tool-card{display:flex;flex-direction:column;min-width:0;min-height:0;height:auto;padding:16px;align-self:stretch}
 #travelerToolkit .tool-card h4,#travelerToolkit .journal-card h3{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;font:700 14px/1.35 system-ui,sans-serif;color:#173f35;margin:0 0 10px}
 #travelerToolkit .tool-card>p{font:400 12px/1.45 system-ui,sans-serif;margin:0 0 10px}
 #travelerToolkit .tool-card .tool-list{min-width:0}
@@ -23,7 +23,7 @@
 .community-collapse-heading:not(h3):not(h4){font:700 14px/1.35 system-ui,sans-serif!important}
 .community-collapse-heading>button.community-collapse-toggle{flex:0 0 76px!important;width:76px!important;min-width:76px!important;height:34px!important;padding:0 10px!important;font:800 11px/1 system-ui,sans-serif!important}
 #travelerIntroductionsTitle,#travelerAccountSecurityTitle,#privateMessagingPanel h4,#chatTitle{font:700 14px/1.35 system-ui,sans-serif!important}
-@media(max-width:760px){#travelerToolkit .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){#travelerToolkit .tool-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:540px){#travelerToolkit .tool-grid{grid-template-columns:minmax(0,1fr)}#travelerToolkit .tool-card.full{grid-column:auto}#travelerToolkit .toolkit-head{gap:8px}#travelerToolkit .toolkit-head h3{font-size:15px}}
 `;
  document.head.appendChild(style);
@@ -38,37 +38,30 @@
 <section id="travelerJournal" class="tool-card full journal-card"><div class="kicker" style="color:var(--terra)">Your private memories</div><h3>My Travel Journal</h3><p>Write and revisit personal memories. Entries are private unless you deliberately choose Shared entry. This is separate from public reviews and introductions.</p><form id="travelerJournalForm" class="tool-fields"><input id="journalEntryId" type="hidden"><label>ENTRY TITLE<input id="journalTitle" maxlength="120" required></label><label>DESTINATION<input id="journalDestination" maxlength="120"></label><label>DATE<input id="journalDate" type="date"></label><label>VISIBILITY<select id="journalVisibility"><option value="private">Private entry</option><option value="shared">Shared entry</option></select></label><label class="wide">YOUR MEMORY<textarea id="journalBody" maxlength="10000" rows="5" required></textarea></label><div class="wide tool-actions"><button id="journalSaveButton" class="tool-button">Save journal entry</button><button id="journalCancelEdit" class="tool-button secondary" type="button" hidden>Cancel edit</button></div></form><p id="journalStatus" class="tool-status" role="status"></p><div id="travelerJournalEntries" class="tool-list"></div></section>
 </div></section>`;
 
- /* Make the whole Travel Toolkit independently collapsible. */
+ const anchor=document.getElementById("travelerIntroductions");
+ if(anchor)anchor.insertAdjacentHTML("beforebegin",markup);
+ /* The toolkit must exist before its main Open/Close control is attached. */
  const toolkitHead=document.querySelector("#travelerToolkit .toolkit-head");
- if(toolkitHead&&!toolkitHead.querySelector(".tool-collapse-toggle")){
+ const toolkitGrid=document.querySelector("#travelerToolkit .tool-grid");
+ if(toolkitHead&&toolkitGrid&&!toolkitHead.querySelector(".toolkit-main-toggle")){
    const toolkitButton=document.createElement("button");
    toolkitButton.type="button";
-   toolkitButton.className="tool-collapse-toggle";
+   toolkitButton.className="tool-collapse-toggle toolkit-main-toggle";
    toolkitButton.textContent="Open";
    toolkitButton.setAttribute("aria-expanded","false");
    toolkitButton.setAttribute("aria-label","Open Your Travel Toolkit");
-   toolkitHead.style.display="flex";
-   toolkitHead.style.alignItems="center";
-   toolkitHead.style.justifyContent="space-between";
-   toolkitHead.style.gap="12px";
-   toolkitHead.style.flexWrap="wrap";
    toolkitHead.appendChild(toolkitButton);
-   const toolkitGrid=document.querySelector("#travelerToolkit .tool-grid");
-   if(toolkitGrid){
-     toolkitGrid.classList.add("toolkit-content-collapsed");
-     const toolkitCollapseStyle=document.createElement("style");
-     toolkitCollapseStyle.textContent="#travelerToolkit .tool-grid.toolkit-content-collapsed{display:none!important}";
-     document.head.appendChild(toolkitCollapseStyle);
-     toolkitButton.addEventListener("click",function(){
-       const closed=toolkitGrid.classList.toggle("toolkit-content-collapsed");
-       toolkitButton.textContent=closed?"Open":"Close";
-       toolkitButton.setAttribute("aria-expanded",String(!closed));
-       toolkitButton.setAttribute("aria-label",(closed?"Open":"Close")+" Your Travel Toolkit");
-     });
-   }
+   const toolkitCollapseStyle=document.createElement("style");
+   toolkitCollapseStyle.textContent="#travelerToolkit .tool-grid.toolkit-content-collapsed{display:none!important}#travelerToolkit .toolkit-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap}#travelerToolkit .toolkit-head>div{min-width:0;flex:1}";
+   document.head.appendChild(toolkitCollapseStyle);
+   toolkitGrid.classList.add("toolkit-content-collapsed");
+   toolkitButton.addEventListener("click",function(){
+     const closed=toolkitGrid.classList.toggle("toolkit-content-collapsed");
+     toolkitButton.textContent=closed?"Open":"Close";
+     toolkitButton.setAttribute("aria-expanded",String(!closed));
+     toolkitButton.setAttribute("aria-label",(closed?"Open":"Close")+" Your Travel Toolkit");
+   });
  }
- const anchor=document.getElementById("travelerIntroductions");
- if(anchor)anchor.insertAdjacentHTML("beforebegin",markup);
  /* Keep the existing live Favorites panel inside the toolkit so saved stays and booking links keep working. */
  const favorites=document.getElementById("travelerListingActions");
  const grid=document.querySelector("#travelerToolkit .tool-grid");
