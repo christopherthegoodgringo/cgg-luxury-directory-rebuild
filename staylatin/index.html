@@ -806,7 +806,23 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 @media(max-width:850px){.sl-admin-dropdown{left:0!important;right:auto!important}}
 </style>
 <script id="staylatin-admin-dropdown-script">
-(function(){var button=document.getElementById("stayLatinAdminToggle"),menu=document.getElementById("stayLatinAdminDropdown");if(!button||!menu)return;function close(){menu.hidden=true;button.setAttribute("aria-expanded","false")}button.addEventListener("click",function(e){e.stopPropagation();menu.hidden=!menu.hidden;button.setAttribute("aria-expanded",String(!menu.hidden))});document.addEventListener("click",function(e){if(!menu.contains(e.target)&&e.target!==button)close()});document.addEventListener("keydown",function(e){if(e.key==="Escape"){close();button.focus()}});})();
+(function(){
+ function bindAdminDropdown(){
+  var button=document.getElementById("stayLatinAdminToggle");
+  var menu=document.getElementById("stayLatinAdminDropdown");
+  if(!button||!menu||button.dataset.adminMenuBound==="1")return;
+  button.dataset.adminMenuBound="1";
+  function close(){menu.hidden=true;button.setAttribute("aria-expanded","false");}
+  function open(){menu.hidden=false;button.setAttribute("aria-expanded","true");}
+  button.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(menu.hidden)open();else close();});
+  menu.addEventListener("click",function(e){if(e.target.closest("a"))close();});
+  document.addEventListener("click",function(e){if(!e.target.closest(".sl-admin-menu"))close();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!menu.hidden){close();button.focus();}});
+  button.setAttribute("aria-controls","stayLatinAdminDropdown");
+  menu.querySelectorAll("a").forEach(function(link){link.setAttribute("role","menuitem");});
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAdminDropdown);else bindAdminDropdown();
+})();
 </script>
 </head>
 <body>
