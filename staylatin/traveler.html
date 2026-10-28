@@ -1198,22 +1198,13 @@ document.getElementById("passwordRecoveryForm")?.addEventListener("submit",async
 document.getElementById("refreshTravelerPortal")?.addEventListener("click",function(){
   const button=this;
   button.disabled=true;
-  button.textContent="↻ Clearing cache…";
-  const refreshId=Date.now().toString();
-  /* Browsers do not allow a page to erase the entire browser cache. Give local
-     scripts and styles fresh URLs so this refresh bypasses their cached copies. */
-  document.querySelectorAll('script[src],link[rel="stylesheet"][href]').forEach(function(asset){
-    try{
-      const assetUrl=new URL(asset.src||asset.href,window.location.href);
-      if(assetUrl.origin!==window.location.origin)return;
-      assetUrl.searchParams.set("refresh",refreshId);
-      if(asset.tagName==="SCRIPT")asset.src=assetUrl.href;
-      else asset.href=assetUrl.href;
-    }catch(e){}
-  });
+  button.textContent="↻ Refreshing portal…";
+  /* Use a unique page URL to request a fresh portal document. Do not rewrite
+     live script tags here: doing so can execute the portal scripts twice and
+     cause duplicate listeners or stale UI state. Browser-wide cache clearing
+     is not available to ordinary webpages. */
   const url=new URL(window.location.href);
-  url.searchParams.set("portalRefresh",refreshId);
-  url.searchParams.set("assetsRefresh",refreshId);
+  url.searchParams.set("portalRefresh",Date.now().toString());
   window.location.replace(url.href);
 });
 </script>
