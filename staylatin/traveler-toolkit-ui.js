@@ -14,6 +14,36 @@
 
 <section id="travelerJournal" class="tool-card full journal-card"><div class="kicker" style="color:var(--terra)">Your private memories</div><h3>My Travel Journal</h3><p>Write and revisit personal memories. Entries are private unless you deliberately choose Shared entry. This is separate from public reviews and introductions.</p><form id="travelerJournalForm" class="tool-fields"><input id="journalEntryId" type="hidden"><label>ENTRY TITLE<input id="journalTitle" maxlength="120" required></label><label>DESTINATION<input id="journalDestination" maxlength="120"></label><label>DATE<input id="journalDate" type="date"></label><label>VISIBILITY<select id="journalVisibility"><option value="private">Private entry</option><option value="shared">Shared entry</option></select></label><label class="wide">YOUR MEMORY<textarea id="journalBody" maxlength="10000" rows="5" required></textarea></label><div class="wide tool-actions"><button id="journalSaveButton" class="tool-button">Save journal entry</button><button id="journalCancelEdit" class="tool-button secondary" type="button" hidden>Cancel edit</button></div></form><p id="journalStatus" class="tool-status" role="status"></p><div id="travelerJournalEntries" class="tool-list"></div></section>
 </div></section>`;
+
+ /* Make the whole Travel Toolkit independently collapsible. */
+ const toolkitHead=document.querySelector("#travelerToolkit .toolkit-head");
+ if(toolkitHead&&!toolkitHead.querySelector(".tool-collapse-toggle")){
+   const toolkitButton=document.createElement("button");
+   toolkitButton.type="button";
+   toolkitButton.className="tool-collapse-toggle";
+   toolkitButton.textContent="Open";
+   toolkitButton.setAttribute("aria-expanded","false");
+   toolkitButton.setAttribute("aria-label","Open Your Travel Toolkit");
+   toolkitHead.style.display="flex";
+   toolkitHead.style.alignItems="center";
+   toolkitHead.style.justifyContent="space-between";
+   toolkitHead.style.gap="12px";
+   toolkitHead.style.flexWrap="wrap";
+   toolkitHead.appendChild(toolkitButton);
+   const toolkitGrid=document.querySelector("#travelerToolkit .tool-grid");
+   if(toolkitGrid){
+     toolkitGrid.classList.add("toolkit-content-collapsed");
+     const toolkitCollapseStyle=document.createElement("style");
+     toolkitCollapseStyle.textContent="#travelerToolkit .tool-grid.toolkit-content-collapsed{display:none!important}";
+     document.head.appendChild(toolkitCollapseStyle);
+     toolkitButton.addEventListener("click",function(){
+       const closed=toolkitGrid.classList.toggle("toolkit-content-collapsed");
+       toolkitButton.textContent=closed?"Open":"Close";
+       toolkitButton.setAttribute("aria-expanded",String(!closed));
+       toolkitButton.setAttribute("aria-label",(closed?"Open":"Close")+" Your Travel Toolkit");
+     });
+   }
+ }
  const anchor=document.getElementById("travelerIntroductions");
  if(anchor)anchor.insertAdjacentHTML("beforebegin",markup);
  /* Keep the existing live Favorites panel inside the toolkit so saved stays and booking links keep working. */
