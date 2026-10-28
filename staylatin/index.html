@@ -836,6 +836,13 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 .latam-card h3{margin:0 0 6px;color:#204d3d;font-size:18px;font-weight:700}
 .latam-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .latam-top h3{margin:0}
+.latam-grid[hidden]{display:none}
+.latam-toggle-wrap{margin-top:24px}
+.latam-toggle{display:inline-flex;align-items:center;gap:10px;background:#fffdf8;color:#204d3d;border:1px solid #c8a86b;border-radius:999px;padding:11px 22px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(23,63,53,.06)}
+.latam-toggle:hover{background:#f3ead6}
+.latam-toggle:focus-visible{outline:3px solid #c8a86b;outline-offset:2px}
+.latam-arrow{display:inline-block;transition:transform .2s}
+.latam-toggle[aria-expanded="true"] .latam-arrow{transform:rotate(180deg)}
 .latam-flag{width:28px;height:19px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(23,63,53,.18);flex:none}
 .latam-card p{margin:0;color:#4a5a54;font-size:14.5px;line-height:1.5}
 @media(max-width:560px){.latam-section{padding:40px 0 16px}.latam-grid{grid-template-columns:1fr}}
@@ -856,7 +863,8 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 </section>
 <section class="section latam-section" id="latin-america"><div class="wrap">
 <div class="section-head"><div><div class="kicker" data-en="Latin America, country by country" data-es="América Latina, país por país" data-pt="América Latina, país por país">Latin America, country by country</div><h2 data-en="Seventeen countries. One Latin America." data-es="Diecisiete países. Una sola América Latina." data-pt="Dezessete países. Uma só América Latina.">Seventeen countries. One Latin America.</h2></div><p data-en="StayLatin covers the countries of Latin America. Explore what each destination is known for, from colonial cities and ancient ruins to rainforests, mountains, deserts and Caribbean coastline." data-es="StayLatin abarca los países de América Latina. Descubre lo que hace especial a cada destino, desde ciudades coloniales y ruinas antiguas hasta selvas, montañas, desiertos y costas caribeñas." data-pt="A StayLatin abrange os países da América Latina. Descubra o que torna cada destino especial, de cidades coloniais e ruínas antigas a florestas tropicais, montanhas, desertos e litorais caribenhos.">StayLatin covers the countries of Latin America. Explore what each destination is known for, from colonial cities and ancient ruins to rainforests, mountains, deserts and Caribbean coastline.</p></div>
-<div class="latam-grid">
+<div class="latam-toggle-wrap"><button type="button" class="latam-toggle" id="latamToggle" aria-expanded="false" aria-controls="latamGrid"><span class="latam-when-closed" data-en="Show all 17 countries" data-es="Ver los 17 países" data-pt="Ver os 17 países">Show all 17 countries</span><span class="latam-when-open" hidden data-en="Hide countries" data-es="Ocultar países" data-pt="Ocultar países">Hide countries</span><span class="latam-arrow" aria-hidden="true">▾</span></button></div>
+<div class="latam-grid" id="latamGrid" hidden>
 <article class="latam-card"><div class="latam-top"><img class="latam-flag" src="https://flagcdn.com/w40/ar.png" width="28" height="19" alt="Flag of Argentina" loading="lazy"><h3 data-en="Argentina" data-es="Argentina" data-pt="Argentina">Argentina</h3></div><p data-en="Buenos Aires tango culture, Patagonian glaciers and Mendoza wine country." data-es="La cultura del tango en Buenos Aires, los glaciares patagónicos y la región vitivinícola de Mendoza." data-pt="A cultura do tango em Buenos Aires, as geleiras da Patagônia e a região vinícola de Mendoza.">Buenos Aires tango culture, Patagonian glaciers and Mendoza wine country.</p></article>
 <article class="latam-card"><div class="latam-top"><img class="latam-flag" src="https://flagcdn.com/w40/bo.png" width="28" height="19" alt="Flag of Bolivia" loading="lazy"><h3 data-en="Bolivia" data-es="Bolivia" data-pt="Bolívia">Bolivia</h3></div><p data-en="The Uyuni salt flats, Andean highlands and Lake Titicaca." data-es="Los salares de Uyuni, las tierras altas andinas y el lago Titicaca." data-pt="Os salares de Uyuni, o altiplano andino e o Lago Titicaca.">The Uyuni salt flats, Andean highlands and Lake Titicaca.</p></article>
 <article class="latam-card"><div class="latam-top"><img class="latam-flag" src="https://flagcdn.com/w40/br.png" width="28" height="19" alt="Flag of Brazil" loading="lazy"><h3 data-en="Brazil" data-es="Brasil" data-pt="Brasil">Brazil</h3></div><p data-en="Rio de Janeiro’s beaches, the Amazon rainforest and Salvador’s Afro-Brazilian culture." data-es="Las playas de Río de Janeiro, la selva amazónica y la cultura afrobrasileña de Salvador." data-pt="As praias do Rio de Janeiro, a Floresta Amazônica e a cultura afro-brasileira de Salvador.">Rio de Janeiro’s beaches, the Amazon rainforest and Salvador’s Afro-Brazilian culture.</p></article>
@@ -1454,6 +1462,19 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
   Promise.all([a1.finished,a2.finished,a3.finished]).then(cleanup,cleanup);
  }
  if(document.readyState==='complete')run();else window.addEventListener('load',run);
+})();
+</script>
+<script>
+(function(){
+ var b=document.getElementById('latamToggle'),g=document.getElementById('latamGrid');
+ if(!b||!g)return;
+ b.addEventListener('click',function(){
+  var open=b.getAttribute('aria-expanded')!=='true';
+  b.setAttribute('aria-expanded',open?'true':'false');
+  g.hidden=!open;
+  b.querySelector('.latam-when-closed').hidden=open;
+  b.querySelector('.latam-when-open').hidden=!open;
+ });
 })();
 </script>
 </body>
