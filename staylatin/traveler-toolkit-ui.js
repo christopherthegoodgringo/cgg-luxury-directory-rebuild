@@ -6,9 +6,9 @@
  style.textContent += `
 /* Unified traveler portal typography and aligned tool cards */
 #travelerToolkit .toolkit-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:nowrap}
-#travelerToolkit .toolkit-head>.toolkit-main-toggle{align-self:center}
+#travelerToolkit .toolkit-head>.toolkit-main-toggle{align-self:center;flex:0 0 76px;width:76px;min-width:76px;height:34px}
 #travelerToolkit .toolkit-head>.toolkit-intro{min-width:0;flex:1}
-#travelerToolkit .toolkit-head .kicker{font:800 11px/1.3 system-ui,sans-serif;letter-spacing:.12em}\n#travelerToolkit .toolkit-head .toolkit-description{font:700 clamp(19px,2.4vw,25px)/1.25 Georgia,serif;letter-spacing:0;text-transform:none;color:#173f35!important;margin:0 0 6px;background:none;-webkit-background-clip:initial;background-clip:initial}
+#travelerToolkit .toolkit-head .kicker{font:800 11px/1.3 system-ui,sans-serif;letter-spacing:.12em}\n#travelerToolkit .toolkit-head .toolkit-description{display:flex;align-items:center;min-height:34px;font:700 14px/1.35 system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#173f35!important;margin:0;background:none;-webkit-background-clip:initial;background-clip:initial}
 #travelerToolkit .toolkit-purpose{font:400 13px/1.6 system-ui,sans-serif;color:#5a7268;margin:0;max-width:760px}
 #travelerToolkit .toolkit-head>.toolkit-main-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 76px;width:76px;min-width:76px;height:34px;margin:0 0 0 auto;padding:0 10px;border:1px solid #cfe0d7;border-radius:8px;background:linear-gradient(115deg,#0f3d32,#167b68,#239b86);color:#fff;font:800 11px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer;box-sizing:border-box}
 #travelerToolkit .toolkit-head h3{display:none;font:700 17px/1.3 system-ui,sans-serif;margin:3px 0;color:#173f35}
