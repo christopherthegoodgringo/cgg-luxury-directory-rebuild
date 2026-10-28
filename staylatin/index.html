@@ -1300,6 +1300,8 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
     if(!overlay||!frame)return false;
     var target;try{target=safeStayLatinUrl(url,false);}catch(e){return false;}
     if(!target)return false;
+    /* Carry Supabase email-confirmation tokens into the same-origin sign-in iframe. */
+    if(new URLSearchParams(window.location.search).get("openAccount")==="traveler-signin.html"&&window.location.hash){target.hash=window.location.hash.slice(1);}
     setOverlayOpen(false);
     frame.src=target.href;
     close&&close.focus();
@@ -1342,6 +1344,14 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
     overlay.hidden=true;overlay.setAttribute("aria-hidden","true");
     var dialog=document.getElementById("staylatin-account-dialog");if(dialog){dialog.classList.remove("portal-view");dialog.style.height="";}
     frame.src="about:blank";document.body.style.overflow=previousOverflow;
+  }
+  /* Email verification returns to the homepage; reopen traveler sign-in inside its popup. */
+  var accountToOpen=new URLSearchParams(window.location.search).get("openAccount");
+  if(accountToOpen==="traveler-signin.html"){
+    window.setTimeout(function(){
+      if(typeof window.openStayLatinAccount==="function")window.openStayLatinAccount(accountToOpen);
+      try{var clean=new URL(window.location.href);clean.searchParams.delete("openAccount");window.history.replaceState({},document.title,clean.pathname+clean.search+clean.hash);}catch(e){}
+    },120);
   }
   close&&close.addEventListener("click",closeAccount);
   overlay&&overlay.addEventListener("click",function(event){if(event.target===overlay)closeAccount();});
