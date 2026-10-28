@@ -71,30 +71,34 @@
  const grid=document.querySelector("#travelerToolkit .tool-grid");
  const journal=document.getElementById("travelerJournal");
  if(grid&&journal){
-  /* Keep My Travel Journal as a first-class, independently collapsible tool card. */
+  /* Keep My Travel Journal inside the main Travel Tools grid as a standard tool card. */
   journal.classList.add("tool-card");
   journal.classList.remove("full");
   const journalHeading=journal.querySelector("h3,h4");
-  if(journalHeading){
+  if(journalHeading && !journalHeading.dataset.toolTitleSet){
     const title=document.createElement("h4");
     title.textContent="8. My Travel Journal";
+    title.dataset.toolTitleSet="true";
     journalHeading.replaceWith(title);
   }
   if(journal.parentElement!==grid)grid.appendChild(journal);
  }
- if(favorites&&grid&&journal){
-  /* Keep the existing saved-stays panel as its own tool card inside the same vertical toolkit. */
+ if(favorites&&grid){
+  /* Keep Your Favorites inside the main Travel Tools grid even if journal markup changes. */
   favorites.className="tool-card";
   favorites.removeAttribute("style");
   favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
   const oldTitle=document.getElementById("travelerListingActionsTitle");
-  if(oldTitle){
+  if(oldTitle && oldTitle.tagName!=="H4"){
     const title=document.createElement("h4");
     title.id=oldTitle.id;
     title.textContent="6. Your Favorites";
     oldTitle.replaceWith(title);
+  } else if(oldTitle){
+    oldTitle.textContent="6. Your Favorites";
   }
-  grid.insertBefore(favorites,journal);
+  if(journal && journal.parentElement===grid)grid.insertBefore(favorites,journal);
+  else grid.appendChild(favorites);
   favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>7. Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
  }
  const inviteForm=document.getElementById("travelerInviteForm");
