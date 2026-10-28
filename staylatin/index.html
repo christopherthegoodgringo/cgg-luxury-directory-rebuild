@@ -893,6 +893,7 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 .stays-notes{display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:1.5;color:#6b7a73;margin:-6px 0 20px}
 .latam-photo{height:120px;border-radius:10px;margin-bottom:12px;overflow:hidden;background:linear-gradient(135deg,#204d3d 0%,#c8a86b 100%)}
 .latam-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.type-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
 </style>
 </head>
 <body>
@@ -932,6 +933,7 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 <div class="field"><label for="vibe" data-en="Experience" data-es="Experiencia" data-pt="Experiência">Experience</label><select id="vibe"><option value="all" data-en="All experiences" data-es="Todas las experiencias" data-pt="Todas as experiências">All experiences</option><option value="Culture" data-en="City & culture" data-es="Ciudad y cultura" data-pt="Cidade e cultura">City & culture</option><option value="Nature" data-en="Beach & nature" data-es="Playa y naturaleza" data-pt="Praia e natureza">Beach & nature</option><option value="Work" data-en="Business & extended stays" data-es="Negocios y estancias largas" data-pt="Negócios e estadias prolongadas">Business & extended stays</option></select></div>
 <button class="btn btn-primary" type="submit" data-en="Find places" data-es="Buscar lugares" data-pt="Encontrar lugares">Find places</button>
 </form>
+<div class="type-chips" role="group" aria-label="Filter by type"><button type="button" class="chip active" data-filter="all" aria-pressed="true" data-en="All" data-es="Todos" data-pt="Todos">All</button><button type="button" class="chip" data-filter="hotels" aria-pressed="false" data-en="Hotels" data-es="Hoteles" data-pt="Hotéis">Hotels</button><button type="button" class="chip" data-filter="Restaurant" aria-pressed="false" data-en="Restaurants" data-es="Restaurantes" data-pt="Restaurantes">Restaurants</button><button type="button" class="chip" data-filter="Bar" aria-pressed="false" data-en="Bars" data-es="Bares" data-pt="Bares">Bars</button></div>
 <div class="property-count-wrap" aria-live="polite" aria-atomic="true"><div class="property-count-card"><span class="property-count-icon" aria-hidden="true">⌕</span><div class="property-count-copy"><span class="property-count-label" data-en="Properties matching your search" data-es="Alojamientos que coinciden con tu búsqueda" data-pt="Acomodações que correspondem à sua busca">Properties matching your search</span><strong id="propertyCountNumber">—</strong></div><span class="property-count-spark" aria-hidden="true">✦</span></div></div>
 
 <div class="stays-notes"><span data-en="Restaurant and bar listings are coming soon." data-es="Los listados de restaurantes y bares llegarán pronto." data-pt="Listagens de restaurantes e bares em breve.">Restaurant and bar listings are coming soon.</span><span data-en="Listings shown are illustrative samples, not verified partner properties." data-es="Los listados mostrados son ejemplos ilustrativos, no socios verificados." data-pt="Os anúncios exibidos são exemplos ilustrativos, não parceiros verificados.">Listings shown are illustrative samples, not verified partner properties.</span></div>
@@ -1058,7 +1060,7 @@ function render(){
  const type=document.getElementById("style").value;
  const vibe=document.getElementById("vibe").value;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
- const found=stays.filter(s=>(activeType==="all"||s.type===activeType)&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
+ const found=stays.filter(s=>(activeType==="all"||(activeType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===activeType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
  const countNode=document.getElementById("propertyCountNumber");if(countNode)countNode.textContent=found.length.toLocaleString();
  const visible=found.slice(0,listingLimit);
  grid.innerHTML=visible.length?visible.map(s=>{
@@ -1067,6 +1069,10 @@ function render(){
   // Temporarily show only the approved Expedia and Trip.com booking options.
   if(s.trip)links.push(link(withAffiliate(s.trip,"trip"),"Book Trip.com","trip-booking"));
   if(s.expedia)links.push(link(withAffiliate(s.expedia,"expedia"),"Book Expedia"));
+  if(s.type==="Restaurant"||s.type==="Bar"){
+   if(s.website)links.push(link(s.website,"Visit website"));
+   links.push(link("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.name+" "+s.city),"Open in Maps"));
+  }
 
   const layout=links.length>1?"multiple":"single";
   const bookingButtons='<div class="booking-buttons '+layout+'">'+links.join("")+'</div>';
