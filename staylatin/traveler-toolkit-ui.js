@@ -70,6 +70,7 @@
  const favorites=document.getElementById("travelerListingActions");
  const grid=document.querySelector("#travelerToolkit .tool-grid");
  const journal=document.getElementById("travelerJournal");
+ if(journal){const journalKicker=journal.querySelector(":scope > .kicker");if(journalKicker)journalKicker.remove();}
  if(grid&&journal){
   /* Keep My Travel Journal inside the main Travel Tools grid as a standard tool card. */
   journal.classList.add("tool-card");
@@ -85,6 +86,8 @@
  }
  if(favorites&&grid){
   /* Keep Your Favorites inside the main Travel Tools grid even if journal markup changes. */
+  const favoritesKicker=favorites.querySelector(":scope > .kicker");if(favoritesKicker)favoritesKicker.remove();
+  const favoritesDescription=favorites.querySelector(":scope > p");if(favoritesDescription)favoritesDescription.remove();
   favorites.className="tool-card";
   favorites.removeAttribute("style");
   favorites.setAttribute("aria-labelledby","travelerListingActionsTitle");
