@@ -723,6 +723,11 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .estimated-rate strong{font-size:13px;line-height:1.2;color:#174b35;white-space:nowrap}
 @media(max-width:560px){.estimated-rate{padding:6px 8px}.estimated-rate strong{font-size:12px}}
 </style>
+<style id="staylatin-admin-popup-banner-removal">
+#staylatin-account-overlay:not([hidden])~#staylatin-donation-tab,
+body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{display:none!important}
+#staylatin-account-overlay:not([hidden]) #staylatin-account-frame{background:#eef6f2!important}
+</style>
 <style id="staylatin-account-overlay-styles">
 #staylatin-account-overlay[hidden]{display:none!important}
 #staylatin-account-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;background:rgba(8,28,23,.64);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
@@ -1330,7 +1335,8 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
             if(!style){
               style=doc.createElement("style");
               style.id="staylatin-hide-admin-popup-banner";
-              style.textContent="body>.topbar,body>.sl-top-message,body>.sl-global-header,body>.sl-mainnav,body>header:not(.top),.topbar,.sl-top-message,.sl-global-header,.sl-mainnav,.sl-tagline,.top-extra{display:none!important}";
+              style.textContent="html body>.topbar,html body>.sl-top-message,html body>.sl-global-header,html body>.sl-mainnav,html body>header:not(.top),html body>.topbar,html body .topbar,html body .sl-top-message,html body .sl-global-header,html body .sl-mainnav,html body .sl-tagline,html body .top-extra,html body #staylatin-donation-tab{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important}";
+              doc.querySelectorAll("body>.topbar,body>.sl-top-message,body>.sl-global-header,body>.sl-mainnav,body>.top-extra,body>#staylatin-donation-tab").forEach(function(node){node.remove();});
               (doc.head||doc.documentElement).appendChild(style);
             }
           }
