@@ -1076,7 +1076,11 @@ function render(){
  const type=document.getElementById("style").value;
  const vibe=document.getElementById("vibe").value;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
- const found=stays.filter(s=>(activeType==="all"||(activeType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===activeType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q))).sort((a,b)=>((tierOrder[a.tier]??99)-(tierOrder[b.tier]??99))||a.name.localeCompare(b.name));
+ // Shuffle within each tier so listings appear in random order by category/location on every load
+ const shuffle=arr=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
+ const filtered=stays.filter(s=>(activeType==="all"||(activeType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===activeType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q)));
+ const tiers=[0,1,2,3,99];
+ const found=tiers.flatMap(t=>shuffle(filtered.filter(s=>(tierOrder[s.tier]??99)===t)));
  const countNode=document.getElementById("propertyCountNumber");if(countNode)countNode.textContent=found.length.toLocaleString();
  const visible=found.slice(0,listingLimit);
  grid.innerHTML=visible.length?visible.map(s=>{
