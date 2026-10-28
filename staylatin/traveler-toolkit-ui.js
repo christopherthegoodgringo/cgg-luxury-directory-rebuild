@@ -73,4 +73,59 @@
  }
  document.querySelectorAll("#travelerToolkit .tool-card").forEach(section=>makeCollapsible(section,"h4"));
  makeCollapsible(document.getElementById("travelerJournal"),"h3");
+ /* Add the same independent Open/Close controls to the main traveler community panels. */
+ const communityCollapseStyle=document.createElement("style");
+ communityCollapseStyle.textContent=".community-collapse-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.community-collapse-toggle{flex:0 0 auto;border:1px solid #cfe0d7;border-radius:999px;background:#edf5ec;color:#173f35;padding:7px 12px;font:700 11px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap}.community-collapse-toggle:hover{background:#dcecdf}.community-collapse-body{min-width:0}.community-collapsed>.community-collapse-body{display:none!important}.community-collapsed{min-height:0!important}.community-collapsed>.community-collapse-heading{margin-bottom:0!important}";
+ document.head.appendChild(communityCollapseStyle);
+ function addCommunityCollapse(panel, heading, body){
+   if(!panel||!heading||panel.dataset.communityCollapseReady==="1")return;
+   const content=body||document.createElement("div");
+   if(!body){
+     content.className="community-collapse-body";
+     while(heading.nextSibling)content.appendChild(heading.nextSibling);
+     panel.appendChild(content);
+   }
+   heading.classList.add("community-collapse-heading");
+   const button=document.createElement("button");
+   button.type="button";button.className="community-collapse-toggle";button.textContent="Open";
+   button.setAttribute("aria-expanded","false");
+   button.setAttribute("aria-label","Open "+heading.textContent.trim());
+   heading.appendChild(button);
+   panel.classList.add("community-collapsed");
+   panel.dataset.communityCollapseReady="1";
+   button.addEventListener("click",function(){
+     const closed=panel.classList.toggle("community-collapsed");
+     button.textContent=closed?"Open":"Close";
+     button.setAttribute("aria-expanded",String(!closed));
+     button.setAttribute("aria-label",(closed?"Open ":"Close ")+heading.childNodes[0].textContent.trim());
+   });
+ }
+ addCommunityCollapse(document.getElementById("travelerAccountSecurity"),document.getElementById("travelerAccountSecurityTitle"));
+ addCommunityCollapse(document.getElementById("travelerIntroductions"),document.getElementById("travelerIntroductionsTitle"));
+ addCommunityCollapse(document.getElementById("privateMessagingPanel"),document.querySelector("#privateMessagingPanel h4"));
+ addCommunityCollapse(document.getElementById("travelerLounge"),document.getElementById("chatTitle"));
+ /* Keep Meet other travelers independent from the introduction profile form. */
+ (function(){
+   const root=document.getElementById("travelerIntroductions");
+   const privatePanel=document.getElementById("privateMessagingPanel");
+   const heading=[...document.querySelectorAll("#travelerIntroductions h4")].find(el=>el.textContent.trim()==="Meet other travelers");
+   if(!root||!heading||!privatePanel||heading.closest(".community-meet-panel"))return;
+   const start=heading.parentElement;
+   const wrapper=document.createElement("div");
+   wrapper.className="community-meet-panel";
+   wrapper.style.cssText="margin-top:24px;border:1px solid #dce8dd;border-radius:12px;padding:14px;background:#fffdf8";
+   const title=heading;
+   const body=document.createElement("div");body.className="community-collapse-body";
+   start.parentNode.insertBefore(wrapper,start);
+   wrapper.appendChild(start);
+   let node=start.nextSibling;
+   while(node&&node!==privatePanel){
+     const next=node.nextSibling;
+     body.appendChild(node);
+     node=next;
+   }
+   wrapper.appendChild(body);
+   addCommunityCollapse(wrapper,title,body);
+ })();
+
 })();
