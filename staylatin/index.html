@@ -895,6 +895,104 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 .latam-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .type-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TIER BADGE & STAR — DEFINITIVE OVERRIDES (wins over all prior blocks)
+     Order: Premium > Featured > Verified > Basic
+     Stars: same size (18px) — distinct colour/animation per tier
+     ═══════════════════════════════════════════════════════════════════ -->
+<style id="staylatin-tier-definitive">
+
+/* ── Keyframes ─────────────────────────────────────────────────────── */
+@keyframes tierSpinPremium{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes tierSpinFeatured{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes tierGlowVerified{0%,100%{filter:drop-shadow(0 0 3px #4caf82) drop-shadow(0 0 1px #4caf82)}50%{filter:drop-shadow(0 0 7px #4caf82) drop-shadow(0 0 3px #9de0bb)}}
+
+/* ── Shared star geometry (uniform size across all tiers) ──────────── */
+.stay-card .photo > .pill .tier-star{
+  display:inline-block!important;
+  font-size:16px!important;
+  line-height:1!important;
+  width:16px!important;
+  height:16px!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+  flex-shrink:0!important;
+  animation:none!important;
+  filter:none!important;
+  background:none!important;
+  -webkit-background-clip:unset!important;
+  -webkit-text-fill-color:unset!important;
+}
+
+/* ── PREMIUM — deep gold star, fast spin ───────────────────────────── */
+.stay-card.tier-premium .photo > .pill{
+  background:linear-gradient(135deg,#7b5000,#c8860a)!important;
+  color:#fff9ec!important;
+  border-color:#c8860a!important;
+  font-weight:700!important;
+}
+.stay-card.tier-premium .photo > .pill .tier-star{
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  background:conic-gradient(from 0deg,#ffe066,#ffc700,#ffad00,#ff8c00,#ffe066)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  animation:tierSpinPremium 1.2s linear infinite!important;
+  filter:drop-shadow(0 0 3px #ffc700)!important;
+}
+
+/* ── FEATURED — purple/violet star, medium spin ────────────────────── */
+.stay-card.tier-featured .photo > .pill{
+  background:linear-gradient(135deg,#3d1a6e,#7c3aed)!important;
+  color:#f3e8ff!important;
+  border-color:#7c3aed!important;
+  font-weight:700!important;
+}
+.stay-card.tier-featured .photo > .pill .tier-star{
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  background:conic-gradient(from 0deg,#d8b4fe,#a855f7,#7c3aed,#c026d3,#d8b4fe)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  animation:tierSpinFeatured 2s linear infinite!important;
+  filter:drop-shadow(0 0 3px #a855f7)!important;
+}
+
+/* ── VERIFIED — green star, gentle pulse glow, no spin ─────────────── */
+.stay-card.tier-verified .photo > .pill{
+  background:linear-gradient(135deg,#1a5c42,#2d9e6b)!important;
+  color:#e8faf2!important;
+  border-color:#2d9e6b!important;
+  font-weight:600!important;
+}
+.stay-card.tier-verified .photo > .pill .tier-star{
+  color:#7de8b0!important;
+  -webkit-text-fill-color:#7de8b0!important;
+  background:none!important;
+  -webkit-background-clip:unset!important;
+  background-clip:unset!important;
+  animation:tierGlowVerified 2.5s ease-in-out infinite!important;
+  filter:none!important;
+}
+
+/* ── BASIC — muted grey star, no animation ──────────────────────────── */
+.stay-card.tier-basic .photo > .pill{
+  background:linear-gradient(135deg,#e8ede9,#f5f8f6)!important;
+  color:#3a5248!important;
+  border-color:#b8cfc4!important;
+  font-weight:500!important;
+}
+.stay-card.tier-basic .photo > .pill .tier-star{
+  color:#8aab9c!important;
+  -webkit-text-fill-color:#8aab9c!important;
+  background:none!important;
+  -webkit-background-clip:unset!important;
+  background-clip:unset!important;
+  animation:none!important;
+  filter:none!important;
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
