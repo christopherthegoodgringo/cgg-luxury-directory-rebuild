@@ -302,23 +302,7 @@ body [role="button"][aria-disabled="true"] {
 
 
 
-<section id="travelerAccountSecurity" aria-labelledby="travelerAccountSecurityTitle" style="margin:24px 0;border:1px solid #dce8dd;border-radius:14px;padding:18px;background:#fffdf8">
-<h3 id="travelerAccountSecurityTitle" style="font:500 25px Georgia,serif;color:var(--forest);margin:0 0 6px">Account &amp; password</h3>
-<p style="font-size:13px;color:var(--muted);margin:0 0 14px">Your sign-in email is shown below. Change your password here while signed in. Your existing password is never displayed.</p>
-<label for="travelerAccountEmail" style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">ACCOUNT EMAIL</label>
-<input id="travelerAccountEmail" type="email" readonly aria-readonly="true" style="width:100%;max-width:520px;padding:11px;border:1px solid #dce3dc;border-radius:8px;background:#f5f7f3;color:var(--forest);margin-bottom:18px">
-<form id="travelerChangeEmailForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px;margin:0 0 18px">
-<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW EMAIL ADDRESS<input id="travelerNewEmail" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
-<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerEmailCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
-<div style="display:flex;align-items:end;grid-column:1/-1"><button id="travelerChangeEmailButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Change email</button></div>
-</form><p id="travelerEmailStatus" aria-live="polite" style="font-size:12px;margin:-8px 0 18px;color:var(--muted)">We'll send a confirmation email if required by your account security settings.</p>
-<form id="travelerChangePasswordForm" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
-<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CURRENT PASSWORD<input id="travelerCurrentPassword" type="password" autocomplete="current-password" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
-<label style="display:grid;gap:5px;font-size:12px;font-weight:800">NEW PASSWORD<input id="travelerNewPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
-<label style="display:grid;gap:5px;font-size:12px;font-weight:800">CONFIRM NEW PASSWORD<input id="travelerConfirmNewPassword" type="password" autocomplete="new-password" minlength="12" required style="width:100%;padding:11px;border:1px solid #dce3dc;border-radius:8px"></label>
-<div style="display:flex;align-items:end"><button id="travelerChangePasswordButton" type="submit" class="minor-action" style="width:auto;margin:0;background:var(--forest);color:white">Update password</button></div>
-</form><p id="travelerPasswordStatus" aria-live="polite" style="font-size:12px;margin:10px 0 0;color:var(--muted)"></p>
-</section><section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
+<section id="travelerIntroductions" aria-labelledby="travelerIntroductionsTitle" style="margin:24px 0;border-top:1px solid var(--line);padding-top:22px">
   <div class="kicker" style="color:var(--terra)">Meet your kind of traveler</div>
   <h3 id="travelerIntroductionsTitle" style="font:500 27px Georgia,serif;color:var(--forest);margin:6px 0">Traveler introductions</h3>
   <p style="font-size:13px;color:var(--muted);max-width:760px;margin:0 0 16px">Share a little about yourself and discover travelers with similar interests. Every detail has its own visibility switch. Only details you choose to share are copied to the member directory; private details remain in your own profile.</p>
