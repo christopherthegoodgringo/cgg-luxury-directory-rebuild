@@ -77,7 +77,7 @@
   const journalHeading=journal.querySelector("h3,h4");
   if(journalHeading){
     const title=document.createElement("h4");
-    title.textContent="My Travel Journal";
+    title.textContent="8. My Travel Journal";
     journalHeading.replaceWith(title);
   }
   if(journal.parentElement!==grid)grid.appendChild(journal);
@@ -91,11 +91,11 @@
   if(oldTitle){
     const title=document.createElement("h4");
     title.id=oldTitle.id;
-    title.textContent="Your Favorites";
+    title.textContent="6. Your Favorites";
     oldTitle.replaceWith(title);
   }
   grid.insertBefore(favorites,journal);
-  favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
+  favorites.insertAdjacentHTML("afterend",'<section class="tool-card"><h4>7. Invite Friends</h4><p>Invite friends to join you on StayLatin. Add their details and open a ready-to-send invitation in your email app.</p><form id="travelerInviteForm" class="tool-fields"><label>FRIEND\'S NAME<input id="inviteFriendName" maxlength="100" required placeholder="Friend\'s name"></label><label>FRIEND\'S EMAIL<input id="inviteFriendEmail" type="email" maxlength="254" required placeholder="friend@example.com"></label><label class="wide">PERSONAL MESSAGE (OPTIONAL)<textarea id="inviteFriendMessage" rows="3" maxlength="500" placeholder="I thought you might enjoy this travel portal!"></textarea></label><div class="wide"><button class="tool-button" type="submit">Prepare email invitation ↗</button></div></form><p id="travelerInviteStatus" class="tool-status" role="status" aria-live="polite">Your email app will open with the invitation. You review and send it yourself.</p></section>');
  }
  const inviteForm=document.getElementById("travelerInviteForm");
  if(inviteForm)inviteForm.addEventListener("submit",function(event){
