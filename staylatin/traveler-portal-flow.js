@@ -14,7 +14,8 @@
     // Overview first, then planning tools and journal; favorites sit immediately
     // before traveler introductions as requested.
     let previous = stats;
-    [toolkit, journal, introductions, messages, lounge].forEach(function (section) {
+    // Every traveler section now lives inside the Travel Toolkit grid, so only the toolkit is placed here.
+    [toolkit].forEach(function (section) {
       if (section && previous) {
         previous.insertAdjacentElement("afterend", section);
         previous = section;
@@ -23,8 +24,6 @@
         previous = section;
       }
     });
-    // Account settings stay accessible at the end, away from the travel flow.
-    if (security) (previous || dashboard).insertAdjacentElement("afterend", security);
     dashboard.dataset.flowArranged = "true";
   }
   function start() {

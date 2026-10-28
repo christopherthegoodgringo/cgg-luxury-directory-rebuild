@@ -190,6 +190,25 @@
      button.setAttribute("aria-label",(closed?"Open ":"Close ")+heading.childNodes[0].textContent.trim());
    });
  }
+ /* Move the remaining traveler sections into the Travel Toolkit as numbered tools. */
+ (function(){
+   const grid=document.querySelector("#travelerToolkit .tool-grid");
+   if(!grid)return;
+   const tools=[
+     {id:"travelerIntroductions",heading:"#travelerIntroductionsTitle",label:"9. Traveler introductions"},
+     {id:"privateMessagingPanel",heading:"h4",label:"10. Private messages"},
+     {id:"travelerLounge",heading:"#chatTitle",label:"11. StayLatin Traveler Lounge"},
+     {id:"travelerAccountSecurity",heading:"#travelerAccountSecurityTitle",label:"12. Account & password"}
+   ];
+   tools.forEach(function(tool){
+     const section=document.getElementById(tool.id);
+     if(!section)return;
+     const heading=section.querySelector(tool.heading);
+     if(heading)heading.textContent=tool.label;
+     section.classList.add("tool-card");
+     grid.appendChild(section);
+   });
+ })();
  addCommunityCollapse(document.getElementById("travelerAccountSecurity"),document.getElementById("travelerAccountSecurityTitle"));
  addCommunityCollapse(document.getElementById("travelerIntroductions"),document.getElementById("travelerIntroductionsTitle"));
  /* Private messages: only the title and Open/Close button stay visible; the description, admin chat button, inbox and conversation collapse together. */
