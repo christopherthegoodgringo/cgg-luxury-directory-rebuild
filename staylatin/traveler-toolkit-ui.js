@@ -82,7 +82,9 @@
    const content=body||document.createElement("div");
    if(!body){
      content.className="community-collapse-body";
-     while(heading.nextSibling)content.appendChild(heading.nextSibling);
+     const headerBlock=heading.parentElement!==panel?heading.parentElement:heading;
+     let next=headerBlock.nextSibling;
+     while(next){const after=next.nextSibling;content.appendChild(next);next=after;}
      panel.appendChild(content);
    }
    heading.classList.add("community-collapse-heading");
