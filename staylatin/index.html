@@ -2177,3 +2177,29 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 @media(max-width:720px){#stays .searchbox{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;padding:10px!important}#stays .searchbox .destination-field{grid-column:1/-1!important}#stays .search-submit{grid-column:1/-1!important;min-height:44px!important}#stays .searchbox .field{min-height:65px!important}}
 @media(max-width:420px){#stays .searchbox{grid-template-columns:minmax(0,1fr)!important}#stays .searchbox .destination-field,#stays .search-submit{grid-column:1!important}#stays .searchbox .field{min-height:60px!important}}
 </style>
+
+<style id="staylatin-force-white-header-lettering">
+/* Final override: all text inside header controls stays white, including hover/focus */
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn,
+html body header.sl-global-header .sl-navlinks > a.sl-admin-direct-link,
+html body header.sl-global-header .sl-navlinks > span.sl-nav-btn,
+html body header.sl-global-header .sl-lang-wrap .sl-language,
+html body header.sl-global-header .sl-lang-wrap #language,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice[aria-current="true"]{
+ color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home:hover,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home:focus-visible,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn:hover,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn:focus-visible,
+html body header.sl-global-header .sl-navlinks > a.sl-admin-direct-link:hover,
+html body header.sl-global-header .sl-navlinks > a.sl-admin-direct-link:focus-visible,
+html body header.sl-global-header .sl-navlinks > span.sl-nav-btn,
+html body header.sl-global-header .sl-lang-wrap #language:hover,
+html body header.sl-global-header .sl-lang-wrap #language:focus-visible,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice:hover{
+ color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+</style>
