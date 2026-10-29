@@ -16,7 +16,7 @@
 /* Uniform, more visible listing-level badges */
 .stay-card .photo>.pill{display:inline-flex;align-items:center;justify-content:center;min-width:104px;height:34px;padding:0 13px;border-radius:6px;font-size:11px;font-weight:850;letter-spacing:.1em;line-height:1;text-align:center;box-shadow:0 3px 10px #13271d20;border:1px solid transparent}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#dce8e1,#b7d0c2);color:#194b3a;border-color:#9bbbab}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84);color:#fff;border-color:#00a878}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 
@@ -198,8 +198,8 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 /* Colorful, coordinated backgrounds for every listing card */
 .stay-card.tier-basic{background:#e5f3ec;border-color:#d0e6db}
 .stay-card.tier-basic .stay-body{background:linear-gradient(180deg,#fffaf0 0%,#f5ead8 100%)}
-.stay-card.tier-verified{background:#e5f3ec;border-color:#1dd1a1}
-.stay-card.tier-verified .stay-body{background:linear-gradient(180deg,#f0fffe 0%,#d4ffe5 100%)}
+.stay-card.tier-verified{background:#e5f3ec;border-color:#d0e6db}
+.stay-card.tier-verified .stay-body{background:linear-gradient(180deg,#fffdf5 0%,#fffdf8 100%)}
 .stay-card.tier-featured{background:#e5f3ec;border-color:#d0e6db}
 .stay-card.tier-featured .stay-body{background:linear-gradient(180deg,#fffdf5 0%,#fffdf8 100%)}
 .stay-card.tier-premium{background:#e5f3ec;border-color:#d0e6db}
@@ -303,7 +303,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84)!important;color:#fff!important;border-color:#00a878!important}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#533b0d!important;border-color:#d3a23b!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#ffe2d8,#f3a991)!important;color:#783c2e!important;border-color:#d98d75!important}
 </style>
 
@@ -366,7 +366,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 /* Tier pills: four clear green shades */
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84)!important;color:#fff!important;border-color:#00a878!important}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#533b0d!important;border-color:#d3a23b!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#d8eee4,#eef6f2)!important;color:#1a5c4a!important;border-color:#a8d5c0!important}
 /* Stars stay green-tint instead of rainbow */
 .stay-card.tier-premium .tier-star,.stay-card.tier-featured .tier-star,.stay-card.tier-verified .tier-star{
@@ -2077,12 +2077,12 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 .stay-card.tier-basic .photo>span::before,
 .stay-card.tier-basic .photo>.pill::before{content:"·";font-size:16px;line-height:.8;margin-right:1px}
 
-/* VERIFIED ✓ — emerald green, checkmark */
+/* VERIFIED ✓ — gold gradient, checkmark (same as Featured/Premium) */
 .stay-card.tier-verified .photo>span,
 .stay-card.tier-verified .photo>.pill{
-  background:rgba(210,245,228,.95)!important;
-  border-color:rgba(80,170,120,.5)!important;
-  color:#0e5232!important;
+  background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;
+  border-color:#d3a23b!important;
+  color:#533b0d!important;
 }
 .stay-card.tier-verified .photo>span::before,
 .stay-card.tier-verified .photo>.pill::before{content:"✓";font-size:11px;line-height:1}
