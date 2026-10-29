@@ -1451,7 +1451,7 @@ function initStayCarousels(){
 function render(){
  const q=document.getElementById("destination").value.trim().toLowerCase();
  const type="all";
- const vibe="all";
+ const selectedVibe=document.getElementById("searchVibe")?.value||"";const vibe=selectedVibe===""?"all":selectedVibe;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
  const selectedType=document.getElementById("searchType")?.value||activeType;
  const filterType=selectedType==="all"?"all":selectedType;
@@ -1611,6 +1611,7 @@ document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimi
 document.getElementById("searchTextLink").addEventListener("click",e=>{e.preventDefault();document.getElementById("searchForm").requestSubmit();});
 document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType=document.getElementById("searchType")?.value||"all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter===activeType));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
 document.getElementById("searchType").addEventListener("change",()=>{activeType=document.getElementById("searchType").value;listingLimit=9;render()});
+document.getElementById("searchVibe").addEventListener("change",()=>{listingLimit=9;render()});
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
 document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
 document.getElementById("destination").addEventListener("input",()=>{listingLimit=9;render()});
