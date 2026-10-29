@@ -1575,7 +1575,7 @@ function render(){
    +'<button class="photo-act sl-act-price" type="button" aria-label="Price for '+esc(s.name)+'" data-act="price" data-id="'+s.id+'" title="Price"><span aria-hidden="true">$</span></button>'
    +'<button class="photo-act sl-act-notify '+(st.alert?'is-on':'')+'" type="button" aria-label="Notify me about '+esc(s.name)+'" data-act="notify" data-id="'+s.id+'" title="Notify"><span aria-hidden="true">🔔</span></button>'
    +'</div>';
-  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><span class="pill listing-tier-badge tier-badge-'+esc(s.tier.toLowerCase())+'">'+(s.tier==="Premium"?'★ ':'')+esc(s.tier)+'</span><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+''+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,500))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3><div class="estimated-rate"><span>Estimated nightly rate</span><strong>'+esc(s.rateEstimate||"Check dates")+'</strong></div>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'</div>'+ownerClaim+'</div></article>';
+  return '<article class="stay-card tier-'+esc(s.tier.toLowerCase())+'" data-stay-id="'+s.id+'" id="stay-'+s.id+'"><div class="photo" data-carousel'+photoBg+'><div class="photo-slides">'+slidesHtml+'</div>'+dotsHtml+''+acts+'</div><div class="stay-body"><p class="stay-description">'+esc((s.desc||"").slice(0,500))+'</p><div class="location">'+esc(s.city)+'</div><h3>'+esc(s.name)+'</h3><div class="estimated-rate"><span>Estimated nightly rate</span><strong>'+esc(s.rateEstimate||"Check dates")+'</strong></div>'+tierBenefits(s.tier)+reviewBlock+'<div class="card-actions">'+bookingButtons+'</div>'+ownerClaim+'</div></article>';
  }).join(""):'<div class="empty">'+(()=>{const msgs={en:{Hostel:"No hostels are listed yet.","Long-stay base":"No long-stay bases are listed yet.",other:"No public listings match those filters. Try another destination or stay style."},es:{Hostel:"Todavía no hay hostales en el directorio.","Long-stay base":"Todavía no hay alojamientos para largas estancias.",other:"No hay alojamientos públicos con esos filtros. Prueba otro destino o estilo."},pt:{Hostel:"Ainda não há hostels listados.","Long-stay base":"Ainda não há bases para longas estadias.",other:"Nenhuma estadia pública corresponde a esses filtros. Tente outro destino ou estilo."}};const pack=msgs[language]||msgs.en;return pack[activeType]||pack.other;})()+'</div>';
  const viewWrap=document.getElementById("viewMoreWrap");
  const viewBtn=document.getElementById("viewMoreBtn");
@@ -2250,24 +2250,4 @@ html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice:hover 
 }
 </style>
 
-<style id="staylatin-visible-tier-labels">
-/* Make each listing's tier explicit on the card photo, above the image and action icons. */
-.stay-card .photo .listing-tier-badge{
- position:absolute!important;top:13px!important;left:13px!important;right:auto!important;
- display:inline-flex!important;align-items:center!important;justify-content:center!important;
- width:auto!important;max-width:calc(100% - 92px)!important;min-height:27px!important;
- padding:6px 10px!important;border:1px solid rgba(255,255,255,.65)!important;
- border-radius:5px!important;background:linear-gradient(135deg,#f5f0df,#fffdf4)!important;
- color:#173f35!important;font-size:10px!important;font-weight:900!important;
- line-height:1.2!important;letter-spacing:.09em!important;text-transform:uppercase!important;
- box-shadow:0 2px 8px rgba(13,50,37,.18)!important;z-index:6!important;
-}
-.stay-card .photo .listing-tier-badge.tier-badge-premium{
- background:linear-gradient(135deg,#fff0b0,#ffd040)!important;
- border-color:rgba(180,130,0,.55)!important;color:#3d2400!important;
-}
-.stay-card .photo .listing-tier-badge.tier-badge-featured{
- background:linear-gradient(135deg,#e8f0ff,#cbdcff)!important;color:#203a64!important;
-}
-@media(prefers-reduced-motion:reduce){.stay-card .photo .listing-tier-badge{animation:none!important}}
-</style>
+
