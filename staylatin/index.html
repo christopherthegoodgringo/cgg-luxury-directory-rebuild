@@ -1517,7 +1517,7 @@ function render(){
  const filterType=selectedType==="all"?"all":selectedType;
  const filtered=stays.filter(s=>(filterType==="all"?(s.type==="Boutique hotel"||s.type==="Hotel"||s.type==="Restaurant"||s.type==="Bar"):filterType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hotel"):s.type===filterType)&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name+" "+s.type).toLowerCase().includes(q)));
  const tiers=[0,1,2,3,99];
- const found=tiers.flatMap(t=>filtered.filter(s=>(tierOrder[s.tier]??99)===t));
+ const found=tiers.flatMap(t=>filtered.filter(s=>(tierOrder[s.tier]??99)===t).sort((a,b)=>{if(t===0){if(a.name==="Casa Zarah")return -1;if(b.name==="Casa Zarah")return 1;}return 0;}));
  const countNode=document.getElementById("propertyCountNumber");if(countNode)countNode.textContent=found.length.toLocaleString();
  const visible=found.slice(0,listingLimit);
  grid.innerHTML=visible.length?visible.map(s=>{
