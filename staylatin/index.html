@@ -248,7 +248,9 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .view-more-wrap[hidden]{display:none!important}
 .view-more-btn{min-width:190px;padding:14px 28px;border-radius:999px;background:linear-gradient(110deg,#157a67,#35a27d);color:#fff;border:1px solid #2b9477;box-shadow:0 10px 25px rgba(21,122,103,.24);font-size:14px;font-weight:850;letter-spacing:.02em;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
 .view-more-btn:hover{background:linear-gradient(135deg,#1f7c61,#2fa374);color:#fff;border-color:#1f7c61;transform:translateY(-2px);box-shadow:0 12px 28px rgba(15,61,50,.22)}
-.photo.image-failed{background:linear-gradient(135deg,#d6e9dd,#eed6b8 48%,#d8d3fa)}
+.photo.image-failed{background:linear-gradient(145deg,#c8dbd2 0%,#b5cfc0 40%,#96b8a6 100%)}
+.photo:not(:has(img)),.photo.image-failed{background:linear-gradient(145deg,#c8dbd2 0%,#b5cfc0 40%,#96b8a6 100%)}
+.photo:not(:has(img))::after,.photo.image-failed::after{content:"📷  Photos Coming Soon";position:absolute;inset:0;z-index:3;display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 1px 5px rgba(10,35,25,.6);background:linear-gradient(145deg,rgba(30,80,60,.72),rgba(15,50,38,.72))}
 @media(max-width:560px){.photo{height:220px}}
 @media(prefers-reduced-motion:reduce){.photo-actions .photo-act,.view-more-btn{transition:none}}
 </style>
