@@ -1019,14 +1019,14 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 
 
 <style id="staylatin-header-simple-text-links">
-/* Header navigation is plain text links, with no button chrome. */
+/* All header controls use plain text links and one consistent hover color. */
 .sl-global-header .sl-navlinks .sl-nav-btn,
 .sl-global-header .sl-navlinks .sl-admin-toggle,
 .sl-global-header .sl-language,
 .sl-global-header #language{
   display:inline!important;
   appearance:none!important;-webkit-appearance:none!important;
-  background:none!important;background-image:none!important;
+  background:transparent!important;background-image:none!important;
   border:0!important;border-radius:0!important;box-shadow:none!important;
   padding:0!important;margin:0!important;
   color:#334b40!important;
@@ -1034,12 +1034,19 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
   letter-spacing:normal!important;text-decoration:none!important;
   animation:none!important;transform:none!important;filter:none!important;
   cursor:pointer;white-space:nowrap;
+  transition:color .15s ease!important;
 }
 .sl-global-header .sl-navlinks a:hover,
 .sl-global-header .sl-navlinks a:focus-visible,
+.sl-global-header .sl-navlinks .sl-admin-toggle:hover,
+.sl-global-header .sl-navlinks .sl-admin-toggle:focus-visible,
 .sl-global-header .sl-language:hover,
-.sl-global-header #language:hover{
-  color:#c86d4a!important;background:none!important;box-shadow:none!important;
+.sl-global-header .sl-language:focus-visible,
+.sl-global-header #language:hover,
+.sl-global-header #language:focus-visible{
+  color:#c86d4a!important;
+  background:transparent!important;background-image:none!important;
+  border:0!important;box-shadow:none!important;transform:none!important;filter:none!important;
 }
 .sl-global-header .sl-navlinks .sl-nav-disabled{cursor:default!important}
 .sl-global-header .sl-lang-wrap{flex:none}
