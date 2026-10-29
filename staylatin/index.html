@@ -1076,7 +1076,7 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 </style>
 
 <style id="staylatin-header-uniform-nav-font-size">
-/* Elegant, consistent typography across all StayLatin header navigation and language links. */
+/* Elegant, uniform header typography for navigation and language selector. */
 .sl-global-header .sl-navlinks > a,
 .sl-global-header .sl-navlinks > span,
 .sl-global-header .sl-navlinks .sl-admin-direct-link,
@@ -1149,6 +1149,33 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
  text-decoration-color:#c86d4a!important;
  text-decoration-thickness:2px!important;
  text-underline-offset:4px!important;
+}
+</style>
+<style id="staylatin-header-no-hover-color-change">
+/* Keep every header link and language choice the same color on hover, focus, and selection. */
+.sl-global-header .sl-navlinks > a,
+.sl-global-header .sl-navlinks > a:hover,
+.sl-global-header .sl-navlinks > a:focus,
+.sl-global-header .sl-navlinks > a:focus-visible,
+.sl-global-header .sl-navlinks .sl-admin-direct-link,
+.sl-global-header .sl-navlinks .sl-admin-direct-link:hover,
+.sl-global-header .sl-navlinks .sl-admin-direct-link:focus-visible,
+.sl-global-header #language .sl-lang-choice,
+.sl-global-header #language .sl-lang-choice:hover,
+.sl-global-header #language .sl-lang-choice:focus,
+.sl-global-header #language .sl-lang-choice:focus-visible,
+.sl-global-header #language .sl-lang-choice[aria-current="true"],
+.sl-global-header #language .sl-lang-choice[aria-current="page"],
+.sl-global-header .sl-lang-choice,
+.sl-global-header .sl-lang-choice:hover,
+.sl-global-header .sl-lang-choice:focus,
+.sl-global-header .sl-lang-choice:focus-visible,
+.sl-global-header .sl-lang-choice[aria-current="true"],
+.sl-global-header .sl-lang-choice[aria-current="page"]{
+  color:#334b40!important;
+  text-decoration:none!important;
+  text-decoration-color:transparent!important;
+  opacity:1!important;
 }
 </style>
 </head>
