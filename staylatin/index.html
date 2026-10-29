@@ -201,7 +201,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-card.tier-verified{background:#e5f3ec;border-color:#d0e6db}
 .stay-card.tier-verified .stay-body{background:linear-gradient(180deg,#f7fff8 0%,#e2f2e5 100%)}
 .stay-card.tier-featured{background:#e5f3ec;border-color:#d0e6db}
-.stay-card.tier-featured .stay-body{background:linear-gradient(180deg,#fffaff 0%,#eeecff 100%)}
+.stay-card.tier-featured .stay-body{background:linear-gradient(180deg,#fff9e9 0%,#f8e9bb 100%)}
 .stay-card.tier-premium{background:#e5f3ec;border-color:#d0e6db}
 .stay-card.tier-premium .stay-body{background:linear-gradient(180deg,#fff9e9 0%,#f8e9bb 100%)}
 .stay-card .stay-body{transition:background .2s ease}
@@ -295,12 +295,13 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-card.tier-basic .tier-star{flex:0 0 13px!important;width:13px!important;height:13px!important;font-size:13px!important}
 .stay-card .photo>.pill .pill{display:inline-flex;align-items:center;gap:7px}
 .tier-star{display:inline-grid;place-items:center;flex:0 0 25px;width:25px;height:25px;font-size:25px;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.14);transform-origin:50% 50%}
-.stay-card.tier-premium .tier-star,.stay-card.tier-featured .tier-star,.stay-card.tier-verified .tier-star{background:conic-gradient(from 0deg,#ff168b,#ff8b22,#ffe52b,#29e49b,#24c9ff,#8057ff,#ff168b);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 4px #fff6a8) drop-shadow(0 0 2px #ef75ff);animation:tierStarSpin 3.5s linear infinite,tierStarGlow 3.4s ease-in-out infinite}
+.stay-card.tier-premium .tier-star,.stay-card.tier-verified .tier-star{background:conic-gradient(from 0deg,#ff168b,#ff8b22,#ffe52b,#29e49b,#24c9ff,#8057ff,#ff168b);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 4px #fff6a8) drop-shadow(0 0 2px #ef75ff);animation:tierStarSpin 3.5s linear infinite,tierStarGlow 3.4s ease-in-out infinite}
+.stay-card.tier-featured .tier-star{color:#d3a23b;opacity:1;display:none}
 @keyframes tierStarSpin{from{transform:rotate(0deg) scale(1)}to{transform:rotate(360deg) scale(1)}}
 @keyframes tierStarGlow{0%,100%{opacity:.65;filter:drop-shadow(0 0 2px #fff6a8) drop-shadow(0 0 2px #ef75ff)}50%{opacity:1;filter:drop-shadow(0 0 7px #ffd86b) drop-shadow(0 0 12px #df73ff)}}
-@media(prefers-reduced-motion:reduce){.stay-card.tier-premium .tier-star,.stay-card.tier-featured .tier-star,.stay-card.tier-verified .tier-star{animation:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.stay-card.tier-premium .tier-star,.stay-card.tier-verified .tier-star{animation:none;opacity:1}}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
-.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#e6e2ff,#a79df4)!important;color:#383078!important;border-color:#8e83db!important}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#dcf8e5,#75c995)!important;color:#145a35!important;border-color:#62af82!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#ffe2d8,#f3a991)!important;color:#783c2e!important;border-color:#d98d75!important}
 </style>
