@@ -1335,7 +1335,7 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 <form class="searchbox" id="searchForm">
 <div class="search-wrapper">
 <div class="field destination-field"><label for="destination" data-en="Destination or property" data-es="Destino o alojamiento" data-pt="Destino ou acomodação">Destination or property</label><div class="input-icon">🔍<input id="destination" placeholder="Try Santa Marta, Tunja or a property name" data-en-placeholder="Try Santa Marta, Tunja or a property name" data-es-placeholder="Prueba Santa Marta, Tunja o el nombre de un alojamiento" data-pt-placeholder="Experimente Santa Marta, Tunja ou o nome de uma acomodação" autocomplete="off"></div></div>
-<div class="field type-field"><label for="searchType" data-en="Experience" data-es="Experiencia" data-pt="Experiência">Experience</label><select id="searchType" aria-label="Filter by experience type"><option value="all" data-en="All exceptional stays" data-es="Todos los alojamientos excepcionales" data-pt="Todos os alojamientos excepcionales">All exceptional stays</option><option value="hotels" data-en="Curated stays" data-es="Alojamientos seleccionados" data-pt="Estadias selecionadas">Curated stays</option></select></div>
+<div class="field type-field"><label for="searchExperience" data-en="Quality tier" data-es="Nivel de calidad" data-pt="Nível de qualidade">Quality tier</label><select id="searchExperience" aria-label="Filter by quality tier"><option value="" data-en="All tiers" data-es="Todos los niveles" data-pt="Todos os niveis">All tiers</option><option value="Premium" data-en="★ Premium" data-es="★ Premium" data-pt="★ Premium">★ Premium</option><option value="Featured" data-en="✦ Featured" data-es="✦ Destacados" data-pt="✦ Destaques">✦ Featured</option><option value="Verified" data-en="✓ Verified" data-es="✓ Verificados" data-pt="✓ Verificados">✓ Verified</option><option value="Basic" data-en="· Basic" data-es="· Básico" data-pt="· Básico">· Basic</option></select></div>
 <div class="field vibe-field"><label for="searchVibe" data-en="Vibe" data-es="Ambiente" data-pt="Ambiente">Vibe</label><select id="searchVibe"><option value="">Any vibe</option><option>Nature</option><option>Culture</option><option>Adventure</option><option>Relaxation</option></select></div>
 </div>
 <button class="search-submit" type="submit" id="searchTextLink" data-en="Search" data-es="Buscar" data-pt="Buscar">Search</button>
@@ -1452,10 +1452,9 @@ function render(){
  const q=document.getElementById("destination").value.trim().toLowerCase();
  const type="all";
  const selectedVibe=document.getElementById("searchVibe")?.value||"";const vibe=selectedVibe===""?"all":selectedVibe;
+ const selectedTier=document.getElementById("searchExperience")?.value||"";const tier=selectedTier===""?"all":selectedTier;
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
- const selectedType=document.getElementById("searchType")?.value||activeType;
- const filterType=selectedType==="all"?"all":selectedType;
- const filtered=stays.filter(s=>(filterType==="all"?(s.type==="Exceptional stay"||s.type==="Hotel"||s.type==="Restaurant"||s.type==="Bar"):filterType==="hotels"?(s.type==="Exceptional stay"||s.type==="Hotel"):s.type===filterType)&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name+" "+s.type).toLowerCase().includes(q)));
+ const filtered=stays.filter(s=>(tier==="all"||s.tier===tier)&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name+" "+s.type).toLowerCase().includes(q)));
  const tiers=[0,1,2,3,99];
  const found=tiers.flatMap(t=>filtered.filter(s=>(tierOrder[s.tier]??99)===t).sort((a,b)=>{if(t===0){if(a.name==="Casa Zarah")return -1;if(b.name==="Casa Zarah")return 1;}return 0;}));
  const countNode=document.getElementById("propertyCountNumber");if(countNode)countNode.textContent=found.length.toLocaleString();
@@ -1609,8 +1608,8 @@ function render(){
 document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=9;render();});
 
 document.getElementById("searchTextLink").addEventListener("click",e=>{e.preventDefault();document.getElementById("searchForm").requestSubmit();});
-document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType=document.getElementById("searchType")?.value||"all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter===activeType));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
-document.getElementById("searchType").addEventListener("change",()=>{activeType=document.getElementById("searchType").value;listingLimit=9;render()});
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.getElementById("searchExperience").addEventListener("change",()=>{listingLimit=9;render()});
 document.getElementById("searchVibe").addEventListener("change",()=>{listingLimit=9;render()});
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
 document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
