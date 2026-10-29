@@ -637,12 +637,17 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
  position:fixed;top:0;left:0;right:0;width:100%;max-width:none;
  transform:none;z-index:99999;box-sizing:border-box;
  display:flex;flex-direction:row;align-items:center;justify-content:center;
- gap:13px;padding:9px 16px;
+ gap:13px;padding:9px 0;
  border:0;border-bottom:1px solid rgba(255,255,255,.72);border-radius:0;
  background:linear-gradient(100deg,#062b20 0%,#075b3b 38%,#087a55 68%,#06452f 100%);
  color:#ffffff;text-decoration:none;white-space:normal;text-align:center;
  box-shadow:0 3px 15px rgba(36,67,75,.2);
  animation:staylatinDonationPulse 7s ease-in-out infinite;
+}
+#staylatin-donation-tab .donation-inner{
+ width:min(1120px,calc(100% - 32px));
+ display:flex;flex-direction:row;align-items:center;justify-content:center;
+ gap:13px;
 }
 #staylatin-donation-tab .donation-vertical{
  writing-mode:horizontal-tb;transform:none;
@@ -1514,9 +1519,11 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 })();
 </script>
 \n<div id="staylatin-donation-tab" role="note" aria-label="For travelers, Forever Free. Support StayLatin. PayPal coming soon." title="For travelers, Forever Free">
- <span class="donation-heart" aria-hidden="true">♥</span>
- <span class="donation-vertical">FOR TRAVELERS · FOREVER FREE</span>
- <span class="donation-paypal">Support StayLatin <em>· PayPal Coming Soon</em></span>
+ <div class="donation-inner">
+  <span class="donation-heart" aria-hidden="true">♥</span>
+  <span class="donation-vertical">FOR TRAVELERS · FOREVER FREE</span>
+  <span class="donation-paypal">Support StayLatin <em>· PayPal Coming Soon</em></span>
+ </div>
 </div>
 <script>
 /* Logo intro: the header and footer stars fly to the centre of the screen, spin, burst, and return to their places. */
