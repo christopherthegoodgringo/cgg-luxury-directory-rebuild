@@ -903,6 +903,18 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 .latam-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .type-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
 </style>
+
+<style id="staylatin-admin-dropdown-final-fix">
+/* Stable Admin Sign in menu: closed by default, opens only on button activation. */
+.sl-global-header,.sl-mainnav,.sl-navlinks,.sl-admin-menu{overflow:visible!important}
+.sl-admin-menu{position:relative!important;display:inline-flex!important;align-items:center!important;z-index:500!important}
+.sl-admin-dropdown{position:absolute!important;top:calc(100% + 8px)!important;right:0!important;left:auto!important;min-width:210px!important;width:max-content!important;max-width:min(280px,90vw)!important;padding:6px!important;margin:0!important;background:#164d3e!important;border:1px solid #2f8b6c!important;border-radius:12px!important;box-shadow:0 14px 32px rgba(10,40,30,.28)!important;z-index:99999!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+.sl-admin-dropdown[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.sl-admin-dropdown:not([hidden]){display:block!important}
+.sl-admin-dropdown a,.sl-admin-dropdown a:visited{display:block!important;width:100%!important;box-sizing:border-box!important;padding:11px 13px!important;margin:0!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#fff!important;font-size:12px!important;font-weight:750!important;line-height:1.4!important;text-decoration:none!important;white-space:normal!important;transform:none!important;box-shadow:none!important}
+.sl-admin-dropdown a:hover,.sl-admin-dropdown a:focus-visible{background:rgba(255,255,255,.18)!important;color:#fff!important;outline:2px solid #a8d5c0!important;outline-offset:-2px!important}
+@media(max-width:850px){.sl-admin-dropdown{left:0!important;right:auto!important}}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
