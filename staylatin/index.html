@@ -2532,3 +2532,14 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 @keyframes staylatinPremiumStarSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.staylatin-premium-uniform .staylatin-premium-star{animation:none!important}}
 </style>
+
+<style id="staylatin-premium-green-pulsing-star-final">
+/* Remove the old gold pseudo-star. Keep the actual star green and gently pulse its size. */
+.stay-card.tier-premium .photo>.staylatin-uniform-tier-ribbon.staylatin-premium-uniform::before,
+.stay-card.tier-premium .photo>.staylatin-uniform-tier-ribbon.staylatin-premium-uniform::after,
+#stay-4 .photo>.staylatin-uniform-tier-ribbon.staylatin-premium-uniform::before,
+#stay-4 .photo>.staylatin-uniform-tier-ribbon.staylatin-premium-uniform::after{content:none!important;display:none!important;animation:none!important}
+.staylatin-uniform-tier-ribbon.staylatin-premium-uniform .staylatin-premium-star{color:#174d3b!important;-webkit-text-fill-color:#174d3b!important;font-size:13px!important;animation:staylatinPremiumStarPulse 1.2s ease-in-out infinite!important;transform-origin:center!important;text-shadow:none!important}
+@keyframes staylatinPremiumStarPulse{0%,100%{transform:scale(.78)}50%{transform:scale(1.3)}}
+@media(prefers-reduced-motion:reduce){.staylatin-uniform-tier-ribbon.staylatin-premium-uniform .staylatin-premium-star{animation:none!important;transform:none!important}}
+</style>
