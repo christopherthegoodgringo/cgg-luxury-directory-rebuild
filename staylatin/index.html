@@ -745,13 +745,13 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 </style>
 <style id="staylatin-property-search-count">
 .property-count-wrap{display:flex;justify-content:flex-start;margin:0 0 22px}
-.property-count-card{position:relative;isolation:isolate;display:flex;align-items:center;gap:14px;min-width:min(100%,310px);max-width:100%;padding:13px 20px 13px 14px;border:1px solid #58b889;border-radius:15px;background:linear-gradient(115deg,#063f31 0%,#087b53 30%,#16a765 62%,#a7efbd 100%);color:#fff;box-shadow:0 9px 24px rgba(9,105,66,.22),inset 0 1px 0 rgba(255,255,255,.32);overflow:hidden}
-.property-count-card:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 15%,rgba(255,255,255,.15) 48%,transparent 78%);pointer-events:none}
-.property-count-icon{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.38);font-size:29px;line-height:1;color:#fff}
+.property-count-card{position:relative;isolation:isolate;display:flex;align-items:center;gap:14px;min-width:min(100%,310px);max-width:100%;padding:13px 20px 13px 14px;border:1px solid #d9d5c9;border-radius:15px;background:#eeece2;color:var(--forest);box-shadow:0 4px 14px rgba(15,61,50,.10);overflow:hidden}
+.property-count-card:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 15%,rgba(255,255,255,.25) 48%,transparent 78%);pointer-events:none}
+.property-count-icon{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:12px;background:rgba(15,61,50,.08);border:1px solid #c9c5b9;font-size:29px;line-height:1;color:var(--forest)}
 .property-count-copy{display:flex;flex-direction:column;gap:1px;min-width:0}
-.property-count-label{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#e6ffed;line-height:1.35}
-.property-count-copy strong{font:800 clamp(26px,4vw,34px)/1.05 Georgia,serif;color:#fff;text-shadow:0 2px 8px rgba(0,35,22,.28);font-variant-numeric:tabular-nums}
-.property-count-spark{margin-left:auto;color:#e6ffd2;font-size:23px;text-shadow:0 0 12px rgba(255,255,255,.6);animation:propertyCountGlow 2.5s ease-in-out infinite}
+.property-count-label{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);line-height:1.35}
+.property-count-copy strong{font:800 clamp(26px,4vw,34px)/1.05 Georgia,serif;color:var(--forest);text-shadow:none;font-variant-numeric:tabular-nums}
+.property-count-spark{margin-left:auto;color:var(--terra);font-size:23px;text-shadow:none;animation:propertyCountGlow 2.5s ease-in-out infinite}
 @keyframes propertyCountGlow{0%,100%{opacity:.65;transform:scale(.92)}50%{opacity:1;transform:scale(1.12)}}
 @media(max-width:560px){.property-count-wrap{margin-bottom:16px}.property-count-card{width:100%;min-width:0;padding:12px}.property-count-label{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.property-count-spark{animation:none}}
