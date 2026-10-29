@@ -138,7 +138,7 @@ body.portal-direct .traveler-content{grid-template-columns:1fr}
 @keyframes staylatinGreenGlow{0%{opacity:.35}100%{opacity:1}}
 @media(prefers-reduced-motion:reduce){#travelerDonationCta.staylatin-donation-glow,#travelerDonationCta.staylatin-donation-glow::before{animation:none}}
 </style>
-<link rel="stylesheet" href="shared-chrome.css?v=edba636ecb79">
+<link rel="stylesheet" href="shared-chrome.css?v=f35265d6090a">
 <script>
 (function(){
  try{
@@ -387,7 +387,7 @@ body [role="button"][aria-disabled="true"] {
 
 </main>
 <footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="index.html#top"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 64 64" width="37" height="37" focusable="false"><circle cx="32" cy="32" r="30" fill="#173f35"/><circle cx="32" cy="32" r="28.25" fill="none" stroke="#c8a86b" stroke-width="2.2"/><g fill="#c86d4a"><path d="M32 10 L35.2 28.8 L32 31 L28.8 28.8 Z"/><path d="M32 54 L28.8 35.2 L32 33 L35.2 35.2 Z"/><path d="M10 32 L28.8 28.8 L31 32 L28.8 35.2 Z"/><path d="M54 32 L35.2 35.2 L33 32 L35.2 28.8 Z"/></g><g fill="#e5c889"><path d="M32 16.5 L33.6 28.2 L32 29.5 L30.4 28.2 Z"/><path d="M32 47.5 L30.4 35.8 L32 34.5 L33.6 35.8 Z"/><path d="M16.5 32 L28.2 30.4 L29.5 32 L28.2 33.6 Z"/><path d="M47.5 32 L35.8 33.6 L34.5 32 L35.8 30.4 Z"/></g><circle cx="32" cy="32" r="4.2" fill="#f7f4ec"/><circle cx="32" cy="32" r="2.3" fill="#c8a86b"/></svg></span>StayLatin</a><p>A more personal way to discover where to stay across Latin America.</p><p class="footer-disclosure">StayLatin is a stay discovery directory. We do not process lodging payments. Third-party booking sites and properties set their own terms. Public listings may be references, not claimed partners.</p></div><div class="footer-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div></div><div class="copyright"><span>© 2026 StayLatin. Built for better journeys.</span><span>Latin America · English · Español · Português</span></div></div></footer>
-<script src="staylatin-config.js?v=edba636ecb79"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js?v=edba636ecb79"></script><script src="listing-actions.js?v=edba636ecb79"></script><script>
+<script src="staylatin-config.js?v=f35265d6090a"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="ai-travelers.js?v=f35265d6090a"></script><script src="listing-actions.js?v=f35265d6090a"></script><script>
 const avatarInput=document.getElementById("travelerAvatarInput"),avatarPreview=document.getElementById("travelerAvatarPreview"),avatarPlaceholder=document.getElementById("travelerAvatarPlaceholder"),avatarStatus=document.getElementById("travelerAvatarStatus"),avatarHint=document.getElementById("travelerAvatarHint"),avatarOverlay=document.getElementById("travelerAvatarOverlay");
 function avatarStorageKey(){return "staylatin-avatar-"+(activeTripUserId||"guest")}
 async function loadTravelerAvatar(){try{const db=introClient();let saved=null;if(db&&activeTripUserId){const {data:profile,error}=await db.from("staylatin_traveler_chat_profiles").select("avatar_path").eq("user_id",activeTripUserId).maybeSingle();if(error)throw error;if(profile?.avatar_path){const {data:signed,error:signedError}=await db.storage.from("staylatin-traveler-avatars").createSignedUrl(profile.avatar_path,3600);if(signedError)throw signedError;if(signed?.signedUrl)saved=signed.signedUrl;}}if(!saved){try{saved=localStorage.getItem(avatarStorageKey())}catch(e){}}if(saved){avatarPreview.src=saved;avatarPreview.style.display="block";avatarPlaceholder.style.display="none";avatarHint.textContent="";avatarOverlay.textContent="Change photo";avatarStatus.textContent=""}else{avatarPreview.removeAttribute("src");avatarPreview.style.display="none";avatarPlaceholder.style.display="grid";avatarHint.textContent="Hover over the photo to add or update it.";avatarOverlay.textContent="Add photo";avatarStatus.textContent=""}}catch(e){avatarStatus.textContent="Could not load your saved profile photo from StayLatin. "+(e.message||"Please refresh and try again.");}}
@@ -1145,6 +1145,6 @@ document.getElementById("refreshTravelerPortal")?.addEventListener("click",funct
   window.location.replace(url.href);
 });
 </script>
-<script src="shared-chrome.js?v=edba636ecb79"></script><script src="traveler-toolkit-ui.js?v=edba636ecb79"></script><script src="traveler-toolkit.js?v=edba636ecb79"></script><script src="traveler-portal-flow.js?v=edba636ecb79"></script>
+<script src="shared-chrome.js?v=f35265d6090a"></script><script src="traveler-toolkit-ui.js?v=f35265d6090a"></script><script src="traveler-toolkit.js?v=f35265d6090a"></script><script src="traveler-portal-flow.js?v=f35265d6090a"></script>
 </body>
 </html>
