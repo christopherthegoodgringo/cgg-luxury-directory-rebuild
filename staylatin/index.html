@@ -387,7 +387,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .stay-review-score{color:var(--forest)!important}
 .sl-global-header,.sl-mainnav{background:var(--paper)!important;border-bottom:1px solid var(--line)!important}
 .sl-brand,.sl-navlinks a.sl-nav-home{color:var(--forest)!important}
-.sl-navlinks a.sl-nav-home:hover,.sl-language:hover{color:var(--green-mid)!important}
+.sl-navlinks a.sl-nav-home:hover{color:var(--green-mid)!important}.sl-language:hover{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;color:#fff!important}
 .sl-mark{color:var(--green-bright)!important;border-color:var(--green-mid)!important}
 
 
@@ -762,8 +762,8 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 
 <style id="staylatin-admin-dropdown-style">
 .sl-admin-menu{position:relative;display:inline-flex;align-items:center;flex:0 0 auto;z-index:120}
-.sl-admin-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:9px 12px!important;border-radius:999px!important;border:1px solid #0f3d32!important;background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;font-family:inherit!important;font-size:11px!important;font-weight:850!important;letter-spacing:.01em!important;line-height:normal!important;text-decoration:none!important;white-space:nowrap!important;cursor:pointer;box-shadow:0 4px 12px rgba(15,61,50,.18);transition:transform .15s ease,filter .15s ease}
-.sl-admin-toggle:hover,.sl-admin-toggle:focus-visible{background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;filter:brightness(1.08);transform:translateY(-1px);outline:none}
+.sl-admin-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:9px 12px!important;border-radius:999px!important;border:1px solid #164d3e!important;background:linear-gradient(135deg,#164d3e,#1f7c61)!important;color:#fff!important;font-family:inherit!important;font-size:11px!important;font-weight:850!important;letter-spacing:.01em!important;line-height:normal!important;text-decoration:none!important;white-space:nowrap!important;cursor:pointer;box-shadow:0 4px 12px rgba(15,61,50,.18);transition:transform .15s ease,background .15s ease}
+.sl-admin-toggle:hover,.sl-admin-toggle:focus-visible{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;color:#fff!important;filter:none;transform:translateY(-1px);outline:none}
 .sl-admin-dropdown{position:absolute;z-index:9999;top:calc(100% + 5px);right:0;min-width:220px;padding:7px;background:linear-gradient(160deg,#0f3d32,#164a3d);border:1px solid #1f7a5c;border-radius:12px;box-shadow:0 14px 30px rgba(10,40,30,.35)}
 .sl-admin-dropdown:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important}
 .sl-admin-dropdown[hidden]{display:none!important}
@@ -779,12 +779,12 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 .sl-admin-dropdown[hidden]{display:none!important}
 .sl-admin-dropdown a,.sl-navlinks .sl-admin-dropdown a,.sl-admin-menu .sl-admin-dropdown a{display:block!important;visibility:visible!important;opacity:1!important;color:#f7fbf8!important;background:transparent!important;padding:11px 13px!important;border:0!important;border-radius:8px!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important;text-decoration:none!important;white-space:normal!important;transform:none!important;box-shadow:none!important}
 .sl-admin-dropdown a:hover,.sl-admin-dropdown a:focus,.sl-navlinks .sl-admin-dropdown a:hover,.sl-admin-menu .sl-admin-dropdown a:hover{background:#1f7a5c!important;color:#fff!important;filter:none!important;outline:none!important;transform:none!important}
-.sl-admin-toggle,.sl-admin-toggle:hover,.sl-admin-toggle:focus-visible{background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;border-color:#0f3d32!important;outline:none!important;filter:brightness(1.05)}
+.sl-admin-toggle{background:linear-gradient(135deg,#164d3e,#1f7c61)!important;color:#fff!important;border-color:#164d3e!important;outline:none!important}.sl-admin-toggle:hover,.sl-admin-toggle:focus-visible{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;border-color:#1f7c61!important;filter:none}
 @media(max-width:850px){.sl-admin-dropdown{left:0!important;right:auto!important}}\n@media(max-width:480px){.sl-admin-toggle{font-size:10px!important;padding:8px 10px!important}}
 
 /* Make Admin dropdown match the language dropdown exactly in shape, colors, spacing and hover behavior. */
 .sl-admin-menu{position:relative!important;display:inline-flex!important;align-items:center!important;z-index:100!important;overflow:visible!important}
-.sl-admin-toggle,.sl-admin-toggle:hover,.sl-admin-toggle:focus,.sl-admin-toggle:focus-visible{
+.sl-admin-toggle{
  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
  padding:9px 14px!important;border-radius:999px!important;border:1px solid #0f3d32!important;
  background:linear-gradient(135deg,#0f3d32,#1f7a5c)!important;color:#fff!important;
