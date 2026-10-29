@@ -1091,27 +1091,23 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
 </style>
 
 <style id="staylatin-find-places-polished-text">
-/* Restore a clear button using the same forest-green and terracotta hover colors as the header links. */
+/* Compact Find places button; use the site default forest green and warm-tan hover, with no arrow. */
 .sl-find-places-text{
- display:inline-flex!important;align-items:center;justify-content:center;gap:8px!important;
+ display:inline-flex!important;align-items:center;justify-content:center;
  appearance:none!important;-webkit-appearance:none!important;
  background:#173f35!important;background-image:none!important;
- border:1px solid #173f35!important;border-radius:8px!important;
- box-shadow:none!important;padding:11px 18px!important;margin:0!important;
- color:#fff!important;font:inherit!important;font-size:15px!important;font-weight:800!important;
- letter-spacing:.015em!important;line-height:1.4!important;
+ border:1px solid #173f35!important;border-radius:7px!important;
+ box-shadow:none!important;padding:7px 13px!important;margin:0!important;
+ color:#fff!important;font:inherit!important;font-size:14px!important;font-weight:800!important;
+ letter-spacing:.01em!important;line-height:1.35!important;
  text-decoration:none!important;cursor:pointer;
- transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .18s ease!important;
+ transition:background-color .18s ease,border-color .18s ease,color .18s ease!important;
 }
-.sl-find-places-text::after{
- content:"→";display:inline-block;font-size:17px!important;font-weight:700!important;
- line-height:1;transition:transform .18s ease!important;
-}
+.sl-find-places-text::after{content:none!important;display:none!important}
 .sl-find-places-text:hover,.sl-find-places-text:focus-visible{
- color:#fff!important;background:#c86d4a!important;border-color:#c86d4a!important;
+ color:#fff!important;background:#c5a77d!important;border-color:#c5a77d!important;
  box-shadow:none!important;
 }
-.sl-find-places-text:hover::after,.sl-find-places-text:focus-visible::after{transform:translateX(3px)}
 </style>
 </head>
 <body>
