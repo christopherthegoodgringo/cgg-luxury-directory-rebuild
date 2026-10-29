@@ -1333,9 +1333,12 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 </div></section>
 <section class="section listings" id="stays"><div class="wrap"><div class="section-head"><div><div class="kicker" data-en="A considered collection" data-es="Una selección cuidada" data-pt="Uma seleção criteriosa">A considered collection</div><h2 data-en="Places with a sense of place." data-es="Lugares con identidad." data-pt="Lugares com identidade.">Places with a sense of place.</h2></div></div>
 <form class="searchbox" id="searchForm">
-<div class="field destination-field"><label for="destination" data-en="Destination or property" data-es="Destino o alojamiento" data-pt="Destino ou acomodação">Destination or property</label><input id="destination" placeholder="Try Santa Marta, Tunja or a property name" data-en-placeholder="Try Santa Marta, Tunja or a property name" data-es-placeholder="Prueba Santa Marta, Tunja o el nombre de un alojamiento" data-pt-placeholder="Experimente Santa Marta, Tunja ou o nome de uma acomodação" autocomplete="off"></div>
-<div class="field type-field"><label for="searchType" data-en="Looking for" data-es="Buscando" data-pt="Procurando">Looking for</label><select id="searchType" aria-label="Filter by stay type"><option value="all" data-en="All exceptional stays" data-es="Todos los alojamientos excepcionales" data-pt="Todos os alojamentos excepcionais">All exceptional stays</option><option value="hotels" data-en="Stays" data-es="Alojamientos" data-pt="Alojamentos">Stays</option></select></div>
-<button class="search-submit" type="submit" id="searchTextLink" data-en="Search" data-es="Buscar" data-pt="Buscar"><span aria-hidden="true">⌕</span> Search</button>
+<div class="search-wrapper">
+<div class="field destination-field"><label for="destination" data-en="Destination or property" data-es="Destino o alojamiento" data-pt="Destino ou acomodação">Destination or property</label><div class="input-icon">🔍<input id="destination" placeholder="Try Santa Marta, Tunja or a property name" data-en-placeholder="Try Santa Marta, Tunja or a property name" data-es-placeholder="Prueba Santa Marta, Tunja o el nombre de un alojamiento" data-pt-placeholder="Experimente Santa Marta, Tunja ou o nome de uma acomodação" autocomplete="off"></div></div>
+<div class="field type-field"><label for="searchType" data-en="Looking for" data-es="Buscando" data-pt="Procurando">Looking for</label><select id="searchType" aria-label="Filter by stay type"><option value="all" data-en="All exceptional stays" data-es="Todos los alojamientos excepcionales" data-pt="Todos os alojamientos excepcionales">All exceptional stays</option><option value="hotels" data-en="Stays" data-es="Alojamientos" data-pt="Alojamentos">Stays</option></select></div>
+<div class="field vibe-field"><label for="searchVibe" data-en="Vibe" data-es="Ambiente" data-pt="Ambiente">Vibe</label><select id="searchVibe"><option value="">Any vibe</option><option>Nature</option><option>Culture</option><option>Adventure</option><option>Relaxation</option></select></div>
+</div>
+<button class="search-submit" type="submit" id="searchTextLink" data-en="Search" data-es="Buscar" data-pt="Buscar">Search</button>
 </form>
 <div class="property-count-wrap" aria-live="polite" aria-atomic="true"><p class="property-count-plain"><span data-en="Properties matching your search" data-es="Alojamientos que coinciden con tu búsqueda" data-pt="Acomodações que correspondem à sua busca"></span> <strong id="propertyCountNumber">—</strong></p></div>
 
@@ -2124,6 +2127,25 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
  border-color:#c49b4d!important;color:#fff!important;
  transform:translateY(-2px)!important;box-shadow:0 7px 16px #163d2c24!important;outline:none!important;
 }
+</style>
+
+<style id="improved-search-box">
+/* Enhanced search box with more features */
+#stays .searchbox{display:grid!important;grid-template-columns:repeat(3,minmax(150px,1fr)) auto!important;align-items:stretch!important;gap:10px!important;padding:14px 16px!important;border:1.5px solid #b8d5c8!important;border-radius:16px!important;background:linear-gradient(135deg,#fefdfb 0%,#f9fdf9 100%)!important;box-shadow:0 8px 24px rgba(23,63,53,.1),inset 0 1px 0 rgba(255,255,255,.5)!important}
+#stays .search-wrapper{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:10px;width:100%}
+#stays .searchbox .field{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:6px!important;min-width:0!important;margin:0!important;padding:8px 14px!important;border:0!important;border-radius:11px!important;background:#f5f8f6!important;transition:all .2s ease!important}
+#stays .searchbox .field:focus-within{background:#fff!important;border:1px solid #7fb89a!important;box-shadow:0 4px 12px rgba(127,184,154,.15)!important}
+#stays .searchbox .field label{display:block!important;margin:0!important;color:#4a6659!important;font-size:9px!important;font-weight:900!important;letter-spacing:.12em!important;text-transform:uppercase!important;line-height:1.2!important}
+#stays .searchbox .field input,#stays .searchbox .field select{width:100%!important;border:0!important;outline:0!important;background:transparent!important;color:#1a2e28!important;font-size:14px!important;font-weight:500!important;padding:0!important;min-width:0!important;font-family:inherit!important}
+#stays .searchbox .field select{cursor:pointer!important}
+#stays .searchbox .field input::placeholder{color:#8a9b92!important}
+.input-icon{display:flex;align-items:center;gap:6px;position:relative}
+.input-icon input{flex:1;padding-left:4px}
+#stays .search-submit{grid-column:auto!important;align-self:center!important;min-height:44px!important;padding:0 28px!important;background:linear-gradient(135deg,#164d3e,#1f7c61)!important;color:#fff!important;border:0!important;border-radius:10px!important;font-size:13px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;cursor:pointer!important;transition:all .2s ease!important;box-shadow:0 6px 16px rgba(22,77,62,.2)!important}
+#stays .search-submit:hover{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;transform:translateY(-2px)!important;box-shadow:0 8px 20px rgba(22,77,62,.3)!important}
+#stays .search-submit:active{transform:translateY(0)!important}
+@media(max-width:920px){#stays .searchbox{grid-template-columns:1fr 1fr auto!important}#stays .search-wrapper{grid-template-columns:1fr 1fr!important}#stays .vibe-field{grid-column:1/-1!important}}
+@media(max-width:640px){#stays .searchbox{grid-template-columns:1fr auto!important;gap:8px!important;padding:12px 14px!important}#stays .search-wrapper{grid-template-columns:1fr!important;gap:8px!important}#stays .search-submit{grid-column:2!important}}
 </style>
 
 <style id="staylatin-search-bar-polish">
