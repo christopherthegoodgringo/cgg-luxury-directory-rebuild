@@ -23,7 +23,7 @@
 
 /* Shared homepage header: use on every StayLatin page */
 .sl-global-header{background:#f7f4ec;color:#173f35;border-bottom:1px solid #e5e0d5}.sl-tagline{background:#112e27;color:#fff;padding:9px 0}.sl-shell{width:min(1120px,calc(100% - 32px));margin:0 auto}.sl-tagline .sl-shell{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em}.sl-tagline strong{font-weight:850;letter-spacing:.14em}.sl-tagline span{color:#e0e9e1;letter-spacing:.01em;font-size:12px}.sl-tagline b{color:#e5c889;font-size:15px}.sl-mainnav{min-height:78px;display:flex;align-items:center;gap:22px;padding:12px 0}.sl-brand{display:flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:#173f35;font:700 28px Georgia,serif}.sl-mark{width:37px;height:37px;border:none;border-radius:50%;display:inline-grid;place-items:center;padding:0;overflow:hidden;flex:none;line-height:0;background:transparent}.sl-mark svg{display:block;width:37px;height:37px}.sl-navlinks{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.5vw,20px);flex:1;flex-wrap:wrap}.sl-navlinks a{font-size:12px;font-weight:800;color:#334b40;text-decoration:none;white-space:nowrap}.sl-navlinks a:hover{color:#c86d4a}button.sl-language{cursor:pointer;font:inherit}
-.sl-lang-wrap{position:relative;display:inline-flex;align-items:center;z-index:50}
+.sl-lang-wrap{position:relative;display:inline-flex;align-items:center;z-index:50;overflow:visible}
 .sl-language,#language{
  display:inline-flex!important;align-items:center;justify-content:center;gap:6px;
  padding:9px 14px!important;border-radius:999px!important;border:1px solid #164d3e!important;
@@ -34,10 +34,9 @@
  transition:transform .15s ease,filter .15s ease;
 }
 .sl-language:hover,#language:hover{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;filter:none;transform:translateY(-1px);animation-play-state:paused!important;color:#fff!important}
-.sl-lang-menu{position:absolute;top:100%;right:0;z-index:60;min-width:168px;margin:0;padding:8px;list-style:none;pointer-events:none;
+.sl-lang-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:168px;margin:0;padding:8px;list-style:none;
  background:#e5f3ec;border:1px solid #a8cebb;border-radius:14px;
- box-shadow:0 8px 20px rgba(10,40,30,.12);color:#173f35}
-.sl-lang-menu:not([hidden]){pointer-events:auto}
+ box-shadow:0 8px 20px rgba(10,40,30,.12);color:#173f35;pointer-events:auto}
 .sl-lang-menu.is-open,.sl-lang-menu:not([hidden]){display:block}
 .sl-lang-menu[hidden]{display:none!important}
 .sl-lang-menu li{padding:11px 12px;border-radius:10px;font-size:13px;font-weight:750;color:#173f35;cursor:pointer}
@@ -780,8 +779,7 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 /* Final admin menu override: keep every destination visible and use the same green hover as homepage buttons. */
 .sl-global-header,.sl-mainnav,.sl-navlinks,.sl-admin-menu{overflow:visible!important}
 .sl-admin-menu{position:relative!important;isolation:isolate}
-.sl-admin-dropdown{position:absolute!important;top:100%!important;right:0!important;left:auto!important;min-width:230px!important;max-width:min(300px,90vw)!important;padding:7px!important;z-index:99999!important;background:#e5f3ec!important;border:1px solid #a8cebb!important;border-radius:12px!important;box-shadow:0 14px 30px rgba(10,40,30,.18)!important;visibility:visible!important;opacity:1!important;display:none;pointer-events:none!important}
-.sl-admin-dropdown:not([hidden]){pointer-events:auto!important}
+.sl-admin-dropdown{position:absolute!important;top:calc(100% + 8px)!important;right:0!important;left:auto!important;min-width:230px!important;max-width:min(300px,90vw)!important;padding:7px!important;z-index:99999!important;background:#e5f3ec!important;border:1px solid #a8cebb!important;border-radius:12px!important;box-shadow:0 14px 30px rgba(10,40,30,.18)!important;visibility:visible!important;opacity:1!important;display:none;pointer-events:auto!important}
 .sl-admin-dropdown:not([hidden]){display:block!important}
 .sl-admin-dropdown[hidden]{display:none!important}
 .sl-admin-dropdown a,.sl-navlinks .sl-admin-dropdown a,.sl-admin-menu .sl-admin-dropdown a{display:block!important;visibility:visible!important;opacity:1!important;color:#173f35!important;background:transparent!important;padding:11px 13px!important;border:0!important;border-radius:8px!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important;text-decoration:none!important;white-space:normal!important;transform:none!important;box-shadow:none!important}
