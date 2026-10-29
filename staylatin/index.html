@@ -2457,3 +2457,10 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 #stay-2 .photo .staylatin-uniform-tier-ribbon.staylatin-verified-uniform::before,
 #stay-2 .photo .staylatin-uniform-tier-ribbon.staylatin-verified-uniform::after{content:none!important;display:none!important}
 </style>
+
+<style id="staylatin-fix-verified-legacy-pseudo-check">
+/* Remove the old generic Verified check that was being added behind the new check. Keep only the check inside the current badge markup. */
+.stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon::before,
+.stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon::after{content:none!important;display:none!important}
+.stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon{background:linear-gradient(115deg,#0d382c 0%,#174d3b 72%,#0d382c 100%)!important;border-color:#e7c36e!important;color:#f5d580!important}
+</style>
