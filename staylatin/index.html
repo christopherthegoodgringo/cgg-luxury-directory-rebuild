@@ -1669,104 +1669,76 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 </script>
 
 
-<style id="hide-tier-badges">/* Tier badges (Premium/Featured/Verified/Basic labels) removed */.pill{display:none!important}</style>
-
-<!-- ═══════════════════════════════════════════════════════════════════
-     TIER BADGE & STAR — DEFINITIVE OVERRIDES (wins over all prior blocks)
-     Order: Premium > Featured > Verified > Basic
-     Stars: same size (18px) — distinct colour/animation per tier
-     ═══════════════════════════════════════════════════════════════════ -->
-<style id="staylatin-tier-definitive">
-
-/* ── Keyframes ─────────────────────────────────────────────────────── */
-@keyframes tierSpinPremium{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes tierSpinFeatured{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes tierGlowVerified{0%,100%{filter:drop-shadow(0 0 3px #4caf82) drop-shadow(0 0 1px #4caf82)}50%{filter:drop-shadow(0 0 7px #4caf82) drop-shadow(0 0 3px #9de0bb)}}
-
-/* ── Shared star geometry (uniform size across all tiers) ──────────── */
-.stay-card .photo > .pill .tier-star{
-  display:inline-block!important;
-  font-size:16px!important;
+<style id="staylatin-tier-badges">
+/* ── Target both .pill class and bare spans inside .photo ── */
+.stay-card .photo>.pill,
+.stay-card .photo>span:not(.tier-star):not(.photo-act):not(.photo-dot){
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  padding:5px 10px!important;
+  border-radius:5px!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.1em!important;
+  text-transform:uppercase!important;
   line-height:1!important;
-  width:16px!important;
-  height:16px!important;
-  text-align:center!important;
-  vertical-align:middle!important;
-  flex-shrink:0!important;
-  animation:none!important;
-  filter:none!important;
-  background:none!important;
-  -webkit-background-clip:unset!important;
-  -webkit-text-fill-color:unset!important;
+  position:absolute!important;
+  top:12px!important;
+  left:12px!important;
+  z-index:10!important;
+  border:1px solid transparent!important;
+  white-space:nowrap!important;
+  max-width:none!important;
+  height:auto!important;
+  min-width:0!important;
 }
+/* hide animated inner spans — icon comes from ::before */
+.stay-card .photo>span .tier-star,
+.stay-card .photo>span .tier-level,
+.stay-card .photo>.pill .tier-star,
+.stay-card .photo>.pill .tier-level{display:none!important}
 
-/* ── PREMIUM — deep gold star, fast spin ───────────────────────────── */
-.stay-card.tier-premium .photo > .pill{
-  background:linear-gradient(135deg,#7b5000,#c8860a)!important;
-  color:#fff9ec!important;
-  border-color:#c8860a!important;
-  font-weight:700!important;
+/* BASIC — quiet grey-green, dot */
+.stay-card.tier-basic .photo>span,
+.stay-card.tier-basic .photo>.pill{
+  background:rgba(240,248,242,.92)!important;
+  border-color:rgba(120,160,120,.4)!important;
+  color:#2e4d38!important;
 }
-.stay-card.tier-premium .photo > .pill .tier-star{
-  color:transparent!important;
-  -webkit-text-fill-color:transparent!important;
-  background:conic-gradient(from 0deg,#ffe066,#ffc700,#ffad00,#ff8c00,#ffe066)!important;
-  -webkit-background-clip:text!important;
-  background-clip:text!important;
-  animation:tierSpinPremium 1.2s linear infinite!important;
-  filter:drop-shadow(0 0 3px #ffc700)!important;
-}
+.stay-card.tier-basic .photo>span::before,
+.stay-card.tier-basic .photo>.pill::before{content:"·";font-size:16px;line-height:.8;margin-right:1px}
 
-/* ── FEATURED — purple/violet star, medium spin ────────────────────── */
-.stay-card.tier-featured .photo > .pill{
-  background:linear-gradient(135deg,#3d1a6e,#7c3aed)!important;
-  color:#f3e8ff!important;
-  border-color:#7c3aed!important;
-  font-weight:700!important;
+/* VERIFIED ✓ — emerald green, checkmark */
+.stay-card.tier-verified .photo>span,
+.stay-card.tier-verified .photo>.pill{
+  background:rgba(210,245,228,.95)!important;
+  border-color:rgba(80,170,120,.5)!important;
+  color:#0e5232!important;
 }
-.stay-card.tier-featured .photo > .pill .tier-star{
-  color:transparent!important;
-  -webkit-text-fill-color:transparent!important;
-  background:conic-gradient(from 0deg,#d8b4fe,#a855f7,#7c3aed,#c026d3,#d8b4fe)!important;
-  -webkit-background-clip:text!important;
-  background-clip:text!important;
-  animation:tierSpinFeatured 2s linear infinite!important;
-  filter:drop-shadow(0 0 3px #a855f7)!important;
-}
+.stay-card.tier-verified .photo>span::before,
+.stay-card.tier-verified .photo>.pill::before{content:"✓";font-size:11px;line-height:1}
 
-/* ── VERIFIED — green star, gentle pulse glow, no spin ─────────────── */
-.stay-card.tier-verified .photo > .pill{
-  background:linear-gradient(135deg,#1a5c42,#2d9e6b)!important;
-  color:#e8faf2!important;
-  border-color:#2d9e6b!important;
-  font-weight:600!important;
+/* FEATURED ✦ — purple gradient, sparkle */
+.stay-card.tier-featured .photo>span,
+.stay-card.tier-featured .photo>.pill{
+  background:linear-gradient(135deg,rgba(220,215,255,.95),rgba(200,190,255,.95))!important;
+  border-color:rgba(140,120,230,.55)!important;
+  color:#322080!important;
 }
-.stay-card.tier-verified .photo > .pill .tier-star{
-  color:#7de8b0!important;
-  -webkit-text-fill-color:#7de8b0!important;
-  background:none!important;
-  -webkit-background-clip:unset!important;
-  background-clip:unset!important;
-  animation:tierGlowVerified 2.5s ease-in-out infinite!important;
-  filter:none!important;
-}
+.stay-card.tier-featured .photo>span::before,
+.stay-card.tier-featured .photo>.pill::before{content:"✦";font-size:10px;line-height:1}
 
-/* ── BASIC — muted grey star, no animation ──────────────────────────── */
-.stay-card.tier-basic .photo > .pill{
-  background:linear-gradient(135deg,#e8ede9,#f5f8f6)!important;
-  color:#3a5248!important;
-  border-color:#b8cfc4!important;
-  font-weight:500!important;
+/* PREMIUM ★ — gold gradient, star, shadow */
+.stay-card.tier-premium .photo>span,
+.stay-card.tier-premium .photo>.pill{
+  background:linear-gradient(135deg,#fff0b0,#ffd040)!important;
+  border-color:rgba(180,130,0,.5)!important;
+  color:#3d2400!important;
+  box-shadow:0 2px 8px rgba(160,110,0,.25)!important;
 }
-.stay-card.tier-basic .photo > .pill .tier-star{
-  color:#8aab9c!important;
-  -webkit-text-fill-color:#8aab9c!important;
-  background:none!important;
-  -webkit-background-clip:unset!important;
-  background-clip:unset!important;
-  animation:none!important;
-  filter:none!important;
-}
+.stay-card.tier-premium .photo>span::before,
+.stay-card.tier-premium .photo>.pill::before{content:"★";font-size:11px;line-height:1}
 </style>
 </body>
 </html>
