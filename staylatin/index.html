@@ -635,23 +635,25 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 /* Full-width animated FOREVER FREE informational banner, not clickable. */
 #staylatin-donation-tab{
  position:fixed;top:0;left:0;right:0;width:100%;max-width:none;
+ height:42px;
  transform:none;z-index:99999;box-sizing:border-box;
  display:flex;flex-direction:row;align-items:center;justify-content:center;
- gap:13px;padding:9px 0;
- border:0;border-bottom:1px solid rgba(255,255,255,.72);border-radius:0;
+ padding:0;
+ border:0;border-bottom:1px solid rgba(255,255,255,.18);border-radius:0;
  background:linear-gradient(100deg,#062b20 0%,#075b3b 38%,#087a55 68%,#06452f 100%);
  color:#ffffff;text-decoration:none;white-space:normal;text-align:center;
  box-shadow:0 3px 15px rgba(36,67,75,.2);
  animation:staylatinDonationPulse 7s ease-in-out infinite;
 }
 #staylatin-donation-tab .donation-inner{
- width:min(1120px,calc(100% - 32px));
+ width:min(1160px,calc(100% - 40px));
+ height:100%;
  display:flex;flex-direction:row;align-items:center;justify-content:center;
  gap:13px;
 }
 #staylatin-donation-tab .donation-vertical{
  writing-mode:horizontal-tb;transform:none;
- font-size:11px;font-weight:850;letter-spacing:.075em;line-height:1.15;
+ font-size:12px;font-weight:850;letter-spacing:.04em;line-height:1.15;
  text-align:center;text-transform:uppercase;
 }
 #staylatin-donation-tab .donation-heart{font-size:17px;line-height:1}
