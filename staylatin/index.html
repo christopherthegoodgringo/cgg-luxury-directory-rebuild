@@ -1333,8 +1333,9 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 </div></section>
 <section class="section listings" id="stays"><div class="wrap"><div class="section-head"><div><div class="kicker" data-en="A considered collection" data-es="Una selección cuidada" data-pt="Uma seleção criteriosa">A considered collection</div><h2 data-en="Places with a sense of place." data-es="Lugares con identidad." data-pt="Lugares com identidade.">Places with a sense of place.</h2></div></div>
 <form class="searchbox" id="searchForm">
-<div class="field"><label for="destination" data-en="Destination in Latin America" data-es="Destino en América Latina" data-pt="Destino na América Latina">Destination in Latin America</label><input id="destination" placeholder="Search city, hotel, restaurant or bar" data-en-placeholder="Search city, hotel, restaurant or bar" data-es-placeholder="Buscar ciudad, hotel, restaurante o bar" data-pt-placeholder="Buscar cidade, hotel, restaurante ou bar"></div>
-<a class="search-text-link" href="#stays" id="searchTextLink" role="button" data-en="Search" data-es="Buscar" data-pt="Buscar">Search</a>
+<div class="field destination-field"><label for="destination" data-en="Destination or property" data-es="Destino o alojamiento" data-pt="Destino ou acomodação">Destination or property</label><input id="destination" placeholder="Try Santa Marta, Tunja or a property name" data-en-placeholder="Try Santa Marta, Tunja or a property name" data-es-placeholder="Prueba Santa Marta, Tunja o el nombre de un alojamiento" data-pt-placeholder="Experimente Santa Marta, Tunja ou o nome de uma acomodação" autocomplete="off"></div>
+<div class="field type-field"><label for="searchType" data-en="I'm looking for" data-es="Estoy buscando" data-pt="Estou procurando">I'm looking for</label><select id="searchType" aria-label="Filter by property type"><option value="all" data-en="All properties" data-es="Todos los alojamientos" data-pt="Todas as acomodações">All properties</option><option value="hotels" data-en="Hotels & hostels" data-es="Hoteles y hostales" data-pt="Hotéis e hostels">Hotels &amp; hostels</option><option value="Boutique hotel" data-en="Boutique hotels" data-es="Hoteles boutique" data-pt="Hotéis boutique">Boutique hotels</option><option value="Hostel" data-en="Hostels" data-es="Hostales" data-pt="Hostels">Hostels</option><option value="Restaurant" data-en="Restaurants" data-es="Restaurantes" data-pt="Restaurantes">Restaurants</option><option value="Bar" data-en="Bars" data-es="Bares" data-pt="Bares">Bars</option></select></div>
+<button class="search-submit" type="submit" id="searchTextLink" data-en="Search" data-es="Buscar" data-pt="Buscar"><span aria-hidden="true">⌕</span> Search</button>
 </form>
 <div class="property-count-wrap" aria-live="polite" aria-atomic="true"><p class="property-count-plain"><span data-en="Properties matching your search" data-es="Alojamientos que coinciden con tu búsqueda" data-pt="Acomodações que correspondem à sua busca"></span> <strong id="propertyCountNumber">—</strong></p></div>
 
@@ -1512,7 +1513,9 @@ function render(){
  const type="all";
  const vibe="all";
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
- const filtered=stays.filter(s=>(activeType==="all"||(activeType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===activeType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q)));
+ const selectedType=document.getElementById("searchType")?.value||activeType;
+ const filterType=selectedType==="all"?"all":selectedType;
+ const filtered=stays.filter(s=>(filterType==="all"||(filterType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===filterType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name+" "+s.type).toLowerCase().includes(q)));
  const tiers=[0,1,2,3,99];
  const found=tiers.flatMap(t=>filtered.filter(s=>(tierOrder[s.tier]??99)===t));
  const countNode=document.getElementById("propertyCountNumber");if(countNode)countNode.textContent=found.length.toLocaleString();
@@ -1639,7 +1642,8 @@ function render(){
 document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=9;render();});
 
 document.getElementById("searchTextLink").addEventListener("click",e=>{e.preventDefault();document.getElementById("searchForm").requestSubmit();});
-document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType=document.getElementById("searchType")?.value||"all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter===activeType));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
+document.getElementById("searchType").addEventListener("change",()=>{activeType=document.getElementById("searchType").value;listingLimit=9;render()});
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
 document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
 document.getElementById("destination").addEventListener("input",()=>{listingLimit=9;render()});
