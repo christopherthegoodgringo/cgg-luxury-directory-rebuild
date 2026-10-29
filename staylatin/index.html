@@ -929,6 +929,24 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
  border-color:#1f7c61!important;transform:translateY(-1px)!important;
 }
 </style>
+
+<style id="staylatin-dropdown-hover-color-match">
+/* Both opened dropdown panels use the same green gradient as the Find places hover state. */
+.sl-admin-dropdown:not([hidden]),#languageMenu:not([hidden]),.sl-lang-menu:not([hidden]){
+ background:linear-gradient(135deg,#1f7c61,#2fa374)!important;
+ border:1px solid #1f7c61!important;
+ color:#fff!important;
+ box-shadow:0 14px 32px rgba(10,40,30,.28)!important;
+}
+.sl-admin-dropdown a,.sl-admin-dropdown a:visited,
+#languageMenu li,.sl-lang-menu li{color:#fff!important}
+.sl-admin-dropdown a:hover,.sl-admin-dropdown a:focus-visible,
+#languageMenu li:hover,#languageMenu li:focus,
+.sl-lang-menu li:hover,.sl-lang-menu li:focus,
+#languageMenu li[aria-selected="true"],.sl-lang-menu li[aria-selected="true"]{
+ background:rgba(255,255,255,.2)!important;color:#fff!important;
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
