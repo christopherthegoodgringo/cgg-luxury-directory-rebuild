@@ -2251,3 +2251,23 @@ html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice:hover 
 </style>
 
 
+
+<style id="staylatin-force-home-traveler-language-fade">
+/* Apply the same gentle fade-in/fade-out to Home, Traveler Join / Sign in, and EN / ES / PT. */
+@keyframes stayLatinNavFadeFinal { 0%,100% { opacity:.62; filter:brightness(.94); } 50% { opacity:1; filter:brightness(1.08); } }
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn:not(.sl-admin-direct-link),
+html body header.sl-global-header .sl-lang-wrap .sl-language,
+html body header.sl-global-header .sl-lang-wrap .sl-language .sl-lang-choice,
+html body header.sl-global-header .sl-lang-wrap #language,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice {
+ animation:stayLatinNavFadeFinal 2.2s ease-in-out infinite!important;
+ transition:none!important;
+}
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home:hover,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home:focus-visible,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn:not(.sl-admin-direct-link):hover,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn:not(.sl-admin-direct-link):focus-visible,
+html body header.sl-global-header .sl-lang-wrap .sl-language:hover,
+html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { animation-play-state:paused!important;opacity:1!important;filter:none!important; }
+</style>
