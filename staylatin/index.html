@@ -971,6 +971,52 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
  border-color:#1f7c61!important;
 }
 </style>
+
+<style id="staylatin-header-text-only">
+/* Header controls appear as plain navigation text, not buttons; keep dropdowns interactive. */
+.sl-global-header .sl-navlinks .sl-nav-btn,
+.sl-global-header .sl-navlinks button.sl-admin-toggle,
+.sl-global-header .sl-language,
+.sl-global-header #language,
+.sl-global-header .sl-admin-toggle,
+.sl-global-header .sl-language{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-color:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+  color:#334b40!important;
+  font:inherit!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  letter-spacing:normal!important;
+  text-decoration:none!important;
+  text-transform:none!important;
+  animation:none!important;
+  transform:none!important;
+  filter:none!important;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.sl-global-header .sl-navlinks .sl-nav-disabled{cursor:default!important}
+.sl-global-header .sl-navlinks .sl-nav-btn:hover,
+.sl-global-header .sl-navlinks .sl-nav-btn:focus-visible,
+.sl-global-header .sl-language:hover,
+.sl-global-header #language:hover,
+.sl-global-header .sl-admin-toggle:hover{
+  background:transparent!important;
+  color:#c86d4a!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+.sl-global-header .sl-lang-wrap{flex:none}
+</style>
+
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
