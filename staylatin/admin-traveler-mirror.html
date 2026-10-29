@@ -14,7 +14,7 @@
 <main class="shell"><section class="hero"><div class="eyebrow" style="color:var(--forest2)">ONE TRAVELER AT A TIME</div><h1>Traveler portal mirror</h1><p>Open a real traveler account and review their saved profile and toolkit data in one aligned view. This is a separate, read-only admin workspace; it does not sign you in as the traveler or change their account.</p><div id="status" class="status" role="status" aria-live="polite"></div></section>
 <div class="layout"><aside class="panel"><h2>Traveler directory</h2><p class="sub" id="directoryCount">Verifying administrator access…</p><input id="search" class="search" type="search" placeholder="Search name, email, country or ID" aria-label="Search travelers"><div id="people" class="list"><div class="loading">Loading authorized directory…</div></div><p class="privacy-note">Private account information is visible only after StayLatin administrator access is verified.</p></aside>
 <section class="content" id="mirror"><div class="card loading">Choose a traveler to open their mirror.</div></section></div></main><footer class="shell">StayLatin · Internal administration · Profile and toolkit data refreshes from the connected StayLatin database.</footer>
-<script src="staylatin-config.js?v=9b0326d42d12"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="staylatin-config.js?v=6bd85e8c5f6d"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let db=null,admin=null,travelers=[],selected=null,cache=new Map();
