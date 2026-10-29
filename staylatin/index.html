@@ -1247,8 +1247,7 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 <section class="section listings" id="stays"><div class="wrap"><div class="section-head"><div><div class="kicker" data-en="A considered collection" data-es="Una selección cuidada" data-pt="Uma seleção criteriosa">A considered collection</div><h2 data-en="Places with a sense of place." data-es="Lugares con identidad." data-pt="Lugares com identidade.">Places with a sense of place.</h2></div></div>
 <form class="searchbox" id="searchForm">
 <div class="field"><label for="destination" data-en="Destination in Latin America" data-es="Destino en América Latina" data-pt="Destino na América Latina">Destination in Latin America</label><input id="destination" placeholder="Search city, hotel, restaurant or bar" data-en-placeholder="Search city, hotel, restaurant or bar" data-es-placeholder="Buscar ciudad, hotel, restaurante o bar" data-pt-placeholder="Buscar cidade, hotel, restaurante ou bar"></div>
-<div class="field"><label for="style" data-en="Category" data-es="Categoría" data-pt="Categoria">Category</label><select id="style"><option value="all" data-en="All ratings" data-es="Todas las calificaciones" data-pt="Todas as classificações">All ratings</option><option value="4" data-en="4-star rating" data-es="Calificación de 4 estrellas" data-pt="Classificação de 4 estrelas">4-star rating</option><option value="4.5" data-en="4.5-star rating" data-es="Calificación de 4,5 estrellas" data-pt="Classificação de 4,5 estrelas">4.5-star rating</option><option value="5" data-en="5-star rating" data-es="Calificación de 5 estrellas" data-pt="Classificação de 5 estrelas">5-star rating</option></select></div>
-<div class="field"><label for="vibe" data-en="Experience" data-es="Experiencia" data-pt="Experiência">Experience</label><select id="vibe"><option value="all" data-en="All experiences" data-es="Todas las experiencias" data-pt="Todas as experiências">All experiences</option><option value="Culture" data-en="City & culture" data-es="Ciudad y cultura" data-pt="Cidade e cultura">City & culture</option><option value="Nature" data-en="Beach & nature" data-es="Playa y naturaleza" data-pt="Praia e natureza">Beach & nature</option><option value="Work" data-en="Business & extended stays" data-es="Negocios y estancias largas" data-pt="Negócios e estadias prolongadas">Business & extended stays</option></select></div>
+
 
 </form>
 <div class="property-count-wrap" aria-live="polite" aria-atomic="true"><p class="property-count-plain"><span data-en="Properties matching your search" data-es="Alojamientos que coinciden con tu búsqueda" data-pt="Acomodações que correspondem à sua busca"></span> <strong id="propertyCountNumber">—</strong></p></div>
@@ -1424,8 +1423,8 @@ function initStayCarousels(){
 
 function render(){
  const q=document.getElementById("destination").value.trim().toLowerCase();
- const type=document.getElementById("style").value;
- const vibe=document.getElementById("vibe").value;
+ const type="all";
+ const vibe="all";
  const tierOrder={Premium:0,Featured:1,Verified:2,Basic:3};
  const filtered=stays.filter(s=>(activeType==="all"||(activeType==="hotels"?(s.type==="Boutique hotel"||s.type==="Hostel"):s.type===activeType))&&(type==="all"||Number(s.rating)===Number(type))&&(vibe==="all"||s.vibe===vibe)&&(!q||(s.city+" "+s.country+" "+s.name).toLowerCase().includes(q)));
  const tiers=[0,1,2,3,99];
@@ -1554,9 +1553,9 @@ function render(){
 document.getElementById("viewMoreBtn").addEventListener("click",()=>{listingLimit+=9;render();});
 
 document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();listingLimit=9;activeType="all";document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));render();document.getElementById("stays").scrollIntoView({behavior:"smooth"})});
-document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
-document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
-document.getElementById("destination").addEventListener("input",()=>{listingLimit=9;render()});document.getElementById("style").addEventListener("change",()=>{listingLimit=9;render()});document.getElementById("vibe").addEventListener("change",()=>{listingLimit=9;render()});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.filter;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===c));render()}));
+document.querySelectorAll("[data-category]").forEach(c=>c.addEventListener("click",()=>{listingLimit=9;activeType=c.dataset.category;if(document.getElementById("style"))document.getElementById("style").value="all";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===activeType));render()}));
+document.getElementById("destination").addEventListener("input",()=>{listingLimit=9;render()});
 const languageOrder=["en","es","pt"];
 const languageLabels={en:"EN",es:"ES",pt:"PT"};
 const languageNames={en:"English",es:"Español",pt:"Português"};
