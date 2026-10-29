@@ -647,6 +647,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
   padding:0 max(20px,calc((100% - 1160px)/2 + 20px));
   font-size:12px;font-weight:700;letter-spacing:.04em;color:#e8f6ef;
   pointer-events:none;white-space:nowrap;
+  animation:staylatinStaticPulse 7s ease-in-out infinite;
 }
 #staylatin-donation-tab .donation-static-right{color:#a8d5c0}
 /* Animated foreground content */
@@ -671,6 +672,10 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
   0%,15%,100%{opacity:0}
   30%,75%{opacity:1}
 }
+@keyframes staylatinStaticPulse{
+  0%,15%,100%{opacity:1}
+  30%,75%{opacity:0}
+}
 @media(max-width:560px){
   #staylatin-donation-tab .donation-static{font-size:10px}
   #staylatin-donation-tab .donation-static-right{display:none}
@@ -680,6 +685,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 }
 @media(prefers-reduced-motion:reduce){
   #staylatin-donation-tab .donation-inner{animation:none;opacity:1}
+  #staylatin-donation-tab .donation-static{animation:none;opacity:0}
 }
 </style>
 
