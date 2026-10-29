@@ -1089,6 +1089,30 @@ html[data-view="tablet"] .searchbox{grid-template-columns:1fr 1fr!important}
   font-weight:800!important;
 }
 </style>
+
+<style id="staylatin-find-places-polished-text">
+/* Refined text-only search action: elegant type, subtle arrow, no button chrome. */
+.sl-find-places-text{
+ display:inline-flex!important;align-items:center;gap:7px!important;
+ appearance:none!important;-webkit-appearance:none!important;
+ background:transparent!important;background-image:none!important;
+ border:0!important;border-radius:0!important;box-shadow:none!important;
+ padding:5px 0!important;margin:0!important;
+ color:#173f35!important;
+ font:inherit!important;font-size:14px!important;font-weight:800!important;
+ letter-spacing:.025em!important;line-height:1.4!important;
+ text-decoration:none!important;cursor:pointer;
+ transition:color .18s ease!important;
+}
+.sl-find-places-text::after{
+ content:"→";display:inline-block;font-size:17px!important;font-weight:600!important;
+ line-height:1;transition:transform .18s ease!important;
+}
+.sl-find-places-text:hover,.sl-find-places-text:focus-visible{
+ color:#c86d4a!important;background:transparent!important;box-shadow:none!important;
+}
+.sl-find-places-text:hover::after,.sl-find-places-text:focus-visible::after{transform:translateX(3px)}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
