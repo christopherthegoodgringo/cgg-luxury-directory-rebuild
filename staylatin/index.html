@@ -1217,6 +1217,13 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 <style id="staylatin-remove-search-field-divider">
 #stays .searchbox .field{border-right:0!important;border-bottom:0!important}
 </style>
+<style id="staylatin-search-text-link">
+#stays .searchbox{display:flex!important;align-items:center!important;gap:14px!important}
+#stays .searchbox .field{flex:1 1 auto!important;min-width:0!important}
+#stays .search-text-link{flex:0 0 auto;color:var(--forest)!important;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:10px 12px;white-space:nowrap}
+#stays .search-text-link:hover{color:var(--green-mid)!important}
+@media(max-width:560px){#stays .searchbox{gap:6px!important}#stays .search-text-link{padding:10px 5px}}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span>LOCAL KNOWLEDGE. BETTER STAYS.</span><span class="top-extra">Made for curious travelers across Latin America <span style="color:#e8c889">✦</span></span></div></div>
@@ -1250,8 +1257,7 @@ header.sl-global-header .sl-shell.sl-mainnav #language a{white-space:nowrap!impo
 <section class="section listings" id="stays"><div class="wrap"><div class="section-head"><div><div class="kicker" data-en="A considered collection" data-es="Una selección cuidada" data-pt="Uma seleção criteriosa">A considered collection</div><h2 data-en="Places with a sense of place." data-es="Lugares con identidad." data-pt="Lugares com identidade.">Places with a sense of place.</h2></div></div>
 <form class="searchbox" id="searchForm">
 <div class="field"><label for="destination" data-en="Destination in Latin America" data-es="Destino en América Latina" data-pt="Destino na América Latina">Destination in Latin America</label><input id="destination" placeholder="Search city, hotel, restaurant or bar" data-en-placeholder="Search city, hotel, restaurant or bar" data-es-placeholder="Buscar ciudad, hotel, restaurante o bar" data-pt-placeholder="Buscar cidade, hotel, restaurante ou bar"></div>
-
-
+<a class="search-text-link" href="#stays" id="searchTextLink" role="button" data-en="Search" data-es="Buscar" data-pt="Buscar">Search</a>
 </form>
 <div class="property-count-wrap" aria-live="polite" aria-atomic="true"><p class="property-count-plain"><span data-en="Properties matching your search" data-es="Alojamientos que coinciden con tu búsqueda" data-pt="Acomodações que correspondem à sua busca"></span> <strong id="propertyCountNumber">—</strong></p></div>
 
