@@ -16,9 +16,9 @@
 /* Uniform, more visible listing-level badges */
 .stay-card .photo>.pill{display:inline-flex;align-items:center;justify-content:center;min-width:104px;height:34px;padding:0 13px;border-radius:6px;font-size:11px;font-weight:850;letter-spacing:.1em;line-height:1;text-align:center;box-shadow:0 3px 10px #13271d20;border:1px solid transparent}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#dce8e1,#b7d0c2);color:#194b3a;border-color:#9bbbab}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
-.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
-.stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#174d3b;border-color:#d3a23b}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#174d3b;border-color:#d3a23b}
+.stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#174d3b;border-color:#d3a23b}
 
 
 /* Shared homepage header: use on every StayLatin page */
@@ -303,7 +303,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#533b0d!important;border-color:#d3a23b!important}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#174d3b!important;border-color:#d3a23b!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#ffe2d8,#f3a991)!important;color:#783c2e!important;border-color:#d98d75!important}
 </style>
 
@@ -366,7 +366,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 /* Tier pills: four clear green shades */
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
-.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#533b0d!important;border-color:#d3a23b!important}
+.stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;color:#174d3b!important;border-color:#d3a23b!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#d8eee4,#eef6f2)!important;color:#1a5c4a!important;border-color:#a8d5c0!important}
 /* Stars stay green-tint instead of rainbow */
 .stay-card.tier-premium .tier-star,.stay-card.tier-featured .tier-star,.stay-card.tier-verified .tier-star{
@@ -2082,7 +2082,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 .stay-card.tier-verified .photo>.pill{
   background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;
   border-color:#d3a23b!important;
-  color:#533b0d!important;
+  color:#174d3b!important;
 }
 .stay-card.tier-verified .photo>span::before,
 .stay-card.tier-verified .photo>.pill::before{content:"✓";font-size:11px;line-height:1}
@@ -2092,7 +2092,7 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 .stay-card.tier-featured .photo>.pill{
   background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;
   border-color:#d3a23b!important;
-  color:#533b0d!important;
+  color:#174d3b!important;
 }
 .stay-card.tier-featured .photo>span::before,
 .stay-card.tier-featured .photo>.pill::before{content:"✦";font-size:11px;line-height:1}
@@ -2422,7 +2422,7 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 <style id="staylatin-verified-check-only">
 /* Verified label gets a checkmark; all labels retain identical outer dimensions and style. */
 .staylatin-uniform-tier-ribbon.staylatin-verified-uniform{gap:5px!important}
-.staylatin-verified-uniform .staylatin-verified-check{display:inline-block!important;flex:0 0 auto!important;width:auto!important;height:auto!important;margin-top:-1px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#533b0d!important;font-family:Arial,sans-serif!important;font-size:14px!important;font-weight:800!important;line-height:1!important;text-shadow:none!important}
+.staylatin-verified-uniform .staylatin-verified-check{display:inline-block!important;flex:0 0 auto!important;width:auto!important;height:auto!important;margin-top:-1px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#174d3b!important;font-family:Arial,sans-serif!important;font-size:14px!important;font-weight:800!important;line-height:1!important;text-shadow:none!important}
 </style>
 
 <style id="staylatin-basic-grey-no-star">
@@ -2450,7 +2450,7 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 /* Remove the old generic Verified check that was being added behind the new check. Keep only the check inside the current badge markup. */
 .stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon::before,
 .stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon::after{content:none!important;display:none!important}
-.stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;border-color:#d3a23b!important;color:#533b0d!important}
+.stay-card.tier-verified .photo>.staylatin-uniform-tier-ribbon{background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;border-color:#d3a23b!important;color:#174d3b!important}
 </style>
 
 <style id="staylatin-basic-grey-remove-legacy-star">
@@ -2466,8 +2466,8 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 
 <style id="staylatin-verified-check-match-text">
 /* Make the Verified check clearly visible in exactly the same gold as the VERIFIED lettering. */
-.staylatin-uniform-tier-ribbon.staylatin-verified-uniform .staylatin-verified-check{color:#533b0d!important;font-size:14px!important;font-weight:900!important;opacity:1!important;visibility:visible!important;text-shadow:none!important}
-.staylatin-uniform-tier-ribbon.staylatin-verified-uniform{color:#533b0d!important}
+.staylatin-uniform-tier-ribbon.staylatin-verified-uniform .staylatin-verified-check{color:#174d3b!important;font-size:14px!important;font-weight:900!important;opacity:1!important;visibility:visible!important;text-shadow:none!important}
+.staylatin-uniform-tier-ribbon.staylatin-verified-uniform{color:#174d3b!important}
 </style>
 
 <style id="staylatin-force-basic-grey-final">
@@ -2491,10 +2491,10 @@ html body header.sl-global-header .sl-lang-wrap .sl-language:focus-within { anim
 .staylatin-uniform-tier-ribbon.staylatin-verified-uniform,
 .staylatin-uniform-tier-ribbon.staylatin-verified-uniform > span,
 .staylatin-uniform-tier-ribbon.staylatin-verified-uniform .staylatin-verified-check{
- color:#533b0d!important;
+ color:#174d3b!important;
 }
 #stay-2 .photo > .staylatin-uniform-tier-ribbon.staylatin-verified-uniform .staylatin-verified-check{
- -webkit-text-fill-color:#533b0d!important;opacity:1!important;visibility:visible!important;
+ -webkit-text-fill-color:#174d3b!important;opacity:1!important;visibility:visible!important;
 }
 </style>
 
