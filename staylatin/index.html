@@ -2203,3 +2203,49 @@ html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice:hover{
  color:#fff!important;-webkit-text-fill-color:#fff!important;
 }
 </style>
+
+
+<style id="staylatin-banner-buttons-fade">
+/* Keep the homepage banner/header controls pulsing at the same gentle pace as listing buttons. */
+html body .hero-panel .btn,
+html body .hero-panel button,
+html body .hero-panel a[role="button"],
+html body .topbar a,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-home,
+html body header.sl-global-header .sl-navlinks > a.sl-nav-btn,
+html body header.sl-global-header .sl-navlinks > a.sl-admin-direct-link,
+html body header.sl-global-header .sl-lang-wrap .sl-language,
+html body header.sl-global-header .sl-lang-wrap #language,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice {
+  animation: stayBtnFade 2.2s ease-in-out infinite !important;
+}
+html body .hero-panel .btn:hover,
+html body .hero-panel .btn:focus-visible,
+html body .hero-panel button:hover,
+html body .hero-panel button:focus-visible,
+html body .hero-panel a[role="button"]:hover,
+html body .hero-panel a[role="button"]:focus-visible,
+html body .topbar a:hover,
+html body header.sl-global-header .sl-navlinks > a:hover,
+html body header.sl-global-header .sl-navlinks > a:focus-visible,
+html body header.sl-global-header .sl-lang-wrap .sl-language:hover,
+html body header.sl-global-header .sl-lang-wrap #language:hover,
+html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice:hover {
+  animation-play-state: paused !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .hero-panel .btn,
+  html body .hero-panel button,
+  html body .hero-panel a[role="button"],
+  html body .topbar a,
+  html body header.sl-global-header .sl-navlinks > a,
+  html body header.sl-global-header .sl-lang-wrap .sl-language,
+  html body header.sl-global-header .sl-lang-wrap #language,
+  html body header.sl-global-header .sl-lang-wrap #language .sl-lang-choice {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+</style>
