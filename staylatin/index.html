@@ -1286,6 +1286,10 @@ if(languageButton&&languageMenu){
  document.addEventListener("click",(e)=>{if(!e.target.closest(".sl-lang-wrap"))closeLangMenu();});
  document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeLangMenu();});
 }
+// Smooth scroll to top when clicking brand or home nav link
+const brandLink=document.querySelector(".sl-brand");
+const homeLink=document.querySelector(".sl-nav-home");
+[brandLink,homeLink].forEach(link=>{if(link)link.addEventListener("click",(e)=>{e.preventDefault();document.getElementById("top").scrollIntoView({behavior:"smooth"});});});
 applyLanguage();
 render();
 const yearElement=document.getElementById("year");
