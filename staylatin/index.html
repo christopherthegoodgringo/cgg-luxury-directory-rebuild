@@ -34,9 +34,10 @@
  transition:transform .15s ease,filter .15s ease;
 }
 .sl-language:hover,#language:hover{background:linear-gradient(135deg,#1f7c61,#2fa374)!important;filter:none;transform:translateY(-1px);animation-play-state:paused!important;color:#fff!important}
-.sl-lang-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:168px;margin:0;padding:8px;list-style:none;
+.sl-lang-menu{position:absolute;top:100%;right:0;z-index:60;min-width:168px;margin:0;padding:8px;list-style:none;pointer-events:none;
  background:#e5f3ec;border:1px solid #a8cebb;border-radius:14px;
  box-shadow:0 8px 20px rgba(10,40,30,.12);color:#173f35}
+.sl-lang-menu:not([hidden]){pointer-events:auto}
 .sl-lang-menu.is-open,.sl-lang-menu:not([hidden]){display:block}
 .sl-lang-menu[hidden]{display:none!important}
 .sl-lang-menu li{padding:11px 12px;border-radius:10px;font-size:13px;font-weight:750;color:#173f35;cursor:pointer}
@@ -779,7 +780,8 @@ body:has(#staylatin-account-overlay:not([hidden])) #staylatin-donation-tab{displ
 /* Final admin menu override: keep every destination visible and use the same green hover as homepage buttons. */
 .sl-global-header,.sl-mainnav,.sl-navlinks,.sl-admin-menu{overflow:visible!important}
 .sl-admin-menu{position:relative!important;isolation:isolate}
-.sl-admin-dropdown{position:absolute!important;top:calc(100% + 5px)!important;right:0!important;left:auto!important;min-width:230px!important;max-width:min(300px,90vw)!important;padding:7px!important;z-index:99999!important;background:#e5f3ec!important;border:1px solid #a8cebb!important;border-radius:12px!important;box-shadow:0 14px 30px rgba(10,40,30,.18)!important;visibility:visible!important;opacity:1!important;display:none}
+.sl-admin-dropdown{position:absolute!important;top:100%!important;right:0!important;left:auto!important;min-width:230px!important;max-width:min(300px,90vw)!important;padding:7px!important;z-index:99999!important;background:#e5f3ec!important;border:1px solid #a8cebb!important;border-radius:12px!important;box-shadow:0 14px 30px rgba(10,40,30,.18)!important;visibility:visible!important;opacity:1!important;display:none;pointer-events:none!important}
+.sl-admin-dropdown:not([hidden]){pointer-events:auto!important}
 .sl-admin-dropdown:not([hidden]){display:block!important}
 .sl-admin-dropdown[hidden]{display:none!important}
 .sl-admin-dropdown a,.sl-navlinks .sl-admin-dropdown a,.sl-admin-menu .sl-admin-dropdown a{display:block!important;visibility:visible!important;opacity:1!important;color:#173f35!important;background:transparent!important;padding:11px 13px!important;border:0!important;border-radius:8px!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important;text-decoration:none!important;white-space:normal!important;transform:none!important;box-shadow:none!important}
