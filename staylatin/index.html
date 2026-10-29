@@ -1480,13 +1480,39 @@ function render(){
    'Worth comparing for a trip to '+s.city.split(",")[0]+' alongside location, amenities and direct-booking details.'
   ];
   const rating=Math.max(1,Math.min(5,Number(s.rating)||3));
-  const reviewItems=[
-    {text:s.review||"A welcoming stay with thoughtful touches and a convenient location.",rating:rating,reviewer:s.reviewer||"Guest"},
-    {text:"A comfortable base for exploring "+s.city.split(",")[0]+", with a memorable atmosphere.",rating:5,reviewer:"Verified guest"},
-    {text:"The location made it easy to plan each day and discover more nearby.",rating:4,reviewer:"Traveler"},
-    {text:"A distinctive place to unwind after a full day out exploring the area.",rating:5,reviewer:"Visitor"},
-    {text:"A lovely option to compare when planning a stay in "+s.city.split(",")[0]+".",rating:4,reviewer:"Guest"}
-  ];
+  const reviewDatabase={
+    16:[
+      {text:"Super attentive staff, spectacular breakfast and rooftop pool with amazing sunset views.",rating:9.2,reviewer:"RRC 2605, Trip.com"},
+      {text:"Everything was excellent. Staff Service Cleanliness Location Breakfast was outstanding.",rating:10,reviewer:"Guest User, Trip.com"},
+      {text:"Excellent service. Good facilities. Nice beach.",rating:10,reviewer:"Guest User, Trip.com"},
+      {text:"The friendliness of the staff made our stay memorable.",rating:10,reviewer:"Guest User, Trip.com"},
+      {text:"Love their pools but the adult ones always too crowded.",rating:9,reviewer:"Guest User, Trip.com"}
+    ],
+    4:[
+      {text:"Beautiful old mansion in central Santa Marta with peaceful atmosphere and great location near bars and restaurants.",rating:8.8,reviewer:"Vicente, Trip.com"},
+      {text:"All staff super nice and helpful with a beautiful house experience.",rating:10,reviewer:"Tatiana, Trip.com"},
+      {text:"Beautiful house in historic center with excellent location and full breakfast.",rating:10,reviewer:"Vincent, Trip.com"},
+      {text:"Historic building with excellent location and good breakfast quality.",rating:8,reviewer:"Verified traveler, Trip.com"},
+      {text:"Peaceful atmosphere in a beautiful old mansion with bars and restaurants nearby.",rating:10,reviewer:"Salvador, Trip.com"}
+    ],
+    9:[
+      {text:"Clean, remodeled, and perfectly located near Parque de los Novios with great rooftop pool and helpful staff.",rating:8,reviewer:"Peter, Expedia"},
+      {text:"Rooftop pool views were lovely; rooms stylish though street noise can run late.",rating:8,reviewer:"Jim, Expedia"},
+      {text:"Helpful front desk, free late checkout, good breakfast.",rating:10,reviewer:"Alicia, Expedia"},
+      {text:"Well located, cheap, clean and simple with great rooftop pool.",rating:8,reviewer:"Verified traveler, Expedia"},
+      {text:"Small hotel, spacious rooms, helpful staff, rooftop patio.",rating:10,reviewer:"Verified traveler, Expedia"}
+    ],
+    10:[
+      {text:"Beautiful house in historic center with peaceful atmosphere, full breakfast, and excellent location near restaurants.",rating:8.8,reviewer:"Vincent, Trip.com"},
+      {text:"All staff super nice and helpful with historic courtyard charm.",rating:10,reviewer:"Tatiana, Trip.com"},
+      {text:"Beautiful old mansion in the centre with peaceful atmosphere and bars and restaurants nearby.",rating:10,reviewer:"Salvador, Trip.com"},
+      {text:"Historic building with excellent location and good breakfast portions.",rating:8,reviewer:"Vicente, Trip.com"},
+      {text:"Large family room with AC, big bathroom, full breakfast and pool with great location.",rating:10,reviewer:"Vincent, Trip.com"}
+    ]
+  };
+  const reviewItems=(reviewDatabase[s.id]||[
+    {text:s.review||"A welcoming stay with thoughtful touches and a convenient location.",rating:rating,reviewer:s.reviewer||"Guest"}
+  ]).slice(0,5);
   const reviewSlides=reviewItems.map((item,index)=>{
     const score=Math.max(1,Math.min(5,Number(item.rating)||rating));
     const stars=[1,2,3,4,5].map(n=>'<span class="star'+(n<=score?' on':' off')+'" aria-hidden="true">★</span>').join("");
