@@ -17,7 +17,7 @@
 .stay-card .photo>.pill{display:inline-flex;align-items:center;justify-content:center;min-width:104px;height:34px;padding:0 13px;border-radius:6px;font-size:11px;font-weight:850;letter-spacing:.1em;line-height:1;text-align:center;box-shadow:0 3px 10px #13271d20;border:1px solid transparent}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#dce8e1,#b7d0c2);color:#194b3a;border-color:#9bbbab}
 .stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84);color:#fff;border-color:#00a878}
-.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#e4e2ff,#b9b7f2);color:#383a82;border-color:#a09ee0}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe6a6,#e9b84e);color:#533b0d;border-color:#d3a23b}
 
 
@@ -201,7 +201,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 .stay-card.tier-verified{background:#e5f3ec;border-color:#1dd1a1}
 .stay-card.tier-verified .stay-body{background:linear-gradient(180deg,#f0fffe 0%,#d4ffe5 100%)}
 .stay-card.tier-featured{background:#e5f3ec;border-color:#d0e6db}
-.stay-card.tier-featured .stay-body{background:linear-gradient(180deg,#fff9e9 0%,#f8e9bb 100%)}
+.stay-card.tier-featured .stay-body{background:linear-gradient(180deg,#fffdf5 0%,#fffdf8 100%)}
 .stay-card.tier-premium{background:#e5f3ec;border-color:#d0e6db}
 .stay-card.tier-premium .stay-body{background:linear-gradient(180deg,#fff9e9 0%,#f8e9bb 100%)}
 .stay-card .stay-body{transition:background .2s ease}
@@ -302,6 +302,7 @@ footer,.footer{background:linear-gradient(110deg,#153d32,#245448)}
 @media(prefers-reduced-motion:reduce){.stay-card.tier-premium .tier-star,.stay-card.tier-verified .tier-star{animation:none;opacity:1}}
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#ffe7a0,#e2ad2f)!important;color:#53380a!important;border-color:#bd8d22!important}
 .stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84)!important;color:#fff!important;border-color:#00a878!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#ffe2d8,#f3a991)!important;color:#783c2e!important;border-color:#d98d75!important}
 </style>
@@ -364,7 +365,7 @@ body{background:radial-gradient(ellipse at 0% 12%,rgba(168,213,192,.35),transpar
 .stay-card .heart.saved,.photo-actions .photo-act.is-on,.photo-actions .photo-act.saved{background:linear-gradient(135deg,var(--green-deep) 0%,var(--green-mid) 100%)!important}
 /* Tier pills: four clear green shades */
 .stay-card.tier-premium .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
-.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#1f7a5c,#3aad7a)!important;color:#f3fbf7!important;border-color:#1f7a5c!important}
+.stay-card.tier-featured .photo>.pill{background:linear-gradient(135deg,#0a2f27,#1a5c4a)!important;color:#e8f6ef!important;border-color:#0a2f27!important}
 .stay-card.tier-verified .photo>.pill{background:linear-gradient(135deg,#1dd1a1,#10ac84)!important;color:#fff!important;border-color:#00a878!important}
 .stay-card.tier-basic .photo>.pill{background:linear-gradient(135deg,#d8eee4,#eef6f2)!important;color:#1a5c4a!important;border-color:#a8d5c0!important}
 /* Stars stay green-tint instead of rainbow */
@@ -2086,12 +2087,12 @@ if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rot
 .stay-card.tier-verified .photo>span::before,
 .stay-card.tier-verified .photo>.pill::before{content:"✓";font-size:11px;line-height:1}
 
-/* FEATURED ✦ — purple gradient, sparkle */
+/* FEATURED ✦ — gold gradient, static (no spinning star like Premium) */
 .stay-card.tier-featured .photo>span,
 .stay-card.tier-featured .photo>.pill{
-  background:linear-gradient(135deg,rgba(220,215,255,.95),rgba(200,190,255,.95))!important;
-  border-color:rgba(140,120,230,.55)!important;
-  color:#322080!important;
+  background:linear-gradient(135deg,#ffe6a6,#e9b84e)!important;
+  border-color:#d3a23b!important;
+  color:#533b0d!important;
 }
 .stay-card.tier-featured .photo>span::before,
 .stay-card.tier-featured .photo>.pill::before{content:"✦";font-size:10px;line-height:1}
