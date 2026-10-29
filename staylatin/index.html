@@ -1700,7 +1700,7 @@ function rotateStayReviews(){
   slides.forEach((slide,index)=>{slide.classList.toggle("active",index===next);if(index===next)slide.setAttribute("aria-live","polite");else slide.removeAttribute("aria-live");});
  });
 }
-if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,8000);
+if(stayReviewRotationTimer===null)stayReviewRotationTimer=window.setInterval(rotateStayReviews,4000);
 </script>
 
 <div id="slCompareModal" hidden>
