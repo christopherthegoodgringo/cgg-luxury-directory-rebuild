@@ -1461,5 +1461,43 @@
     "trip": "https://www.trip.com/hotels/list?keywords=Albergue%20Lavacolla%20Santiago",
     "note": "Official property website; Expedia and Trip.com search links",
     "discoverySource": "OpenStreetMap; official website checked 2026-11-08"
+  },
+  {
+    "id": 257989301,
+    "name": "Hotel Monasterio de los Basilios",
+    "city": "Granada, Nicaragua",
+    "country": "Nicaragua",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "Disfruta en Macià Hoteles de todas las comodidades, un servicio a la altura y esa calidez en la atención propia del carácter del sur.",
+    "image": "https://static-resources-elementor.mirai.com/wp-content/uploads/sites/421/home-hero-01-mb.jpg",
+    "imageFallback": "https://static-resources-elementor.mirai.com/wp-content/uploads/sites/421/home-hero-01-mb.jpg",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://www.maciahoteles.com/",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Hotel%20Monasterio%20de%20los%20Basilios%20Granada",
+    "trip": "https://www.trip.com/hotels/list?keywords=Hotel%20Monasterio%20de%20los%20Basilios%20Granada",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-09"
+  },
+  {
+    "id": 115535118,
+    "name": "Hotel España",
+    "city": "Buenos Aires, Argentina",
+    "country": "Argentina",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "Hotel familiar 3 estrellas en el centro de Mar del Plata, a 70m de la peatonal San Martín y a 400m de la playa. Desayuno buffet, WiFi y reservas directas con mejor tarifa.",
+    "image": "https://framerusercontent.com/images/rmw2N1NFlGnWBICidWjaG8j8t4.png",
+    "imageFallback": "https://framerusercontent.com/images/rmw2N1NFlGnWBICidWjaG8j8t4.png",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://xn--espaahotel-w9a.com.ar/",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Hotel%20Espa%C3%B1a%20Buenos%20Aires",
+    "trip": "https://www.trip.com/hotels/list?keywords=Hotel%20Espa%C3%B1a%20Buenos%20Aires",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-09"
   }
 ]
