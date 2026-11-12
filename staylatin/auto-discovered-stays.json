@@ -1708,5 +1708,43 @@
     "trip": "https://www.trip.com/hotels/list?keywords=San%20Agustin%20Internacional%20Cusco",
     "note": "Official property website; Expedia and Trip.com search links",
     "discoverySource": "OpenStreetMap; official website checked 2026-11-11"
+  },
+  {
+    "id": 334290427,
+    "name": "Hotel Boutique Don Pepe",
+    "city": "Santa Marta, Colombia",
+    "country": "Colombia",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "¡Vive la experiencia! Historia, descanso y traidicion. Nuestra historia El Hotel Boutique Don Pepe nace como un homenaje a la historia y al carácter de Santa",
+    "image": "https://wubook.net/imgs/default/booking_by_wu.gif",
+    "imageFallback": "https://wubook.net/imgs/default/booking_by_wu.gif",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://hotelboutiquedonpepe.com/",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Hotel%20Boutique%20Don%20Pepe%20Santa%20Marta",
+    "trip": "https://www.trip.com/hotels/list?keywords=Hotel%20Boutique%20Don%20Pepe%20Santa%20Marta",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-12"
+  },
+  {
+    "id": 100700226,
+    "name": "Hotel Central",
+    "city": "Oaxaca, Mexico",
+    "country": "Mexico",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "Destacado entre los mejores hoteles en Juchitán. Reserve en nuestro Hotel en Juchitán, Oaxaca. Ofrecemos habitaciones económicas, limpias y cómodas en el centro de Juchitán.",
+    "image": "https://hotelcentral.com.mx/wp-content/uploads/Social-Hotel-Central-Promocion.webp",
+    "imageFallback": "https://hotelcentral.com.mx/wp-content/uploads/Social-Hotel-Central-Promocion.webp",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://hotelcentral.com.mx/",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Hotel%20Central%20Oaxaca",
+    "trip": "https://www.trip.com/hotels/list?keywords=Hotel%20Central%20Oaxaca",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-12"
   }
 ]
