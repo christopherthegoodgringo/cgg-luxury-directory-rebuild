@@ -1746,5 +1746,43 @@
     "trip": "https://www.trip.com/hotels/list?keywords=Hotel%20Central%20Oaxaca",
     "note": "Official property website; Expedia and Trip.com search links",
     "discoverySource": "OpenStreetMap; official website checked 2026-11-12"
+  },
+  {
+    "id": 223761134,
+    "name": "Holiday Inn Huatulco",
+    "city": "Oaxaca, Mexico",
+    "country": "Mexico",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "Official site of Holiday Inn Huatulco. Read guest reviews and book your stay with our Best Price Guarantee. Kids stay and eat free at Holiday Inn.",
+    "image": "https://digital.ihg.com/is/image/ihg/holiday-inn-santa-maria-huatulco-6705063955-2x1",
+    "imageFallback": "https://digital.ihg.com/is/image/ihg/holiday-inn-santa-maria-huatulco-6705063955-2x1",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://www.ihg.com/holidayinn/hotels/us/en/huatulco/huxhi/hoteldetail",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Holiday%20Inn%20Huatulco%20Oaxaca",
+    "trip": "https://www.trip.com/hotels/list?keywords=Holiday%20Inn%20Huatulco%20Oaxaca",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-13"
+  },
+  {
+    "id": 313752367,
+    "name": "Wakapunku",
+    "city": "Cusco, Peru",
+    "country": "Peru",
+    "type": "Boutique hotel",
+    "vibe": "Culture",
+    "desc": "Hotel boutique en el centro de Cusco, a pasos de la Plaza de Armas. Disfruta de 7 habitaciones con historia, desayuno incluido y atención personalizada. Reserva directo al mejor precio.",
+    "image": "https://i0.wp.com/wakapunkuboutique.com/wp-content/uploads/2026/07/hotel-cozy-cusco-area-comun47.png",
+    "imageFallback": "https://i0.wp.com/wakapunkuboutique.com/wp-content/uploads/2026/07/hotel-cozy-cusco-area-comun47.png",
+    "tag": "Basic",
+    "tier": "Basic",
+    "tierFeature": "Standard property profile",
+    "website": "https://wakapunkuboutique.com/",
+    "expedia": "https://www.expedia.com/Hotel-Search?destination=Wakapunku%20Cusco",
+    "trip": "https://www.trip.com/hotels/list?keywords=Wakapunku%20Cusco",
+    "note": "Official property website; Expedia and Trip.com search links",
+    "discoverySource": "OpenStreetMap; official website checked 2026-11-13"
   }
 ]
